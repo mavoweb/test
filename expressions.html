@@ -3,8 +3,8 @@
 <head>
 	<meta charset="UTF-8">
 	<title>Expression tests</title>
-	<link rel="stylesheet" href="../dist/mavo.css" />
-	<link rel="stylesheet" href="style.css" />
+	<link rel="stylesheet" href="mavo/mavo.css" />
+	<link rel="stylesheet" href="css/style.css" />
 	<style>
 		[data-foo]::before {
 			content: "[data-foo=" attr(data-foo) "]";
@@ -173,7 +173,7 @@
 	</table>
 </section>
 
-<section mv-app mv-storage="local" mv-init="people.json">
+<section mv-app mv-storage="local" mv-init="data/people.json">
 	<h1>Aggregates</h1>
 
 	<table class="reftest">
@@ -594,7 +594,7 @@
 	</table>
 </section>
 
-<script src="../dist/mavo.js"></script>
+<script src="mavo/mavo.js"></script>
 <script src="test.js"></script>
 <script>
 	var compareChecked = RefTest.compareAttribute.bind(null, "checked");
