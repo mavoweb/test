@@ -1,7 +1,7 @@
 {
   "name": "mavo-test",
   "version": "0.0.3",
-  "description": "Mavo website",
+  "description": "Mavo unit tests",
   "main": "mavo.js",
   "scripts": {
     "test": "open ."

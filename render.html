@@ -5,27 +5,11 @@
 	<title>Render tests</title>
 	<link rel="stylesheet" href="mavo/mavo.css" />
 	<link rel="stylesheet" href="css/style.css" />
+	<script src="mavo/mavo.js"></script>
 </head>
 <body>
 
 <h1>Render tests</h1>
-
-<script type="application/json" id="countries">{
-	"country": [
-		{
-			"code": "",
-			"name": "Online"
-		},
-		{
-			"code": "us",
-			"name": "United States"
-		},
-		{
-			"code": "gb",
-			"name": "United Kingdom"
-		}
-	]
-}</script>
 
 <script type="application/json" id="deep">
 {
@@ -41,8 +25,180 @@
 }
 </script>
 
-<section mv-app mv-storage="#countries">
-	<h1>No store, element source</h1>
+<section>
+	<h1>mv-path</h1>
+
+	<p>Click Save. The tests should still pass.</p>
+	<table class="reftest">
+		<tr>
+			<td>
+				<pre id="data-mvpath-0">{
+	"prop1": 2
+}</pre>
+			</td>
+			<td>
+				<script>document.write($$("td pre").pop().outerHTML)</script>
+			</td>
+		</tr>
+		<tr title="No mv-path">
+			<td mv-app="mvpath1" mv-storage="#data-mvpath-0">
+				<span property="prop1"></span>
+			</td>
+			<td>2</td>
+		</tr>
+		<tr>
+			<td>
+				<pre id="data-mvpath-1">[
+	{
+		"prop1": 1
+	},
+	{
+		"prop1": 2
+	}
+]</pre>
+			</td>
+			<td>
+				<script>document.write($$("td pre").pop().outerHTML)</script>
+			</td>
+		</tr>
+		<tr title="Render only second item from a collection">
+			<td mv-app="mvpath2" mv-storage="#data-mvpath-1" mv-path="1">
+				<span property="prop1"></span>
+			</td>
+			<td>2</td>
+		</tr>
+		<tr>
+			<td>
+				<pre id="data-mvpath-2">{
+	"prop1": {
+		"prop2": {
+			"prop3": 2
+		}
+	}
+}</pre>
+			</td>
+			<td>
+				<script>document.write($$("td pre").pop().outerHTML)</script>
+			</td>
+		</tr>
+		<tr title="Render sub-object">
+			<td mv-app="mvpath3" mv-storage="#data-mvpath-2" mv-path="prop1/prop2">
+				<span property="prop3"></span>
+			</td>
+			<td>2</td>
+		</tr>
+	</table>
+</section>
+
+<section>
+	<h1>mv-path on internal nodes</h1>
+
+	<p>Click Save. The tests should still pass.</p>
+	<table class="reftest">
+		<tr>
+			<td>
+				<pre id="data-mvpath-3">{
+	"prop1": {
+		"prop3": {
+			"prop2": 2
+		},
+		"prop2": 1
+	}
+}</pre>
+			</td>
+			<td>
+				<script>document.write($$("td pre").pop().outerHTML)</script>
+			</td>
+		</tr>
+		<tr title="mv-path on root and non-root objects">
+			<td mv-app="mvpath4" mv-storage="#data-mvpath-3" mv-path="prop1">
+				<span property="prop3" mv-path="prop2"></span>
+			</td>
+			<td>2</td>
+		</tr>
+		<tr>
+			<td>
+				<pre id="data-mvpath-4">{
+	"prop1": {
+		"prop2": [
+			{
+				"prop3": 2
+			},
+			{
+				"prop3": 3
+			}
+		],
+		"prop3": 1
+	}
+}</pre>
+			</td>
+			<td>
+				<script>document.write($$("td pre").pop().outerHTML)</script>
+			</td>
+		</tr>
+		<tr title="mv-path on collection and on collection item">
+			<td mv-app="mvpath5" mv-storage="#data-mvpath-4" mv-path="prop1">
+				<span property="prop2" mv-multiple mv-path="prop3"></span>
+			</td>
+			<td>23</td>
+		</tr>
+	</table>
+</section>
+
+<section>
+	<h1>Implicit mv-path</h1>
+
+	<p>Click Save. The tests should still pass.</p>
+	<table class="reftest">
+		<tr>
+			<td>
+				<pre id="data-mvpath-5">{
+	"prop1": [
+		{
+			"prop2": 2
+		},
+		{
+			"prop2": 3
+		}
+	]
+}</pre>
+			</td>
+			<td>
+				<script>document.write($$("td pre").pop().outerHTML)</script>
+			</td>
+		</tr>
+		<tr>
+			<td mv-app="mvpath6" mv-storage="#data-mvpath-5">
+				<div property="prop1">
+					<span property="prop2"></span>
+				</div>
+			</td>
+			<td>2</td>
+		</tr>
+		<tr>
+			<td>
+				<pre id="data-mvpath-6">{
+	"prop1": {
+		"prop1": 2,
+		"prop2": 3
+	}
+}</pre>
+			</td>
+			<td>
+				<script>document.write($$("td pre").pop().outerHTML)</script>
+			</td>
+		</tr>
+		<tr>
+			<td mv-app="mvpath7" mv-storage="#data-mvpath-6">
+				<span property="prop1"></span>
+			</td>
+			<td>2</td>
+		</tr>
+	</table>
+</section>
+
+<!-- <section mv-app mv-source="#deep">
+	<h1>Deep hierarchy with same property</h1>
 
 	<table class="reftest">
 		<tr>
@@ -50,9 +206,8 @@
 			<td>YOLO</td>
 		</tr>
 	</table>
-</section>
+</section> -->
 
-<script src="mavo/mavo.js"></script>
 <script src="test.js"></script>
 
 </body>

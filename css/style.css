@@ -12,6 +12,9 @@ body {
   max-width: 50em;
   margin: auto;
   counter-reset: failures; }
+  body > h1 {
+    font: 300 350%/1 Helvetica Neue, Helvetica, sans-serif;
+    color: orange; }
 
 a {
   color: var(--dark); }
