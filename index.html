@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en" class="index">
+<head>
+
+<meta charset="UTF-8">
+<title>Mavo Tests</title>
+<link rel="stylesheet" href="mavo/mavo.css" />
+<link rel="stylesheet" href="css/style.css" />
+
+</head>
+<body mv-app="tests" mv-source="https://api.github.com/repos/LeaVerou/mavo-test/contents" mv-bar="none">
+
+<section>
+	<h1>Mavo Tests</h1>
+
+	<section>
+		<ul property="file" mv-multiple mv-if="ends(name, '.html') and name != 'index.html'">
+			<li><a target="test" property="name">[readable(replace(name, '.html'))]</a></li>
+		</ul>
+	</section>
+</section>
+<iframe name="test"></iframe>
+
+<script src="mavo/mavo.js"></script>
+
+</body>
+</html>

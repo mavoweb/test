@@ -16,9 +16,7 @@ $fail: hsl(0, 70%, 90%);
 $error: hsl(0, 70%, 70%);
 
 body {
-	max-width: 50em;
 	margin: auto;
-	counter-reset: failures;
 
 	& > h1 {
 		font: 300 350%/1 Helvetica Neue, Helvetica, sans-serif;
@@ -32,6 +30,12 @@ a {
 
 a:not(:hover) {
 	text-decoration: none;
+}
+
+h1 {
+	font: bold 200%/1 Helvetica Neue, sans-serif;
+	color: var(--dark);
+	letter-spacing: -.04em;
 }
 
 .pass {
@@ -49,25 +53,38 @@ a:not(:hover) {
 	--dark-color: hsl(0, 70%, 40%);
 }
 
-body > section {
-	border: .2em solid var(--ciel);
-	margin: .5em 0;
-	padding: .5em;
-	border-radius: .3em;
-
-	& > h1 {
-		margin: 0;
-		font: bold 200%/1 Helvetica Neue, sans-serif;
-		color: var(--dark);
-		letter-spacing: -.04em;
+html:not(.index) {
+	body {
+		max-width: 50em;
+		counter-reset: failures;
 	}
 
-	script[type="application/json"] {
+	body::after {
+		content: counter(failures) " failure(s)";
+		position: fixed;
+		top: .6rem;
+		left: 1rem;
+		font: bold 200% Helvetica Neue, sans-serif;
+		color: #b00;
+	}
+
+	body > section {
+		border: .2em solid var(--ciel);
+		margin: .5em 0;
 		padding: .5em;
-		background: var(--ciel);
-		display: block;
-		font-family: monospace;
-		white-space: pre;
+		border-radius: .3em;
+
+		h1 {
+			margin: 0;
+		}
+
+		script[type="application/json"] {
+			padding: .5em;
+			background: var(--ciel);
+			display: block;
+			font-family: monospace;
+			white-space: pre;
+		}
 	}
 }
 
@@ -258,11 +275,39 @@ body > section > div {
 	}
 }
 
-body::after {
-	content: counter(failures) " failure(s)";
-	position: fixed;
-	top: .6rem;
-	left: 1rem;
-	font: bold 200% Helvetica Neue, sans-serif;
-	color: #b00;
+.index {
+	body {
+		margin: 0;
+		display: flex;
+		height: 100vh;
+	}
+
+	body > section {
+		padding: 1em;
+		background: var(--ciel);
+
+		h1 {
+			font-weight: 300;
+			margin: 0;
+		}
+
+		ul {
+			padding: 0;
+			list-style: none;
+		}
+
+		li {
+			text-transform: capitalize;
+		}
+
+		a {
+			font-weight: bold;
+			font: 600 120%/1 Helvetica Neue, sans-serif;
+		}
+	}
+
+	iframe {
+		flex: 1;
+		border: 0;
+	}
 }

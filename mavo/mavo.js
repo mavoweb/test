@@ -937,15 +937,6 @@ var _ = $.extend(Mavo, {
 		return JSON.stringify(data, null, "\t");
 	},
 
-	// Convert an identifier to readable text that can be used as a label
-	readable: function (identifier) {
-		// Is it camelCase?
-		return identifier && identifier
-				 .replace(/([a-z])([A-Z])(?=[a-z])/g, ($0, $1, $2) => $1 + " " + $2.toLowerCase()) // camelCase?
-				 .replace(/([a-z])[_\/-](?=[a-z])/g, "$1 ") // Hyphen-separated / Underscore_separated?
-				 .replace(/^[a-z]/, $0 => $0.toUpperCase()); // Capitalize
-	},
-
 	queryJSON: function(data, path) {
 		if (!path || !data) {
 			return data;
@@ -1649,7 +1640,7 @@ var _ = Mavo.Node = $.Class({
 	},
 
 	get name() {
-		return Mavo.readable(this.property || this.type).toLowerCase();
+		return Mavo.Functions.readable(this.property || this.type).toLowerCase();
 	},
 
 	get saved() {
@@ -2680,7 +2671,7 @@ var _ = Mavo.Primitive = $.Class({
 
 	lazy: {
 		label: function() {
-			return Mavo.readable(this.property);
+			return Mavo.Functions.readable(this.property);
 		},
 
 		emptyValue: function() {
@@ -5081,7 +5072,7 @@ var _ = Mavo.Functions = {
 	/**
 	 * Replace all occurences of a string with another string
 	 */
-	replace: function(haystack, needle, replacement, iterations = 1) {
+	replace: function(haystack, needle, replacement = "", iterations = 1) {
 		if (Array.isArray(haystack)) {
 			return haystack.map(item => _.replace(item, needle, replacement));
 		}
@@ -5092,11 +5083,23 @@ var _ = Mavo.Functions = {
 		var counter = 0;
 
 		while (ret != prev && (counter++ < iterations)) {
-			prev = ret; // foo
-			ret = ret.replace(needleRegex, replacement); // fo
+			prev = ret;
+			ret = ret.replace(needleRegex, replacement);
 		}
 
 		return ret;
+	},
+
+	len: str => (str || "").length,
+	/**
+	 * Case insensitive search
+	 */
+	search: (haystack, needle) => haystack && needle? haystack.toLowerCase().indexOf(needle.toLowerCase()) : -1,
+
+	starts: (haystack, needle) => _.search(haystack, needle) === 0,
+	ends: function(haystack, needle) {
+		var i = _.search(haystack, needle);
+		return  i > -1 && i === haystack.length - needle.length;
 	},
 
 	join: function(array, glue = "") {
@@ -5107,6 +5110,15 @@ var _ = Mavo.Functions = {
 		.replace(/\s+/g, "-") // Convert whitespace to hyphens
 		.replace(/[^\w-]/g, "") // Remove weird characters
 		.toLowerCase(),
+
+	// Convert an identifier to readable text that can be used as a label
+	readable: function (identifier) {
+		// Is it camelCase?
+		return identifier && identifier
+				 .replace(/([a-z])([A-Z])(?=[a-z])/g, ($0, $1, $2) => $1 + " " + $2.toLowerCase()) // camelCase?
+				 .replace(/([a-z])[_\/-](?=[a-z])/g, "$1 ") // Hyphen-separated / Underscore_separated?
+				 .replace(/^[a-z]/, $0 => $0.toUpperCase()); // Capitalize
+	},
 
 	uppercase: str => (str + "").toUpperCase(),
 	lowercase: str => (str + "").toLowerCase(),

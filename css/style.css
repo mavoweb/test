@@ -9,9 +9,7 @@
   --dark: #337799; }
 
 body {
-  max-width: 50em;
-  margin: auto;
-  counter-reset: failures; }
+  margin: auto; }
   body > h1 {
     font: 300 350%/1 Helvetica Neue, Helvetica, sans-serif;
     color: orange; }
@@ -21,6 +19,11 @@ a {
 
 a:not(:hover) {
   text-decoration: none; }
+
+h1 {
+  font: bold 200%/1 Helvetica Neue, sans-serif;
+  color: var(--dark);
+  letter-spacing: -.04em; }
 
 .pass {
   --color: #ceec93;
@@ -34,17 +37,26 @@ a:not(:hover) {
   --color: #e87d7d;
   --dark-color: #ad1f1f; }
 
-body > section {
+html:not(.index) body {
+  max-width: 50em;
+  counter-reset: failures; }
+
+html:not(.index) body::after {
+  content: counter(failures) " failure(s)";
+  position: fixed;
+  top: .6rem;
+  left: 1rem;
+  font: bold 200% Helvetica Neue, sans-serif;
+  color: #b00; }
+
+html:not(.index) body > section {
   border: 0.2em solid var(--ciel);
   margin: .5em 0;
   padding: .5em;
   border-radius: .3em; }
-  body > section > h1 {
-    margin: 0;
-    font: bold 200%/1 Helvetica Neue, sans-serif;
-    color: var(--dark);
-    letter-spacing: -.04em; }
-  body > section script[type="application/json"] {
+  html:not(.index) body > section h1 {
+    margin: 0; }
+  html:not(.index) body > section script[type="application/json"] {
     padding: .5em;
     background: var(--ciel);
     display: block;
@@ -181,12 +193,30 @@ body > section > div {
       font: bold 75%/1 sans-serif;
       text-shadow: 0 0 1px rgba(0, 0, 0, 0.5); }
 
-body::after {
-  content: counter(failures) " failure(s)";
-  position: fixed;
-  top: .6rem;
-  left: 1rem;
-  font: bold 200% Helvetica Neue, sans-serif;
-  color: #b00; }
+.index body {
+  margin: 0;
+  display: -ms-flexbox;
+  display: flex;
+  height: 100vh; }
+
+.index body > section {
+  padding: 1em;
+  background: var(--ciel); }
+  .index body > section h1 {
+    font-weight: 300;
+    margin: 0; }
+  .index body > section ul {
+    padding: 0;
+    list-style: none; }
+  .index body > section li {
+    text-transform: capitalize; }
+  .index body > section a {
+    font-weight: bold;
+    font: 600 120%/1 Helvetica Neue, sans-serif; }
+
+.index iframe {
+  -ms-flex: 1;
+  flex: 1;
+  border: 0; }
 
 /*# sourceMappingURL=style.css.map */
