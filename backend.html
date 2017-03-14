@@ -5,6 +5,7 @@
 	<title>Backend Tests</title>
 	<link rel="stylesheet" href="mavo/mavo.css" />
 	<link rel="stylesheet" href="css/style.css" />
+	<script src="mavo/mavo.js"></script>
 </head>
 <body>
 
@@ -28,6 +29,58 @@
 					<li>
 						Code Name
 					</li>
+				</ul>
+			</td>
+		</tr>
+	</table>
+</section>
+
+<section>
+	<h1>Element storage</h1>
+
+	<table class="reftest">
+		<tr>
+			<td>
+				<pre id="element-data">{
+	"group": {
+		"number": 2,
+		"string": "foo"
+	},
+	"collection": [
+		{
+			"number": 3,
+			"string": "bar"
+		},
+		{
+			"number": 4,
+			"string": "yolo"
+		}
+	],
+	"number": 1
+}</pre>
+				<td>
+					<script>document.write($$("td pre").pop().outerHTML)</script>
+				</td>
+			</td>
+		</tr>
+		<tr>
+			<td mv-app="element" mv-storage="#element-data">
+				<div property="group">
+					<span property="number">Number</span>
+					<span property="string">String</span>
+				</div>
+				<ul>
+					<li property="collection" mv-multiple>
+						<span property="number">Number</span>
+						<span property="string">String</span>
+					</li>
+				</ul>
+			</td>
+			<td>
+				<div>2 foo</div>
+				<ul>
+					<li>3 bar</li>
+					<li>4 yolo</li>
 				</ul>
 			</td>
 		</tr>
@@ -247,6 +300,8 @@ localStorage.localstoretest = `{
 			<td>
 				<ul>
 					<li>file countries.json</li>
+					<li>file csv.csv</li>
+					<li>file markdown.md</li>
 					<li>file people.json</li>
 				</ul>
 			</td>
@@ -270,6 +325,38 @@ localStorage.localstoretest = `{
 
 					Paragraph **bold** *italic*
 				</div>
+			</td>
+		</tr>
+		<tr>
+			<td>
+				<pre id="data-csv">prop1,prop21,foo2,bar</pre>
+			</td>
+			<td>
+				<script>document.write($$("td pre").pop().outerHTML)</script>
+			</td>
+		</tr>
+		<tr title="CSV from Element, explicit mv-format">
+			<td mv-app="csvelement" mv-source="#data-csv" mv-format="csv">
+				<div property="row" mv-multiple>
+					<span property="prop1"></span>
+					<span property="prop2"></span>
+				</div>
+			</td>
+			<td>
+				<div>1 foo</div>
+				<div>2 bar</div>
+			</td>
+		</tr>
+		<tr title="CSV from Github, implicit mv-format">
+			<td mv-app="csvgithub" mv-source="https://github.com/LeaVerou/mavo-test/data/csv.csv">
+				<div property="row" mv-multiple>
+					<span property="prop1"></span>
+					<span property="prop2"></span>
+				</div>
+			</td>
+			<td>
+				<div>1 foo</div>
+				<div>2 bar</div>
 			</td>
 		</tr>
 	</table>
@@ -349,10 +436,6 @@ localStorage.localstoretest = `{
 	</table>
 </section>
 
-
-
-
-<script src="mavo/mavo.js"></script>
 <script src="test.js"></script>
 
 </body>
