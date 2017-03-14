@@ -237,13 +237,38 @@
 <section mv-app="bools" mv-storage="#teams">
     <h1>Collections containing Boolean values</h1>
 
-    <div>
-        <div property="team" mv-multiple>
-            <b property="name"></b>
-            <i property="isBest"></i>
-            <ul><li property="wins" mv-multiple></li></ul>
-        </div>
-    </div>
+	<table class="reftest">
+		<tr>
+			<td>
+				<div property="team" mv-multiple>
+					<b property="name">name</b>
+					<i property="isBest">is best</i>
+					<ul>
+						<li property="wins" mv-multiple>wins</li>
+					</ul>
+				</div>
+			</td>
+			<td>
+				<div mv-multiple>A
+					<ul>
+						<li>wins</li>
+						<li>wins</li>
+					</ul>
+				</div>
+				<div mv-multiple>B <i>is best</i>
+					<ul>
+					<li>wins</li>
+					<li>wins</li>
+					<li>wins</li>
+				</ul></div>
+				<div mv-multiple>C
+					<ul>
+						<li>wins</li>
+					</ul>
+			</div>
+			</td>
+		</tr>
+	</table>
 </section>
 
 

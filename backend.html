@@ -2,13 +2,13 @@
 <html lang="en">
 <head>
 	<meta charset="UTF-8">
-	<title>Tests related to mv-storage, mv-source, and mv-init</title>
+	<title>Backend Tests</title>
 	<link rel="stylesheet" href="mavo/mavo.css" />
 	<link rel="stylesheet" href="css/style.css" />
 </head>
 <body>
 
-<h1>mv-storage, mv-source, mv-init</h1>
+<h1>Backend Tests</h1>
 
 <section class="mv-app">
 	<h1>No storage</h1>
@@ -249,6 +249,27 @@ localStorage.localstoretest = `{
 					<li>file countries.json</li>
 					<li>file people.json</li>
 				</ul>
+			</td>
+		</tr>
+	</table>
+</section>
+
+<section>
+	<h1>mv-format</h1>
+
+	<p>Need to login to Github and have access to the mavo-test repo for this test to pass.</p>
+
+	<table class="reftest">
+		<tr>
+			<td mv-app="implicitmvformat" mv-storage="https://github.com/LeaVerou/mavo-test/data/markdown.md">
+				<div property="content"></div>
+			</td>
+			<td>
+				<div>
+					# Heading
+
+					Paragraph **bold** *italic*
+				</div>
 			</td>
 		</tr>
 	</table>

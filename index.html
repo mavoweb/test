@@ -14,8 +14,10 @@
 	<h1>Mavo Tests</h1>
 
 	<section>
-		<ul property="file" mv-multiple mv-if="ends(name, '.html') and name != 'index.html'">
-			<li><a target="test" property="name">[readable(replace(name, '.html'))]</a></li>
+		<ul>
+			<li property="file" mv-multiple mv-if="ends(name, '.html') and name != 'index.html'">
+				<a target="test" property="name">[replace(name, '.html')]</a>
+			</li>
 		</ul>
 	</section>
 </section>

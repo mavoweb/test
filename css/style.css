@@ -208,11 +208,9 @@ body > section > div {
   .index body > section ul {
     padding: 0;
     list-style: none; }
-  .index body > section li {
-    text-transform: capitalize; }
   .index body > section a {
     font-weight: bold;
-    font: 600 120%/1 Helvetica Neue, sans-serif; }
+    font: 600 150%/1.4 Helvetica Neue, sans-serif; }
 
 .index iframe {
   -ms-flex: 1;
