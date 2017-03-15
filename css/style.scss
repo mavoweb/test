@@ -21,6 +21,25 @@ body {
 	& > h1 {
 		font: 300 350%/1 Helvetica Neue, Helvetica, sans-serif;
 		color: orange;
+
+		.home {
+			display: inline-block;
+			vertical-align: middle;
+			padding: .3em .4em;
+			border-radius: .3em;
+			margin-left: .5em;
+			background: hsl(200, 50%, 70%);
+			color: white;
+			text-transform: uppercase;
+			font-size: 40%;
+			font-weight: bold;
+			letter-spacing: -.03em;
+
+			&:hover {
+				background: var(--dark);
+				text-decoration: none;
+			}
+		}
 	}
 }
 
@@ -56,15 +75,16 @@ h1 {
 html:not(.index) {
 	body {
 		max-width: 50em;
-		counter-reset: failures;
+		counter-reset: fail pass;
 	}
 
 	body::after {
-		content: counter(failures) " failure(s)";
+		content: counter(fail) " failing \a" counter(pass) " passing";
 		position: fixed;
 		top: .6rem;
 		left: 1rem;
-		font: bold 200% Helvetica Neue, sans-serif;
+		white-space: pre-line;
+		font: bold 180% Helvetica Neue, sans-serif;
 		color: #b00;
 	}
 
@@ -228,7 +248,11 @@ table.reftest {
 		background: var(--color);
 
 		&.fail {
-			counter-increment: failures;
+			counter-increment: fail;
+		}
+
+		&.pass {
+			counter-increment: pass;
 		}
 	}
 

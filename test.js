@@ -4,32 +4,24 @@ if (typeof self["test_" + page] == "function") {
 	self["test_" + page]();
 }
 
+if (page !== "index") {
+	let h1 = $("body > h1");
+	if (h1) {
+		$.create("a", {
+			className: "home",
+			textContent: "Home",
+			href: "index.html",
+			target: "_top",
+			inside: h1
+		});
+	}
+}
+
 self.Test = {
 	pseudo: (element, pseudo) => {
 		var content = getComputedStyle(element, ":" + pseudo).content;
 		return content.replace(/^"|"$/g, "");
 	},
-
-	// Get content of a td for reftest
-	// content: function(node) {
-	// 	var content = Test.pseudo(node, "before");
-	// 	var treeWalker = document.createTreeWalker(node, NodeFilter.SHOW_TEXT | NodeFilter.SHOW_ELEMENT);
-	//
-	// 	while (treeWalker.nextNode()) {
-	// 		let node = treeWalker.currentNode;
-	//
-	// 		if (node.nodeType == 3) {
-	// 			content += node.textContent;
-	// 		}
-	// 		else if (node.matches("input, textarea")) {
-	// 			content += node.value;
-	// 		}
-	// 	}
-	//
-	// 	content += Test.pseudo(node, "after");
-	//
-	// 	return content.replace(/\s+/g, " ").trim();
-	// },
 
 	content: function(node) {
 		var ret = "";
