@@ -13,21 +13,6 @@ body {
   body > h1 {
     font: 300 350%/1 Helvetica Neue, Helvetica, sans-serif;
     color: orange; }
-    body > h1 .home {
-      display: inline-block;
-      vertical-align: middle;
-      padding: .3em .4em;
-      border-radius: .3em;
-      margin-left: .5em;
-      background: #8cbfd9;
-      color: white;
-      text-transform: uppercase;
-      font-size: 40%;
-      font-weight: bold;
-      letter-spacing: -.03em; }
-      body > h1 .home:hover {
-        background: var(--dark);
-        text-decoration: none; }
 
 a {
   color: var(--dark); }
@@ -54,15 +39,14 @@ h1 {
 
 html:not(.index) body {
   max-width: 50em;
-  counter-reset: fail pass; }
+  counter-reset: failures; }
 
 html:not(.index) body::after {
-  content: counter(fail) " failing \a" counter(pass) " passing";
+  content: counter(failures) " failure(s)";
   position: fixed;
   top: .6rem;
   left: 1rem;
-  white-space: pre-line;
-  font: bold 180% Helvetica Neue, sans-serif;
+  font: bold 200% Helvetica Neue, sans-serif;
   color: #b00; }
 
 html:not(.index) body > section {
@@ -174,9 +158,7 @@ table.reftest {
     margin: .4em 0;
     background: var(--color); }
     table.reftest tr.fail {
-      counter-increment: fail; }
-    table.reftest tr.pass {
-      counter-increment: pass; }
+      counter-increment: failures; }
   table.reftest tr[title] {
     position: relative; }
     table.reftest tr[title] td {
