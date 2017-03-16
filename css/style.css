@@ -226,7 +226,7 @@ body > section > div {
   .index body > section ul {
     padding: 0;
     list-style: none; }
-  .index body > section a {
+  .index body > section li a {
     font-weight: bold;
     font: 600 150%/1.4 Helvetica Neue, sans-serif; }
 
