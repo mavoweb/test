@@ -235,7 +235,7 @@ var _ = self.Mavo = $.Class({
 		this.autoEdit = this.element.classList.contains("mv-autoedit");
 
 		// Should we save automatically?
-		this.autoSave = this.element.classList.contains("mv-autosave");
+		this.autoSave = this.element.hasAttribute("mv-autosave");
 
 		this.element.setAttribute("typeof", "");
 
@@ -268,8 +268,8 @@ var _ = self.Mavo = $.Class({
 			})
 		};
 
-		this.ui.bar.classList.toggle("mv-compact", this.ui.bar.offsetWidth < 400);
-		this.ui.bar.classList.toggle("mv-tiny", this.ui.bar.offsetWidth < 250);
+		this.ui.bar.classList.toggle("mv-compact", this.ui.bar.parentNode.offsetWidth < 400);
+		this.ui.bar.classList.toggle("mv-tiny", this.ui.bar.parentNode.offsetWidth < 250);
 
 		this.ui.status = $(".mv-status", this.ui.bar) || $.create("span", {
 			className: "mv-status",
@@ -493,18 +493,13 @@ var _ = self.Mavo = $.Class({
 		}
 
 		this.permissions.can("save", () => {
-			this.ui.save = $.create("button", {
-				className: "mv-save",
-				textContent: "Save",
-				title: "Save",
-				inside: this.ui.bar
-			});
-
 			if (this.autoSave) {
+				var delay = (this.element.getAttribute("mv-autosave") || 3) * 1000;
+
 				this.element.addEventListener("mavo:load.mavo:autosave", evt => {
 					var debouncedSave = _.debounce(() => {
 						this.save();
-					}, 3000);
+					}, delay);
 
 					var callback = evt => {
 						if (evt.node.saved) {
@@ -521,26 +516,26 @@ var _ = self.Mavo = $.Class({
 					});
 				});
 			}
-			else {
-				// Revert is pointless if autosaving, there's not enough time between saves to click it
-				this.ui.revert = $.create("button", {
-					className: "mv-revert",
-					textContent: "Revert",
-					title: "Revert",
-					disabled: true,
+
+			if (!this.autoSave || delay > 0) {
+				// If throttling is disabled, the Save button is pointless
+				this.ui.save = $.create("button", {
+					className: "mv-save",
+					textContent: "Save",
+					title: "Save",
 					inside: this.ui.bar
 				});
 			}
 
-			$.events([this.ui.save, this.ui.revert], {
+			$.events(this.ui.save, {
 				"mouseenter focus": e => {
 					this.element.classList.add("mv-highlight-unsaved");
 				},
 				"mouseleave blur": e => this.element.classList.remove("mv-highlight-unsaved")
 			});
 		}, () => {
-			$.remove([this.ui.save, this.ui.revert]);
-			this.ui.save = this.ui.revert = null;
+			$.remove(this.ui.save);
+			this.ui.save = null;
 			this.element.removeEventListener(".mavo:autosave");
 		});
 
@@ -548,11 +543,6 @@ var _ = self.Mavo = $.Class({
 			".mv-save": evt => {
 				if (this.permissions.save) {
 					this.save();
-				}
-			},
-			".mv-revert": evt => {
-				if (this.permissions.save) {
-					this.revert();
 				}
 			},
 			".mv-edit": evt => {
@@ -648,8 +638,8 @@ var _ = self.Mavo = $.Class({
 
 		$.events(this.element, "mouseenter.mavo:edit mouseleave.mavo:edit", evt => {
 			if (evt.target.matches(".mv-item-controls *")) {
-				var item = evt.target.closest(_.selectors.multiple);
-				item.classList.toggle("mv-highlight", evt.type == "mouseenter");
+				var item = Mavo.data(evt.target.closest(".mv-item-controls"), "item");
+				item.element.classList.toggle("mv-highlight", evt.type == "mouseenter");
 			}
 
 			if (evt.target.matches(_.selectors.multiple)) {
@@ -787,10 +777,6 @@ var _ = self.Mavo = $.Class({
 		});
 	},
 
-	revert: function() {
-		this.root.revert();
-	},
-
 	walk: function(callback) {
 		return this.root.walk(callback);
 	},
@@ -817,16 +803,6 @@ var _ = self.Mavo = $.Class({
 
 		unsavedChanges: function(value) {
 			this.element.classList.toggle("mv-unsaved-changes", value);
-
-			if (this.ui) {
-				if (this.ui.save) {
-					this.ui.save.classList.toggle("mv-unsaved-changes", value);
-				}
-
-				if (this.ui.revert) {
-					this.ui.revert.disabled = !value;
-				}
-			}
 		},
 
 		needsEdit: function(value) {
@@ -861,14 +837,15 @@ var _ = self.Mavo = $.Class({
 			_.hooks.add(o.hooks);
 
 			for (let Class in o.extend) {
-				$.Class(Mavo[Class], o.extend[Class]);
+				let def = Class == "Mavo"? _ : _[Class];
+				$.Class(def, o.extend[Class]);
 			}
 		},
 
 		hooks: new $.Hooks(),
 
 		attributes: [
-			"mv-app", "mv-storage", "mv-source", "mv-init", "mv-path",
+			"mv-app", "mv-storage", "mv-source", "mv-init", "mv-path", "mv-format",
 			"mv-attribute", "mv-default", "mv-mode", "mv-edit", "mv-permisssions"
 		]
 	}
@@ -1051,6 +1028,11 @@ var _ = $.extend(Mavo, {
 
 	// Credit: https://remysharp.com/2010/07/21/throttling-function-calls
 	debounce: function (fn, delay) {
+		if (!delay) {
+			// No throttling
+			return fn;
+		}
+		
 		var timer = null, code;
 
 		return function () {
@@ -1623,7 +1605,7 @@ var base = _.Base = $.Class({
 var json = _.JSON = $.Class({
 	extends: _.Base,
 	static: {
-		parse: async response => JSON.parse(response),
+		parse: async serialized => serialized? JSON.parse(serialized) : null,
 		stringify: async data => Mavo.toJSON(data),
 		extensions: [".json", ".jsonld"]
 	}
@@ -1643,8 +1625,8 @@ var text = _.Text = $.Class({
 
 	static: {
 		extensions: [".txt", ".md", ".markdown"],
-		parse: function(content, format) {
-			return {[format? format.property : "content"]: content};
+		parse: function(serialized, format) {
+			return {[format? format.property : "content"]: serialized};
 		},
 		stringify: (data, format) => data[format? format.property : "content"]
 	}
@@ -1657,10 +1639,10 @@ var csv = _.CSV = $.Class({
 		this.options = $.extend({}, _.CSV.defaultOptions);
 	},
 
-	parse: async function(content) {
+	parse: async function(serialized) {
 		await csv.ready();
-		
-		var data = Papa.parse(content, csv.defaultOptions);
+
+		var data = Papa.parse(serialized, csv.defaultOptions);
 
 		// Get delimiter & linebreak for serialization
 		this.options.delimiter = data.meta.delimiter;
@@ -1767,17 +1749,11 @@ var _ = Mavo.Node = $.Class({
 
 		this.mavo = mavo;
 		this.group = this.parentGroup = env.options.group;
-		this.inPath = [];
 
-		if (!this.fromTemplate("property", "type", "inPath")) {
+		if (!this.fromTemplate("property", "type")) {
 			this.property = _.getProperty(element);
 			this.type = Mavo.Group.normalize(element);
 			this.store = this.element.getAttribute("mv-storage"); // TODO rename to storage
-
-			// Are were only rendering and editing a subset of the data?
-			if (this.nodeType != "Collection") {
-				this.inPath = (this.element.getAttribute("mv-path") || "").split("/").filter(p => p.length);
-			}
 		}
 
 		this.modes = this.element.getAttribute("mv-mode");
@@ -1938,7 +1914,7 @@ var _ = Mavo.Node = $.Class({
 		}
 	},
 
-	propagated: ["save", "revert", "destroy"],
+	propagated: ["save", "destroy"],
 
 	toJSON: Mavo.prototype.toJSON,
 
@@ -2026,6 +2002,15 @@ var _ = Mavo.Node = $.Class({
 	lazy: {
 		closestCollection: function() {
 			return this.getClosestCollection();
+		},
+
+		// Are were only rendering and editing a subset of the data?
+		inPath: function() {
+			if (this.nodeType != "Collection") {
+				return (this.element.getAttribute("mv-path") || "").split("/").filter(p => p.length);
+			}
+
+			return [];
 		}
 	},
 
@@ -2507,38 +2492,6 @@ var _ = Mavo.Primitive = $.Class({
 			}
 		});
 
-		if (this.collection && !this.attribute) {
-			// Collection of primitives, deal with setting textContent etc without the UI interfering.
-			var swapUI = callback => {
-				var ret;
-
-				Mavo.Observer.sneak(this.observer, () => {
-					var ui = $.remove($(".mv-item-controls", this.element));
-
-					ret = callback();
-
-					$.inside(ui, this.element);
-				});
-
-				return ret;
-			};
-
-			// Intercept certain properties so that any Mavo UI inside this primitive will not be destroyed
-			["textContent", "innerHTML"].forEach(property => {
-				var descriptor = Object.getOwnPropertyDescriptor(Node.prototype, property);
-
-				Object.defineProperty(this.element, property, {
-					get: function() {
-						return swapUI(() => descriptor.get.call(this));
-					},
-
-					set: function(value) {
-						swapUI(() => descriptor.set.call(this, value));
-					}
-				});
-			});
-		}
-
 		this.postInit();
 
 		Mavo.hooks.run("primitive-init-end", this);
@@ -2623,16 +2576,6 @@ var _ = Mavo.Primitive = $.Class({
 	save: function() {
 		this.savedValue = this.value;
 		this.unsavedChanges = false;
-	},
-
-	revert: function() {
-		if (this.unsavedChanges && this.savedValue !== undefined) {
-			// FIXME if we have a collection of properties (not groups), this will cause
-			// cancel to not remove new unsaved items
-			// This should be fixed by handling this on the collection level.
-			this.value = this.savedValue;
-			this.unsavedChanges = false;
-		}
 	},
 
 	// Called only the first time this primitive is edited
@@ -3846,11 +3789,16 @@ var _ = Mavo.Collection = $.Class({
 	editItem: function(item) {
 		if (!item.itemControls) {
 			item.itemControls = $$(".mv-item-controls", item.element)
-								   .filter(el => el.closest(Mavo.selectors.multiple) == item.element)[0];
+								   .filter(el => {
+									   // Remove item controls meant for other collections
+									   return el.closest(Mavo.selectors.multiple) == item.element && !Mavo.data(el, "item");
+								   })[0];
 
 			item.itemControls = item.itemControls || $.create({
 				className: "mv-item-controls mv-ui"
 			});
+
+			Mavo.data(item.itemControls, "item", item);
 
 			$.set(item.itemControls, {
 				contents: [
@@ -3905,7 +3853,13 @@ var _ = Mavo.Collection = $.Class({
 				item.itemControlsComment.parentNode.replaceChild(item.itemControls, item.itemControlsComment);
 			}
 			else {
-				item.element.appendChild(item.itemControls);
+				if (item instanceof Mavo.Primitive && !item.attribute) {
+					item.itemControls.classList.add("mv-adjacent");
+					$.after(item.itemControls, item.element);
+				}
+				else {
+					item.element.appendChild(item.itemControls);
+				}
 			}
 		}
 
@@ -3993,24 +3947,6 @@ var _ = Mavo.Collection = $.Class({
 	},
 
 	propagated: ["save"],
-
-	revert: function() {
-		for (let item of this.children) {
-			// Delete added items
-			if (item.unsavedChanges) {
-				this.delete(item, true);
-			}
-			else {
-				// Bring back deleted items
-				if (item.deleted) {
-					item.deleted = false;
-				}
-
-				// Revert all properties
-				item.revert();
-			}
-		}
-	},
 
 	dataRender: function(data) {
 		this.unhandled = {before: [], after: []};
@@ -5592,792 +5528,6 @@ function numbers(array, args) {
 
 })();
 
-/*
-Copyright (c) 2009 James Padolsey.  All rights reserved.
-
-Redistribution and use in source and binary forms, with or without
-modification, are permitted provided that the following conditions
-are met:
-
-   1. Redistributions of source code must retain the above copyright
-	  notice, this list of conditions and the following disclaimer.
-
-   2. Redistributions in binary form must reproduce the above copyright
-	  notice, this list of conditions and the following disclaimer in the
-	  documentation and/or other materials provided with the distribution.
-
-THIS SOFTWARE IS PROVIDED BY James Padolsey ``AS IS"" AND
-ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
-IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
-ARE DISCLAIMED. IN NO EVENT SHALL James Padolsey OR CONTRIBUTORS BE LIABLE
-FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
-DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
-SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
-CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT
-LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY
-OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
-SUCH DAMAGE.
-
-The views and conclusions contained in the software and documentation are
-those of the authors and should not be interpreted as representing official
-policies, either expressed or implied, of James Padolsey.
-
- AUTHOR James Padolsey (http://james.padolsey.com)
- VERSION 1.03.0
- UPDATED 29-10-2011
- CONTRIBUTORS
-	David Waller
-    Benjamin Drucker
-
-*/
-
-var prettyPrint = (function() {
-
-	/* These "util" functions are not part of the core
-	   functionality but are  all necessary - mostly DOM helpers */
-
-	var util = {
-
-		txt: function(t) {
-			/* Create text node */
-			t = t + "";
-			return document.createTextNode(t);
-		},
-
-		row: function(cells, type, cellType) {
-
-			/* Creates new <tr> */
-			cellType = cellType || "td";
-
-			/* colSpan is calculated by length of null items in array */
-			var colSpan = util.count(cells, null) + 1,
-				tr = $.create("tr"), td,
-				attrs = {
-					colSpan: colSpan
-				};
-
-			$$(cells).forEach(function(cell) {
-				if (cell === null) {
-					return;
-				}
-
-				/* Default cell type is <td> */
-				td = $.create(cellType, attrs);
-
-				if (cell.nodeType) {
-					/* IsDomElement */
-					td.appendChild(cell);
-				}
-				else {
-					/* IsString */
-					td.innerHTML = util.shorten(cell.toString());
-				}
-
-				tr.appendChild(td);
-			});
-
-			return tr;
-		},
-
-		hRow: function(cells, type) {
-			/* Return new <th> */
-			return util.row(cells, type, "th");
-		},
-
-		table: function(headings, type) {
-
-			headings = headings || [];
-
-			/* Creates new table: */
-			var tbl = $.create("table");
-			var thead = $.create("thead");
-			var tbody = $.create("tbody");
-
-			tbl.classList.add(type);
-
-			if (headings.length) {
-				tbl.appendChild(thead);
-				thead.appendChild( util.hRow(headings, type) );
-			}
-
-			tbl.appendChild(tbody);
-
-			return {
-				/* Facade for dealing with table/tbody
-				   Actual table node is this.node: */
-				node: tbl,
-				tbody: tbody,
-				thead: thead,
-				appendChild: function(node) {
-					this.tbody.appendChild(node);
-				},
-				addRow: function(cells, _type, cellType) {
-					this.appendChild(util.row(cells, (_type || type), cellType));
-					return this;
-				}
-			};
-		},
-
-		shorten: function(str) {
-			var max = 40;
-			str = str.replace(/^\s\s*|\s\s*$|\n/g, "");
-			return str.length > max ? (str.substring(0, max-1) + "...") : str;
-		},
-
-		htmlentities: function(str) {
-			return str.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
-		},
-
-		count: function(arr, item) {
-			var count = 0;
-			for (var i = 0, l = arr.length; i< l; i++) {
-				if (arr[i] === item) {
-					count++;
-				}
-			}
-			return count;
-		},
-
-		thead: function(tbl) {
-			return tbl.getElementsByTagName("thead")[0];
-		},
-
-		within: function(ref) {
-			/* Check existence of a val within an object
-			   RETURNS KEY */
-			return {
-				is: function(o) {
-					for (var i in ref) {
-						if (ref[i] === o) {
-							return i;
-						}
-					}
-					return "";
-				}
-			};
-		},
-
-		common: {
-			circRef: function(obj, key, settings) {
-				return util.expander(
-					"[POINTS BACK TO <strong>" + (key) + "</strong>]",
-					"Click to show this item anyway",
-					function() {
-						this.parentNode.appendChild(prettyPrintThis(obj, {maxDepth:1}));
-					}
-				);
-			},
-			depthReached: function(obj, settings) {
-				return util.expander(
-					"[DEPTH REACHED]",
-					"Click to show this item anyway",
-					function() {
-						try {
-							this.parentNode.appendChild( prettyPrintThis(obj, {maxDepth:1}) );
-						}
-						catch (e) {
-							this.parentNode.appendChild(
-								util.table(["ERROR OCCURED DURING OBJECT RETRIEVAL"], "error").addRow([e.message]).node
-							);
-						}
-					}
-				);
-			}
-		},
-
-		expander: function(text, title, clickFn) {
-			return $.create("a", {
-				innerHTML:  util.shorten(text) + ' <b style="visibility:hidden;">[+]</b>',
-				title: title,
-				onmouseover: function() {
-					this.getElementsByTagName("b")[0].style.visibility = "visible";
-				},
-				onmouseout: function() {
-					this.getElementsByTagName("b")[0].style.visibility = "hidden";
-				},
-				onclick: function() {
-					this.style.display = "none";
-					clickFn.call(this);
-					return false;
-				},
-				style: {
-					cursor: "pointer"
-				}
-			});
-		}
-	};
-
-	// Main..
-	var prettyPrintThis = function(obj, options) {
-
-		 /*
-		 *	  obj :: Object to be printed
-		 *  options :: Options (merged with config)
-		 */
-
-		options = options || {};
-
-		var settings = $.extend( {}, prettyPrintThis.config, options ),
-			container = $.create("div"),
-			config = prettyPrintThis.config,
-			currentDepth = 0,
-			stack = {},
-			hasRunOnce = false;
-
-		/* Expose per-call settings.
-		   Note: "config" is overwritten (where necessary) by options/"settings"
-		   So, if you need to access/change *DEFAULT* settings then go via ".config" */
-		prettyPrintThis.settings = settings;
-
-		var typeDealer = {
-			string : function(item) {
-				return util.txt('"' + util.shorten(item.replace(/"/g, '\\"')) + '"');
-			},
-
-			object : function(obj, depth, key) {
-
-				/* Checking depth + circular refs */
-				/* Note, check for circular refs before depth; just makes more sense */
-				var stackKey = util.within(stack).is(obj);
-
-				if ( stackKey ) {
-					return util.common.circRef(obj, stackKey, settings);
-				}
-
-				stack[key||"TOP"] = obj;
-
-				if (depth === settings.maxDepth) {
-					return util.common.depthReached(obj, settings);
-				}
-
-				var table = util.table(["Group", null], "object"),
-					isEmpty = true;
-
-				for (var i in obj) {
-					if (!obj.hasOwnProperty || obj.hasOwnProperty(i)) {
-						var item = obj[i],
-							type = $.type(item);
-						isEmpty = false;
-						try {
-							table.addRow([i, typeDealer[ type ](item, depth+1, i)], type);
-						}
-						catch (e) {
-							/* Security errors are thrown on certain Window/DOM properties */
-							if (window.console && window.console.log) {
-								console.log(e.message);
-							}
-						}
-					}
-				}
-
-				var ret = (settings.expanded || hasRunOnce) ? table.node : util.expander(
-					JSON.stringify(obj),
-					"Click to show more",
-					function() {
-						this.parentNode.appendChild(table.node);
-					}
-				);
-
-				hasRunOnce = true;
-
-				return ret;
-
-			},
-
-			array : function(arr, depth, key, jquery) {
-
-				/* Checking depth + circular refs */
-				/* Note, check for circular refs before depth; just makes more sense */
-				var stackKey = util.within(stack).is(arr);
-
-				if ( stackKey ) {
-					return util.common.circRef(arr, stackKey);
-				}
-
-				stack[key||"TOP"] = arr;
-
-				if (depth === settings.maxDepth) {
-					return util.common.depthReached(arr);
-				}
-
-				/* Accepts a table and modifies it */
-				var table = util.table(["List (" + arr.length + " items)", null], "list");
-				var isEmpty = true;
-                var count = 0;
-
-				$$(arr).forEach(function (item, i) {
-                    if (settings.maxArray >= 0 && ++count > settings.maxArray) {
-                        table.addRow([
-                            i + ".." + (arr.length-1),
-                            typeDealer[ $.type(item) ]("...", depth+1, i)
-                        ]);
-                        return false;
-                    }
-					isEmpty = false;
-					table.addRow([i, typeDealer[ $.type(item) ](item, depth+1, i)]);
-				});
-
-				return settings.expanded ? table.node : util.expander(
-					JSON.stringify(arr),
-					"Click to show more",
-					function() {
-						this.parentNode.appendChild(table.node);
-					}
-				);
-
-			},
-
-			"date" : function(date) {
-
-				var miniTable = util.table(["Date", null], "date"),
-					sDate = date.toString().split(/\s/);
-
-				/* TODO: Make this work well in IE! */
-				miniTable
-					.addRow(["Time", sDate[4]])
-					.addRow(["Date", sDate.slice(0, 4).join("-")]);
-
-				return settings.expanded ? miniTable.node : util.expander(
-					"Date (timestamp): " + (+date),
-					"Click to see a little more info about this date",
-					function() {
-						this.parentNode.appendChild(miniTable.node);
-					}
-				);
-
-			}
-		};
-
-		typeDealer.number =
-		typeDealer.boolean =
-		typeDealer.undefined =
-		typeDealer.null =
-		typeDealer.default = function(value) {
-			return util.txt(value);
-		},
-
-		container.appendChild(typeDealer[$.type(obj)](obj, currentDepth));
-
-		return container;
-
-	};
-
-	/* Configuration */
-
-	/* All items can be overwridden by passing an
-	   "options" object when calling prettyPrint */
-	prettyPrintThis.config = {
-		/* Try setting this to false to save space */
-		expanded: true,
-
-		maxDepth: 10,
-		maxArray: -1  // default is unlimited
-	};
-
-	return prettyPrintThis;
-
-})();
-
-(function($, $$) {
-
-var _ = Mavo.Debug = {
-	friendlyError: (e, expr) => {
-		var type = e.constructor.name.replace(/Error$/, "").toLowerCase();
-		var message = e.message;
-
-		// Friendlify common errors
-
-		// Non-developers don't know wtf a token is.
-		message = message.replace(/\s+token\s+/g, " ");
-
-		if (message == "Unexpected }" && !/[{}]/.test(expr)) {
-			message = "Missing a )";
-		}
-		else if (message === "Unexpected )") {
-			message = "Missing a (";
-		}
-		else if (message === "Invalid left-hand side in assignment") {
-			message = "Invalid assignment. Maybe you typed = instead of == ?";
-		}
-		else if (message == "Unexpected ILLEGAL") {
-			message = "There is an invalid character somewhere.";
-		}
-
-		return `<span class="type">Oh noes, a ${type} error!</span> ${message}`;
-	},
-
-	elementLabel: function(element, attribute) {
-		var ret = element.nodeName.toLowerCase();
-
-		if (element.hasAttribute("property")) {
-			ret += `[property=${element.getAttribute("property")}]`;
-		}
-		else if (element.id) {
-			ret += `#${element.id}`;
-		}
-		else if (element.classList.length) {
-			ret += $$(element.classList).map(c => `.${c}`).join("");
-		}
-
-		if (attribute) {
-			ret += `@${attribute}`;
-		}
-
-		return ret;
-	},
-
-	printValue: function(obj) {
-		var ret;
-
-		if (typeof obj !== "object" || obj === null) {
-			return typeof obj == "string"? `"${obj}"` : obj + "";
-		}
-
-		if (Array.isArray(obj)) {
-			if (obj.length > 0) {
-				if (typeof obj[0] === "object") {
-					return `List: ${obj.length} group(s)`;
-				}
-				else {
-					return "List: " + obj.map(_.printValue).join(", ");
-				}
-			}
-			else {
-				return "List: (Empty)";
-			}
-		}
-
-		if (obj.constructor === Object) {
-			return `Group with ${Object.keys(obj).length} properties`;
-		}
-
-		if (obj instanceof Mavo.Primitive) {
-			return _.printValue(obj.value);
-		}
-		else if (obj instanceof Mavo.Collection) {
-			if (obj.children.length > 0) {
-				if (obj.children[0] instanceof Mavo.Group) {
-					return `List: ${obj.children.length} group(s)`;
-				}
-				else {
-					return "List: " + obj.children.map(_.printValue).join(", ");
-				}
-			}
-			else {
-				return _.printValue([]);
-			}
-		}
-		else if (obj instanceof Mavo.Group) {
-			// Group
-			return `Group with ${Object.keys(obj).length} properties`;
-		}
-	},
-
-	timed: function(id, callback) {
-		return function() {
-			console.time(id);
-			callback.apply(this, arguments);
-			console.timeEnd(id);
-		};
-	},
-
-	time: function callee(objName, name) {
-		var obj = eval(objName);
-		console.log(`Benchmarking ${objName}.${name}(). Run console.log(${objName}.${name}.timeTaken, ${objName}.${name}.calls) at any time to see stats.`);
-		var callback = obj[name];
-
-		obj[name] = function callee() {
-			var before = performance.now();
-			var ret = callback.apply(this, arguments);
-			callee.timeTaken += performance.now() - before;
-			obj[name].calls++;
-			return ret;
-		};
-
-		obj[name].timeTaken = obj[name].calls = 0;
-
-		callee.all = callee.all || [];
-		callee.all.push({obj, objName, name});
-
-		return obj[name];
-	},
-
-	times: function() {
-		if (!_.time.all) {
-			return;
-		}
-
-		console.table(_.time.all.map(o => {
-			return {
-				"Function": `${o.objName}.${o.name}`,
-				"Time (ms)": o.obj[o.name].timeTaken,
-				"Calls": o.obj[o.name].calls
-			};
-		}));
-	},
-
-	reservedWords: "as|async|await|break|case|catch|class|const|continue|debugger|default|delete|do|else|enum|export|extends|finally|for|from|function|get|if|implements|import|in|instanceof|interface|let|new|null|of|package|private|protected|public|return|set|static|super|switch|this|throw|try|typeof|var|void|while|with|yield".split("|")
-};
-
-Mavo.prototype.render = _.timed("render", Mavo.prototype.render);
-
-Mavo.selectors.debug = ".mv-debug";
-
-var selector = ", .mv-debuginfo";
-
-Stretchy.selectors.filter += selector;
-
-// Add element to show saved data
-Mavo.hooks.add("init-tree-after", function() {
-	if (this.root.debug) {
-		this.element.classList.add("mv-debug-saving");
-	}
-
-	if (this.store && this.element.classList.contains("mv-debug-saving")) {
-		var element;
-
-		var details = $.create("details", {
-			className: "mv-debug-storage",
-			contents: [
-				{tag: "Summary", textContent: "Saved data"},
-				element = $.create("pre", {id: this.id + "-debug-storage"})
-			],
-			after: this.element
-		});
-
-		this.element.addEventListener("mavo:save", evt => {
-			element.innerHTML = "";
-
-			element.appendChild(prettyPrint(evt.data));
-		});
-	}
-});
-
-Mavo.hooks.add("render-start", function({data}) {
-	if (this.backend && this.element.classList.contains("mv-debug-saving")) {
-		var element = $(`#${this.id}-debug-storage`);
-
-		if (element) {
-			element.innerHTML = "";
-
-			if (data) {
-				element.appendChild(prettyPrint(data));
-			}
-		}
-	}
-});
-
-Mavo.hooks.add("group-init-start", function() {
-	this.debug = this.debug || this.walkUp(group => {
-		if (group.debug) {
-			return true;
-		}
-	}) || Mavo.Functions.urlOption("debug") !== null;
-
-	if (!this.debug && this.element.closest(Mavo.selectors.debug)) {
-		this.debug = true;
-	}
-
-	if (this.debug) {
-		this.debug = $.create("tbody", {
-			inside: $.create("table", {
-				innerHTML: `<thead><tr>
-					<th></th>
-					<th>Expression</th>
-					<th>Value</th>
-					<th>Element</th>
-				</tr></thead>`,
-				style: {
-					display: "none"
-				},
-				inside: $.create("details", {
-					className: "mv-ui mv-debuginfo",
-					inside: this.element,
-					contents: $.create("summary", {
-						textContent: "Debug"
-					}),
-					"mv-expressions": "none"
-				})
-			})
-		});
-	}
-}, true);
-
-Mavo.hooks.add("node-init-end", function() {
-	if (this.collection) {
-		this.debug = this.collection.debug;
-	}
-});
-
-Mavo.hooks.add("expression-eval-beforeeval", function() {
-	if (this.debug) {
-		this.debug.classList.remove("mv-error");
-	}
-});
-
-Mavo.hooks.add("expression-eval-error", function(env) {
-	if (this.debug) {
-		this.debug.innerHTML = _.friendlyError(env.exception, env.expression);
-		this.debug.classList.add("mv-error");
-	}
-});
-
-Mavo.Group.prototype.debugRow = function({element, attribute = null, tds = []}) {
-	if (!this.debug) {
-		return;
-	}
-
-	this.debug.parentNode.style.display = "";
-
-	var type = tds[0];
-
-	tds[0] = $.create("td", {
-		title: type
-	});
-
-	if (!tds[3]) {
-		var elementLabel = _.elementLabel(element, attribute);
-
-		tds[3] = $.create("td", {
-			textContent: elementLabel,
-			title: elementLabel,
-			events: {
-				"mouseenter mouseleave": evt => {
-					element.classList.toggle("mv-highlight", evt.type === "mouseenter");
-				},
-				"click": evt => {
-					element.scrollIntoView({behavior: "smooth"});
-				}
-			}
-		});
-	}
-
-	tds = tds.map(td => {
-		if (!(td instanceof Node)) {
-			return $.create("td", typeof td == "object"? td : { textContent: td });
-		}
-
-		return td;
-	});
-
-	if (type == "Warning") {
-		tds[1].setAttribute("colspan", 2);
-	}
-
-	var tr = $.create("tr", {
-		className: "mv-debug-" + type.toLowerCase(),
-		contents: tds,
-		inside: this.debug
-	});
-};
-
-Mavo.hooks.add("domexpression-init-end", function() {
-	if (this.mavo.debug) {
-		this.debug = {};
-
-		this.parsed.forEach(expr => {
-			if (expr instanceof Mavo.Expression && !this.element.matches(".mv-debuginfo *")) {
-				this.group.debugRow({
-					element: this.element,
-					attribute: this.attribute,
-					tds: ["Expression", {
-							tag: "td",
-							contents: {
-								tag: "textarea",
-								value: expr.expression,
-								events: {
-									input: evt => {
-										expr.expression = evt.target.value;
-										expr.debug = evt.target.parentNode.nextElementSibling;
-										this.update(this.data);
-									}
-								},
-								once: {
-									focus: evt => Stretchy.resize(evt.target)
-								}
-							}
-						},
-						expr.debug = $.create("td")
-					]
-				});
-			}
-		});
-	}
-});
-
-Mavo.hooks.add("group-init-end", function() {
-	// TODO make properties update, collapse duplicate expressions
-	if (this.debug instanceof Node) {
-		// We have a debug table, add stuff to it
-
-		var selector = Mavo.selectors.andNot(Mavo.selectors.multiple, Mavo.selectors.property);
-		$$(selector, this.element).forEach(element => {
-			this.debugRow({
-				element,
-				tds: ["Warning", "mv-multiple without a property attribute"]
-			});
-		});
-
-		this.propagate(obj => {
-			var value = _.printValue(obj);
-
-			this.debugRow({
-				element: obj.element,
-				tds: ["Property", obj.property, obj.value]
-			});
-
-			if (_.reservedWords.indexOf(obj.property) > -1) {
-				this.debugRow({
-					element: obj.element,
-					tds: ["Warning", `You can’t use "${obj.property}" as a property name, it’s a reserved word.`]
-				});
-			}
-			else if (/^\d|[\W$]/.test(obj.property)) {
-				this.debugRow({
-					element: obj.element,
-					tds: ["Warning", {
-						textContent: `You can’t use "${obj.property}" as a property name.`,
-						title: "Property names can only contain letters, numbers and underscores and cannot start with a number."
-					}]
-				});
-			}
-		});
-
-		this.group.element.addEventListener("mavo:datachange", evt => {
-			$$("tr.debug-property", this.debug).forEach(tr => {
-				var property = tr.cells[1].textContent;
-				var value = _.printValue(this.children[property]);
-
-				if (tr.cells[2]) {
-					var td = tr.cells[2];
-					td.textContent = td.title = value;
-				}
-			});
-		});
-	}
-});
-
-Mavo.hooks.add("domexpression-update-beforeeval", function(env) {
-	if (this.debug) {
-		env.td = env.expr.debug;
-
-		if (env.td) {
-			env.td.classList.remove("mv-error");
-		}
-	}
-});
-
-Mavo.hooks.add("domexpression-update-aftereval", function(env) {
-	if (env.td && !env.td.classList.contains("mv-error")) {
-		var value = _.printValue(env.value);
-		env.td.textContent = env.td.title = value;
-	}
-});
-
-//Mavo.Debug.time("Mavo.Expressions.prototype", "update");
-
-})(Bliss, Bliss.$);
-
 (function($) {
 
 if (!self.Mavo) {
@@ -6572,7 +5722,7 @@ var _ = Mavo.Backend.register($.Class({
 
 	/**
 	 * Saves a file to the backend.
-	 * @param {String} file - Serialized data
+	 * @param {String} serialized - Serialized data
 	 * @param {String} path - Optional file path
 	 * @return {Promise} A promise that resolves when the file is saved.
 	 */

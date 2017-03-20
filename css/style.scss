@@ -78,14 +78,25 @@ html:not(.index) {
 		counter-reset: fail pass;
 	}
 
-	body::after {
-		content: counter(fail) " failing \a" counter(pass) " passing";
+	body::after,
+	body > section:last-of-type::after {
 		position: fixed;
-		top: .6rem;
 		left: 1rem;
 		white-space: pre-line;
 		font: bold 180% Helvetica Neue, sans-serif;
+	}
+
+	body::after {
+		content: counter(fail) " failing";
+		top: .6rem;
 		color: #b00;
+	}
+
+	body > section:last-of-type::after {
+		content: counter(pass) " passing";
+		top: 3rem;
+		color: hsl(80, 50%, 45%);
+		font-size: 140%;
 	}
 
 	body > section {
@@ -246,14 +257,6 @@ table.reftest {
 	tr {
 		margin: .4em 0;
 		background: var(--color);
-
-		&.fail {
-			counter-increment: fail;
-		}
-
-		&.pass {
-			counter-increment: pass;
-		}
 	}
 
 	tr[title] {
@@ -330,4 +333,12 @@ body > section > div {
 		flex: 1;
 		border: 0;
 	}
+}
+
+.fail {
+	counter-increment: fail;
+}
+
+.pass {
+	counter-increment: pass;
 }

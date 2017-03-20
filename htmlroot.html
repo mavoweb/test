@@ -8,14 +8,33 @@
 </head>
 <body>
 
-<h1 property="heading">&lt;html> root tests</h1>
+<h1>
+	<span property="heading">&lt;html> root tests</span>
+</h1>
 
-<ul>
-	<li property="someCollectionItem" mv-multiple>
-		<span property="prop1">Some property</span>
-		<span property="prop2">Some other property</span>
-	</li>
-</ul>
+<section>
+	<table class="reftest">
+		<tr>
+			<td><span property="prop1">Some property</span></td>
+			<td>[prop1]</td>
+		</tr>
+		<tr>
+			<td><span property="prop2">Some other property</span></td>
+			<td>[prop2]</td>
+		</tr>
+		<tr>
+			<td>
+				<div property="someCollectionItem" mv-multiple>
+					<span property="prop3">prop3</span>
+					<span property="prop4">prop4</span>
+				</div>
+			</td>
+			<td>
+				[prop3] [prop4]
+			</td>
+		</tr>
+	</table>
+</section>
 
 <script src="mavo/mavo.js"></script>
 <script src="test.js"></script>
