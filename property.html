@@ -28,33 +28,73 @@
 }</script>
 
 <section mv-app="exposed">
-	<h1>Form controls</h1>
+	<h1>Form values</h1>
 
-	<div>
-		<input property="name" value="Lea Verou"/>
-		Name: [name]
-	</div>
+	<table class="reftest">
+		<tr>
+			<td><input property="name" value="Lea Verou"/></td>
+			<td>[name]</td>
+			<td>Lea Verou</td>
+		</tr>
+		<tr>
+			<td><input property="strength" type="range" /></td>
+			<td>[strength]</td>
+			<td>50</td>
+		</tr>
+		<tr>
+			<td><select property="country">
+				<option value="us">United States
+				<option value="gb">United Kingdom
+				<option value="jp">Japan
+			</select></td>
+			<td>[country]</td>
+			<td>us</td>
+		</tr>
+		<tr>
+			<td><input type="checkbox" property="checktrue" checked></td>
+			<td>[checktrue]</td>
+			<td>true</td>
+		</tr>
+		<tr>
+			<td><input type="checkbox" property="checkfalse"></td>
+			<td>[checkfalse]</td>
+			<td>false</td>
+		</tr>
+		<tr>
+			<td><textarea property="bio">Foo Bar</textarea></td>
+			<td>[bio]</td>
+			<td>Foo Bar</td>
+		</tr>
+		<tr title="Radio buttons without form">
+			<td>
+				<input type="radio" property name="radio1" value="a" />a
+				<input type="radio" name="radio1" value="b" checked />b
+			</td>
+			<td>[radio1]</td>
+			<td>b</td>
+		</tr>
+		<tr title="Radio buttons with same name and different form">
+			<td>
+				<input type="radio" property name="radio2" value="a" />a
+				<input type="radio" name="radio2" value="b" checked />b
 
-	<div>
-		<input property="strength" type="range" />
-		Strength: [strength]
-	</div>
-
-	<div>
-		<select property="country">
-			<option value="us">United States
-			<option value="gb">United Kingdom
-			<option value="jp">Japan
-		</select>
-		Country: [country]
-	</div>
-
-	<div>
-		<input type="checkbox" property="checktrue" checked> [checktrue]
-		<input type="checkbox" property="checkfalse"> [checkfalse]
-	</div>
-
-	<textarea property="bio"></textarea> Bio: [bio]
+				<form>
+					<input type="radio" property name="radio3" value="a" />a
+					<input type="radio" name="radio3" value="b" checked />b
+				</form>
+			</td>
+			<td>[radio2] [radio3]</td>
+			<td>b b</td>
+		</tr>
+		<tr title="Nullable radio buttons">
+			<td>
+				<input type="radio" property name="radio4" value="a" />a
+				<input type="radio" name="radio4" value="b" />b
+			</td>
+			<td>[radio4]</td>
+			<td></td>
+		</tr>
+	</table>
 </section>
 
 <section mv-app="buttons">
