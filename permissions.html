@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Mavo.Permissions Tests</title>
+	<link rel="stylesheet" href="mavo/mavo.css" />
+	<link rel="stylesheet" href="css/style.css" />
+	<script src="mavo/mavo.js"></script>
+</head>
+<body>
+
+<h1>Mavo.Permissions Tests</h1>
+
+<script>
+var a = new Mavo.Permissions();
+var b = new Mavo.Permissions();
+var c = new Mavo.Permissions();
+</script>
+
+<section>
+	<h1>Basic</h1>
+	<table class="reftest">
+		<tr>
+			<td>
+				<script>
+					a.can("read", () => document.write(a.read));
+					a.read = true;
+				</script>
+			</td>
+			<td>
+				true
+			</td>
+		</tr>
+		<tr>
+			<td>
+				<script>
+					b.can(["read", "login"], () => document.write(b.read));
+					b.read = true;
+				</script>
+			</td>
+			<td>
+				true
+			</td>
+		</tr>
+	</table>
+</section>
+
+<section>
+	<h1>Inheritance</h1>
+
+	<table class="reftest">
+		<tr title="Basic inheritance">
+			<td>
+				<script>
+					a.parent = b;
+					b.edit = true;
+					document.write(a.edit)
+				</script>
+			</td>
+			<td>
+				true
+			</td>
+		</tr>
+		<tr title="Local permissions override inherited permissions">
+			<td>
+				<script>
+					a.edit = false;
+					document.write(a.edit);
+				</script>
+			</td>
+			<td>
+				false
+			</td>
+		</tr>
+		<tr title="Parent changes trigger child observe">
+			<td>
+				<script>
+					a.can("login", () => document.write(a.login));
+					b.login = true;
+				</script>
+			</td>
+			<td>
+				true
+			</td>
+		</tr>
+		<tr title="Changing parent does not trigger observe from old parent">
+			<td>
+				<script>
+					a.parent = c;
+					b.login = false;
+					document.write(a.login);
+				</script>
+			</td>
+			<td>
+				undefined
+			</td>
+		</tr>
+	</table>
+</section>
+
+<script src="test.js"></script>
+
+</body>
+</html>

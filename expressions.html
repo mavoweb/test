@@ -475,6 +475,18 @@
 			<td>A<span mv-if="false">B<span mv-if="true"><span property="prop2">C</span></span></span>[prop2]</td>
 			<td>A</td>
 		</tr>
+		<tr>
+			<td>
+				<span mv-if="false">
+					<span property="prop3">A</span>
+				</span>
+				<span mv-if="true">
+					<span property="prop3">B</span>
+				</span>
+				[prop3]
+			</td>
+			<td>B B</td>
+		</tr>
 	</table>
 </section>
 
@@ -591,6 +603,21 @@
 				<input type="text" disabled="{prop4 > 1}">
             </td>
         </tr>
+	</table>
+</section>
+
+<section>
+	<h1>Cross-Mavo expressions</h1>
+
+	<table class="reftest">
+		<tr>
+			<td mv-app="crossmavo1">[crossmavosource1.prop1]</td>
+			<td mv-app="crossmavosource1"><input property="prop1" value="foo" /></td>
+		</tr>
+		<tr>
+			<td mv-app="crossmavo2">[crossmavosource2.prop2]</td>
+			<td mv-app="crossmavosource2"><input property="prop2" value="[crossmavosource1.prop1]" /></td>
+		</tr>
 	</table>
 </section>
 
