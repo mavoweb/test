@@ -219,7 +219,8 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
 			this.element = element;
 
 			// Index among other mavos in the page, 1 is first
-			this.index = _.all.push(this);
+			this.index = _.length + 1;
+			Object.defineProperty(_.all, this.index - 1, { value: this });
 
 			// Convert any data-mv-* attributes to mv-*
 			var dataMv = _.attributes.map(function (attribute) {
@@ -278,7 +279,8 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
 				}
 			}
 
-			_.allIds.push(this.id = Mavo.getAttribute(this.element, "mv-app", "id") || "mavo" + this.index);
+			this.id = Mavo.getAttribute(this.element, "mv-app", "id") || "mavo" + this.index;
+			_.all[this.id] = this;
 			this.element.setAttribute("mv-app", this.id);
 
 			// Should we start in edit mode?
@@ -326,6 +328,8 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
 				inside: this.ui.bar
 			});
 
+			this.permissions = new Mavo.Permissions();
+
 			// Figure out backends for storage, data reads, and initialization respectively
 			var _arr = ["storage", "source", "init"];
 			for (var _i = 0; _i < _arr.length; _i++) {
@@ -359,12 +363,10 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
 				var _role = _arr2[_i2];
 				if (this[_role]) {
 					this.primaryBackend = this[_role];
-					this.permissions = this[_role].permissions;
+					this.permissions.parent = this[_role].permissions;
 					break;
 				}
 			}
-
-			this.permissions = this.permissions || new Mavo.Permissions();
 
 			if (this.primaryBackend) {
 				// Reflect backend permissions in global permissions
@@ -571,19 +573,17 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
 				});
 			}
 
-			if (this.storage) {
-				this.permissions.can("delete", function () {
-					_this.ui.clear = $.create("button", {
-						className: "mv-clear",
-						textContent: "Clear",
-						title: "Clear"
-					});
-
-					_this.ui.bar.appendChild(_this.ui.clear);
-				}, function () {
-					$.remove(_this.ui.clear);
+			this.permissions.can("delete", function () {
+				_this.ui.clear = $.create("button", {
+					className: "mv-clear",
+					textContent: "Clear",
+					title: "Clear"
 				});
-			}
+
+				_this.ui.bar.appendChild(_this.ui.clear);
+			}, function () {
+				$.remove(_this.ui.clear);
+			});
 
 			if (this.storage || this.source) {
 				// Fetch existing data
@@ -945,39 +945,16 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
 		},
 
 		static: {
-			all: [],
+			all: {},
 
-			allIds: [],
+			get length() {
+				return Object.keys(_.all).length;
+			},
 
 			get: function get(id) {
-				var _iteratorNormalCompletion5 = true;
-				var _didIteratorError5 = false;
-				var _iteratorError5 = undefined;
+				var name = typeof id === "number" ? Object.keys(_.all)[id] : id;
 
-				try {
-					for (var _iterator5 = _.all[Symbol.iterator](), _step5; !(_iteratorNormalCompletion5 = (_step5 = _iterator5.next()).done); _iteratorNormalCompletion5 = true) {
-						var mavo = _step5.value;
-
-						if (mavo.id === id) {
-							return mavo;
-						}
-					}
-				} catch (err) {
-					_didIteratorError5 = true;
-					_iteratorError5 = err;
-				} finally {
-					try {
-						if (!_iteratorNormalCompletion5 && _iterator5.return) {
-							_iterator5.return();
-						}
-					} finally {
-						if (_didIteratorError5) {
-							throw _iteratorError5;
-						}
-					}
-				}
-
-				return null;
+				return _.all[name] || null;
 			},
 
 			superKey: navigator.platform.indexOf("Mac") === 0 ? "metaKey" : "ctrlKey",
@@ -1102,12 +1079,34 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
 			return arr === undefined ? [] : Array.isArray(arr) ? arr : [arr];
 		},
 
-		delete: function _delete(arr, element) {
-			var index = arr && arr.indexOf(element);
+		/**
+   * Delete one or more elements from an array
+   * @param arr {Array}
+   * @param et {Function|*} If function, it’s used as a test for deleting multiple elements.
+   *                        Otherwise, it’s asssumed to be the element to delete.
+   * @return {Array} Deleted elements
+   */
+		delete: function _delete(arr) {
+			var ret = [];
 
-			if (index > -1) {
-				arr.splice(index, 1);
+			if ($.type(arguments[1]) == "function") {
+				for (var i = 0; i < arr.length; i++) {
+					if (arguments[1](arr[i])) {
+						ret.push(arr[i]);
+						arr.splice(i, 1);
+						i--;
+					}
+				}
+			} else {
+				var index = arr && arr.indexOf(arguments[1]);
+
+				if (index > -1) {
+					ret.push(arr[index]);
+					arr.splice(index, 1);
+				}
 			}
+
+			return ret;
 		},
 
 		hasIntersection: function hasIntersection(arr1, arr2) {
@@ -1330,7 +1329,7 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
 				if (attribute) {
 					$.extend(this.options, {
 						attributes: true,
-						attributeFilter: this.attribute == "all" ? undefined : [this.attribute],
+						attributeFilter: this.attribute == "all" ? undefined : Mavo.toArray(this.attribute),
 						attributeOldValue: !!o.oldValue
 					});
 				}
@@ -1646,7 +1645,6 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
 			// need to set it manually, otherwise it still has its previous value
 			this["_" + action] = value;
 
-			// TODO add classes to element
 			this.triggers.forEach(function (trigger) {
 				var match = _this5.is(trigger.actions, trigger.value);
 
@@ -1662,7 +1660,7 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
 				}
 			});
 
-			this.hooks.run("change", { action: action, value: value, permissions: this });
+			this.hooks.run("change", { action: action, value: value, from: from, permissions: this });
 		},
 
 		or: function or(permissions) {
@@ -1694,6 +1692,39 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
 			return this;
 		},
 
+		live: {
+			parent: function parent(_parent) {
+				var _this6 = this;
+
+				var callback = function callback(_ref) {
+					var action = _ref.action,
+					    value = _ref.value,
+					    from = _ref.from;
+
+					_this6.changed(action, value, from);
+				};
+
+				callback.inheritanceTrigger = this;
+
+				// Remove previous trigger, if any
+				if (this._parent) {
+					var r = Mavo.delete(this._parent.hooks.change, function (f) {
+						return f.inheritanceTrigger === _this6;
+					});
+					console.log(r, this._parent.hooks.change[0]);
+				}
+
+				// Add new trigger
+				_parent.onchange(function (_ref2) {
+					var action = _ref2.action,
+					    value = _ref2.value,
+					    from = _ref2.from;
+
+					_this6.changed(action, value, from);
+				});
+			}
+		},
+
 		static: {
 			actions: [],
 
@@ -1706,12 +1737,23 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
 					return;
 				}
 
-				$.live(_.prototype, action, function (able, previous) {
-					if (setter) {
-						setter.call(this, able, previous);
-					}
+				$.live(_.prototype, action, {
+					get: function get() {
+						var ret = this["_" + action];
 
-					this.changed(action, able, previous);
+						if (ret === undefined && this.parent) {
+							return this.parent[action];
+						}
+
+						return ret;
+					},
+					set: function set(able, previous) {
+						if (setter) {
+							setter.call(this, able, previous);
+						}
+
+						this.changed(action, able, previous);
+					}
 				});
 
 				_.actions.push(action);
@@ -1961,7 +2003,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 			dependencies: [],
 			ready: function ready() {
 				return Promise.all(this.dependencies.map(function (d) {
-					return $.include(d.test, d.url);
+					return $.include(d.test(), d.url);
 				}));
 			}
 		}
@@ -2012,12 +2054,14 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 				skipEmptyLines: true
 			},
 			dependencies: [{
-				test: self.Papa,
+				test: function test() {
+					return self.Papa;
+				},
 				url: "https://cdnjs.cloudflare.com/ajax/libs/PapaParse/4.1.4/papaparse.min.js"
 			}],
 			ready: base.ready,
 			parse: function parse(serialized, me) {
-				return csv.ready(function () {
+				return csv.ready().then(function () {
 					var data = Papa.parse(serialized, csv.defaultOptions);
 					var property = me ? me.property : "content";
 
@@ -2036,7 +2080,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 			},
 
 			stringify: function stringify(serialized, me) {
-				return csv.ready(function () {
+				return csv.ready().then(function () {
 					var property = me ? me.property : "content";
 					var options = me ? me.options : csv.defaultOptions;
 					return Papa.unparse(data[property], options);
@@ -4574,7 +4618,7 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
 				}
 
 				this.propagate(function (item) {
-					return Mavo.revocably.remove(item.itemControls, "item controls");
+					return Mavo.revocably.remove(item.itemControls);
 				});
 			}
 		},
@@ -4966,10 +5010,6 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
 				if (Mavo.hasIntersection(collection.properties, this.identifiers)) {
 					return true;
 				}
-			}
-
-			if (Mavo.hasIntersection(Mavo.allIds, this.identifiers)) {
-				return true; // contains a Mavo id
 			}
 
 			return false;
@@ -5405,13 +5445,13 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
 				_this.expressions = [];
 
 				// Watch changes and update value
-				_this.mavo.element.addEventListener("mavo:datachange", function (evt) {
+				document.documentElement.addEventListener("mavo:datachange", function (evt) {
 					if (!_this.active) {
 						return;
 					}
 
 					if (evt.action == "propertychange" && evt.node.closestCollection) {
-						// Throttle propertychange events in collections
+						// Throttle propertychange events in collections and events from other Mavos
 						if (!_this.scheduled.has(evt.property)) {
 							setTimeout(function () {
 								_this.scheduled.delete(evt.property);
@@ -5638,10 +5678,6 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
 							return null;
 						}
 
-						if (property == _this6.mavo.id) {
-							return data[property] = _this6.mavo.root.getData(env.options);
-						}
-
 						if (_this6 instanceof Mavo.Group && property == _this6.property && _this6.collection) {
 							return data[property] = env.data;
 						}
@@ -5672,6 +5708,11 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
 							data[property] = ret;
 
 							return true;
+						}
+
+						// Does it reference another Mavo?
+						if (property in Mavo.all) {
+							return data[property] = Mavo.all[property].root.getData(env.options);
 						}
 
 						return false;

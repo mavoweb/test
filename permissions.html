@@ -11,18 +11,13 @@
 
 <h1>Mavo.Permissions Tests</h1>
 
-<script>
-var a = new Mavo.Permissions();
-var b = new Mavo.Permissions();
-var c = new Mavo.Permissions();
-</script>
-
 <section>
 	<h1>Basic</h1>
 	<table class="reftest">
-		<tr>
+		<tr title="Mavo.Permissions#can()">
 			<td>
 				<script>
+					var a = new Mavo.Permissions();
 					a.can("read", () => document.write(a.read));
 					a.read = true;
 				</script>
@@ -31,15 +26,41 @@ var c = new Mavo.Permissions();
 				true
 			</td>
 		</tr>
-		<tr>
+		<tr title="Mavo.Permissions#can() with array">
 			<td>
 				<script>
+					var b = new Mavo.Permissions();
 					b.can(["read", "login"], () => document.write(b.read));
 					b.read = true;
 				</script>
 			</td>
 			<td>
 				true
+			</td>
+		</tr>
+		<tr title="Mavo.Permissions#can() with cannot callback">
+			<td>
+				<script>
+					var a = new Mavo.Permissions(); // otherwise cannot would be executed immediately
+					a.can("read", () => document.write(1), () => document.write(0));
+					a.read = true;
+					a.read = false;
+				</script>
+			</td>
+			<td>
+				010
+			</td>
+		</tr>
+		<tr title="Mavo.Permissions#cannot()">
+			<td>
+				<script>
+					var a = new Mavo.Permissions({"read": true}); // otherwise cannot would be executed immediately
+					a.cannot("read", () => document.write(a.read));
+					a.read = false;
+				</script>
+			</td>
+			<td>
+				false
 			</td>
 		</tr>
 	</table>
@@ -52,6 +73,8 @@ var c = new Mavo.Permissions();
 		<tr title="Basic inheritance">
 			<td>
 				<script>
+					var a = new Mavo.Permissions();
+					var b = new Mavo.Permissions();
 					a.parent = b;
 					b.edit = true;
 					document.write(a.edit)
@@ -64,6 +87,10 @@ var c = new Mavo.Permissions();
 		<tr title="Local permissions override inherited permissions">
 			<td>
 				<script>
+					var a = new Mavo.Permissions();
+					var b = new Mavo.Permissions();
+					a.parent = b;
+					b.edit = true;
 					a.edit = false;
 					document.write(a.edit);
 				</script>
@@ -75,6 +102,9 @@ var c = new Mavo.Permissions();
 		<tr title="Parent changes trigger child observe">
 			<td>
 				<script>
+					var a = new Mavo.Permissions();
+					var b = new Mavo.Permissions();
+					a.parent = b;
 					a.can("login", () => document.write(a.login));
 					b.login = true;
 				</script>
@@ -86,8 +116,13 @@ var c = new Mavo.Permissions();
 		<tr title="Changing parent does not trigger observe from old parent">
 			<td>
 				<script>
+					var a = new Mavo.Permissions();
+					var b = new Mavo.Permissions();
+					var c = new Mavo.Permissions();
+					a.can("login", () => document.write(a.login));
+					a.parent = b;
 					a.parent = c;
-					b.login = false;
+					b.login = true;
 					document.write(a.login);
 				</script>
 			</td>
@@ -95,6 +130,38 @@ var c = new Mavo.Permissions();
 				undefined
 			</td>
 		</tr>
+		<tr title="Setting parent to null should be allowed">
+			<td>
+				<script>
+					var a = new Mavo.Permissions();
+					var b = new Mavo.Permissions();
+					a.can("login", () => document.write(a.login));
+					a.parent = b;
+					a.parent = null;
+					b.login = true;
+					document.write(a.login);
+				</script>
+			</td>
+			<td>
+				undefined
+			</td>
+		</tr>
+		<tr title="Changing parent should trigger observe">
+			<td>
+				<script>
+					var a = new Mavo.Permissions();
+					var b = new Mavo.Permissions();
+					var c = new Mavo.Permissions();
+					c.login = true;
+					a.can("login", () => document.write(a.login));
+					a.parent = b;
+					a.parent = c;
+				</script>
+			</td>
+			<td>
+				true
+			</td>
+		</t>
 	</table>
 </section>
 
