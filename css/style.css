@@ -56,23 +56,20 @@ html:not(.index) body {
   max-width: 50em;
   counter-reset: fail pass; }
 
-html:not(.index) body::after,
-html:not(.index) body > section:last-of-type::after {
+html:not(.index) .counter {
   position: fixed;
   left: 1rem;
-  white-space: pre-line;
-  font: bold 180% Helvetica Neue, sans-serif; }
-
-html:not(.index) body::after {
-  content: counter(fail) " failing";
   top: .6rem;
-  color: #b00; }
-
-html:not(.index) body > section:last-of-type::after {
-  content: counter(pass) " passing";
-  top: 3rem;
-  color: #86ac39;
-  font-size: 140%; }
+  font: bold 180% Helvetica Neue, sans-serif; }
+  html:not(.index) .counter::before {
+    content: counter(fail) " failing";
+    display: block;
+    color: #b00; }
+  html:not(.index) .counter::after {
+    content: counter(pass) " passing";
+    display: block;
+    color: #86ac39;
+    font-size: 75%; }
 
 html:not(.index) body > section {
   border: 0.2em solid var(--ciel);
@@ -197,6 +194,24 @@ table.reftest {
       color: white;
       font: bold 75%/1 sans-serif;
       text-shadow: 0 0 1px rgba(0, 0, 0, 0.5); }
+
+td[data-script] {
+  position: relative;
+  background-image: linear-gradient(225deg, rgba(0, 0, 0, 0.5) 0.6em, transparent 0);
+  cursor: help; }
+  td[data-script]:hover::after, td[data-script]:focus::after {
+    content: attr(data-script);
+    position: absolute;
+    z-index: 1;
+    white-space: pre-wrap;
+    min-width: 50ch;
+    max-width: 30vw;
+    padding: .8em 1.2em;
+    margin: 1em;
+    border-radius: .5em;
+    background: rgba(255, 245, 240, 0.9);
+    box-shadow: 0 1px 0.5em rgba(0, 0, 0, 0.5);
+    font: 100%/1.5 Consolas, Monaco, monospace; }
 
 body > section > div {
   border: 1px solid rgba(0, 0, 0, 0.15);

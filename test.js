@@ -1,21 +1,14 @@
-var page = location.pathname.match(/\/([a-z]+)(?:\.html|\/$)/)[1];
-
-if (typeof self["test_" + page] == "function") {
-	self["test_" + page]();
-}
-
-if (page !== "index") {
-	let h1 = $("body > h1");
-	if (h1) {
-		$.create("a", {
-			className: "home",
-			textContent: "Home",
-			href: "index.html",
-			target: "_top",
-			inside: h1
-		});
+self.print = function print(text) {
+	if (document.readyState == "loading") {
+		document.write(text);
 	}
-}
+	else if (document.currentScript.parentNode) {
+		document.currentScript.parentNode.appendChild(document.createTextNode(text));
+	}
+	else {
+		console.log("Test print", text);
+	}
+};
 
 self.Test = {
 	pseudo: (element, pseudo) => {
@@ -66,59 +59,6 @@ self.Test = {
 	contentIgnore: [".mv-ui"]
 };
 
-for (let h1 of $$("body > section > h1")) {
-	let section = h1.parentNode;
-
-	section.id = section.id || Mavo.Functions.idify(h1.textContent);
-
-	$.create("a", {
-		href: "#" + section.id,
-		around: h1.firstChild
-	});
-}
-
-
-var hashchanged = evt => {
-	if (location.hash) {
-		var target = $(location.hash);
-
-		if (!target) {
-			return;
-		}
-
-		if (target.matches("body > section")) {
-			if (evt) {
-				location.reload();
-				return true;
-			}
-
-			// Isolate this test
-			for (let section of $$(`body > section:not(${location.hash})`)) {
-				section.remove();
-			}
-
-			$.create("p", {
-				className: "notice",
-				contents: [
-					"Some tests hidden. ",
-					{
-						tag: "a",
-						href: "#",
-						onclick: evt => location.reload(),
-						textContent: "Show all tests"
-					}
-				],
-				start: document.body
-			});
-		}
-
-
-	}
-};
-
-hashchanged();
-onhashchange = hashchanged;
-
 var _ = self.RefTest = $.Class({
 	constructor: function(table) {
 		this.table = table;
@@ -129,7 +69,15 @@ var _ = self.RefTest = $.Class({
 
 	setup: function() {
 		// Remove any <script> elements to prevent them messing up the contents. They've already been processed anyway.
-		$.remove($$("script", this.table));
+		// Keep them in an attribute though, as they may be useful to display
+		for (var script of $$("script", this.table)) {
+			var attr = script.parentNode.getAttribute("data-script") || "";
+
+			var code = _.presentCode(script.textContent);
+
+			script.parentNode.setAttribute("data-script", attr + code);
+			$.remove(script);
+		}
 
 		// Add instruction text if not present
 		if (!$("p", this.table.parentNode) && this.compare === _.defaultCompare) {
@@ -244,16 +192,21 @@ var _ = self.RefTest = $.Class({
 				return v === expected[i];
 
 			});
+		},
+
+		presentCode: function(code) {
+			// Remove blank line in the beginning and end
+			code = code.replace(/^\s*\n|\n\s*$/g, "");
+
+			// Remove extra indentation
+			var indent = (code.match(/^\s*/) || [""])[0];
+			code = code.replace(RegExp("^" + indent, "gm"), "");
+
+			code = code.replace(/document.write/g, "print");
+
+			return code;
 		}
 	}
-});
-
-document.addEventListener("DOMContentLoaded", () => {
-	requestAnimationFrame(() => {
-		for (let table of $$("table.reftest")) {
-			table.reftest = new RefTest(table);
-		}
-	});
 });
 
 function equals(a, b) {
@@ -272,6 +225,7 @@ function equals(a, b) {
 	return false;
 }
 
+// TODO migrate this to the new reftest format
 function test_mavoscript() {
 	Mavo.hooks.add("expression-eval-error", env => console.log(env.exception));
 
@@ -324,3 +278,89 @@ function test_mavoscript() {
 		}
 	});
 }
+
+$.ready().then(function(){
+	var page = location.pathname.match(/\/([a-z]+)(?:\.html|\/$)/)[1];
+
+	// Legacy
+	if (typeof self["test_" + page] == "function") {
+		self["test_" + page]();
+	}
+
+	if (page !== "index") {
+		// Create link to home
+		let h1 = $("body > h1");
+		if (h1) {
+			$.create("a", {
+				className: "home",
+				textContent: "Home",
+				href: "index.html",
+				target: "_top",
+				inside: h1
+			});
+		}
+
+		// Add div for counter at the end of body
+		$.create({
+			className: "counter",
+			inside: document.body
+		});
+	}
+
+	// Add ids to section headers and make them links
+	for (let h1 of $$("body > section > h1")) {
+		let section = h1.parentNode;
+
+		section.id = section.id || Mavo.Functions.idify(h1.textContent);
+
+		$.create("a", {
+			href: "#" + section.id,
+			around: h1.firstChild
+		});
+	}
+
+	var hashchanged = evt => {
+		if (location.hash) {
+			var target = $(location.hash);
+
+			if (!target) {
+				return;
+			}
+
+			if (target.matches("body > section")) {
+				if (evt) {
+					location.reload();
+					return true;
+				}
+
+				// Isolate this test
+				for (let section of $$(`body > section:not(${location.hash})`)) {
+					section.remove();
+				}
+
+				$.create("p", {
+					className: "notice",
+					contents: [
+						"Some tests hidden. ",
+						{
+							tag: "a",
+							href: "#",
+							onclick: evt => location.reload(),
+							textContent: "Show all tests"
+						}
+					],
+					start: document.body
+				});
+			}
+		}
+	};
+
+	hashchanged();
+	onhashchange = hashchanged;
+
+	requestAnimationFrame(() => {
+		for (let table of $$("table.reftest")) {
+			table.reftest = new RefTest(table);
+		}
+	});
+});
