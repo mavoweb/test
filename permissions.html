@@ -162,7 +162,39 @@
 			<td>
 				true
 			</td>
-		</t>
+		</tr>
+		<tr title="Deleting parent should trigger cannot">
+			<td>
+				<script>
+					var a = new Mavo.Permissions();
+					var b = new Mavo.Permissions();
+					b.save = true;
+					a.can("save", () => print(1), () => print(0));
+					a.parent = b;
+					a.parent = null;
+				</script>
+			</td>
+			<td>
+				010
+			</td>
+		</tr>
+		<tr title="Changing parent should not trigger change if permissions are the same">
+			<td>
+				<script>
+					var a = new Mavo.Permissions();
+					var b = new Mavo.Permissions();
+					var c = new Mavo.Permissions();
+					b.save = true;
+					c.save = true;
+					a.can("save", () => print(1), () => print(0));
+					a.parent = b;
+					a.parent = c;
+				</script>
+			</td>
+			<td>
+				01
+			</td>
+		</tr>
 	</table>
 </section>
 

@@ -6,6 +6,7 @@
 	<link rel="stylesheet" href="mavo/mavo.css" />
 	<link rel="stylesheet" href="css/style.css" />
 	<script src="mavo/mavo.js"></script>
+	<script src="test.js"></script>
 </head>
 <body>
 
@@ -97,7 +98,7 @@ localStorage.localstoretest = `{
 	]
 }`;
 </script>
-<section mv-storage="local" id="localstoretest">
+<section mv-storage="local" mv-app id="localstoretest">
 	<h1>Local</h1>
 
 	<table class="reftest">
@@ -122,7 +123,7 @@ localStorage.localstoretest = `{
 	</table>
 </section>
 
-<section mv-storage="local" id="localnoedit" mv-autosave>
+<section mv-app mv-storage="local" id="localnoedit" mv-autosave>
 	<h1>Local with no edit</h1>
 
 	<p>Make changes, then refresh. The two columns must match.</p>
@@ -146,7 +147,7 @@ localStorage.localstoretest = `{
 	</table>
 </section>
 
-<section mv-storage="data/countries.json">
+<section mv-app mv-storage="data/countries.json">
 	<h1>Remote</h1>
 
 	<table class="reftest">
@@ -234,7 +235,7 @@ localStorage.localstoretest = `{
 	</table>
 </section>
 
-<section mv-storage="local" mv-source="http://test.mavo.io/data/countries.json" id="dualstoretest">
+<section mv-app mv-storage="local" mv-source="http://test.mavo.io/data/countries.json" id="dualstoretest">
 	<h1>mv-storage=local, mv-source=remote</h1>
 
 	<table class="reftest">
@@ -365,9 +366,9 @@ localStorage.localstoretest = `{
 <section mv-app="urltest" mv-storage="">
 	<h1>mv-storage=Github, mv-source=Element, via URL</h1>
 
-	<p><a href="?urltest_storage=https://github.com/LeaVerou/mavo-test/blob/master/data/countries.json&urltest_source=%23countries">Click here first for this test to pass.</a></p>
+	<p><a href="?urltest-storage=https://github.com/LeaVerou/mavo-test/blob/master/data/countries.json&urltest-source=%23countries">Click here first for this test to pass.</a></p>
 	<table class="reftest">
-		<tr>
+		<tr class="interactive">
 			<td>
 				<ul>
 					<li property="country" mv-multiple>
@@ -387,7 +388,7 @@ localStorage.localstoretest = `{
 	</table>
 </section>
 
-<section mv-storage="https://github.com/LeaVerou/mavo-test/blob/master/data/countries.json" mv-source="#countries">
+<section mv-app mv-storage="https://github.com/LeaVerou/mavo-test/blob/master/data/countries.json" mv-source="#countries">
 	<h1>mv-storage=Github, mv-source=element</h1>
 
 	<table class="reftest">
@@ -436,7 +437,82 @@ localStorage.localstoretest = `{
 	</table>
 </section>
 
-<script src="test.js"></script>
+<section>
+	<h1>Expression in mv-storage</h1>
+	<script mv-expressions="none">
+	localStorage.mvstoragexpressioninteractive = `{
+		"prop1": "using localStorage"
+	}`;
+	</script>
+	<table class="reftest">
+		<tr>
+			<td>
+				<pre id="element-data-2">{
+	"prop1": "using element storage"
+}</pre>
+				<td>
+					<script>document.write($$("td pre").pop().outerHTML)</script>
+				</td>
+			</td>
+		</tr>
+		<tr>
+			<td mv-app="mvstoragexpression" mv-storage="[if(true, '#element-data-2', local)]">
+				<div property="prop1"></div>
+			</td>
+			<td>
+				using element storage
+			</td>
+		</tr>
+		<tr title="Interactive" class="interactive">
+			<td mv-app="mvstoragexpression" mv-storage="[if(storage, '#element-data-2', local)]">
+				<label>
+					<input type="checkbox" property="storage" />
+					Element storage
+				</label>
+				<div property="prop1"></div>
+			</td>
+			<td>
+				<input type="checkbox" checked /> Element storage
+				using element storage
+			</td>
+		</tr>
+		<tr title="Interactive, different permissions" class="interactive">
+			<td mv-app="mvstoragexpression" mv-storage="[if(storage, '#countries', 'data/countries.json')]">
+				<label>
+					<input type="checkbox" property="storage" />
+					Element storage
+				</label>
+				<ul>
+					<li property="country" mv-multiple>
+						<span property="code">Code</span>
+						<span property="name">Name</span>
+					</li>
+				</ul>
+			</td>
+			<td>
+				<input type="checkbox" checked /> Element storage
+				<ul>
+					<li>us United States</li>
+					<li>jp Japan</li>
+					<li>es Spain</li>
+				</ul>
+			</td>
+		</tr>
+		<tr class="interactive" title="Interactive, setting to none">
+			<td mv-app="mvstoragexpression" mv-storage="[if(storage, none, '#element-data-2')]">
+				<label>
+					<input type="checkbox" property="storage" />
+					No storage
+				</label>
+				<div property="prop1">Default text</div>
+			</td>
+			<td>
+				<input type="checkbox" checked /> No storage
+				using element storage
+			</td>
+		</tr>
+	</table>
+</section>
 
 </body>
 </html>

@@ -13,7 +13,7 @@ body {
   body > h1 {
     font: 300 350%/1 Helvetica Neue, Helvetica, sans-serif;
     color: orange; }
-    body > h1 .home {
+    body > h1 .home, body > h1 .remote {
       display: inline-block;
       vertical-align: middle;
       padding: .3em .4em;
@@ -25,9 +25,11 @@ body {
       font-size: 40%;
       font-weight: bold;
       letter-spacing: -.03em; }
-      body > h1 .home:hover {
+      body > h1 .home:hover, body > h1 .remote:hover {
         background: var(--dark);
         text-decoration: none; }
+    body > h1 .remote {
+      background: #b3d5e6; }
 
 a {
   color: var(--dark); }
@@ -54,22 +56,28 @@ h1 {
 
 html:not(.index) body {
   max-width: 50em;
-  counter-reset: fail pass; }
+  counter-reset: fail pass interactive; }
 
-html:not(.index) .counter {
+html:not(.index) .results {
   position: fixed;
   left: 1rem;
   top: .6rem;
-  font: bold 180% Helvetica Neue, sans-serif; }
-  html:not(.index) .counter::before {
+  font: bold 180%/1 Helvetica Neue, sans-serif;
+  content: counter(interactive) " interactive"; }
+  html:not(.index) .results .count-fail::before {
     content: counter(fail) " failing";
-    display: block;
     color: #b00; }
-  html:not(.index) .counter::after {
+  html:not(.index) .results .count-pass::before {
     content: counter(pass) " passing";
-    display: block;
     color: #86ac39;
-    font-size: 75%; }
+    font-size: 75%;
+    line-height: 1.334; }
+  html:not(.index) .results .count-pass::after {
+    content: counter(interactive) " interactive";
+    display: block;
+    color: #ffaa00;
+    font-size: 60%;
+    line-height: 1.667; }
 
 html:not(.index) body > section {
   border: 0.2em solid var(--ciel);
@@ -260,5 +268,11 @@ body > section > div {
 
 .pass {
   counter-increment: pass; }
+
+.fail.interactive {
+  counter-increment: fail interactive; }
+
+.pass.interactive {
+  counter-increment: pass interactive; }
 
 /*# sourceMappingURL=style.css.map */

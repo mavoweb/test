@@ -22,7 +22,7 @@ body {
 		font: 300 350%/1 Helvetica Neue, Helvetica, sans-serif;
 		color: orange;
 
-		.home {
+		.home, .remote {
 			display: inline-block;
 			vertical-align: middle;
 			padding: .3em .4em;
@@ -39,6 +39,10 @@ body {
 				background: var(--dark);
 				text-decoration: none;
 			}
+		}
+
+		.remote {
+			background: hsl(200, 50%, 80%);
 		}
 	}
 }
@@ -75,26 +79,34 @@ h1 {
 html:not(.index) {
 	body {
 		max-width: 50em;
-		counter-reset: fail pass;
+		counter-reset: fail pass interactive;
 	}
 
-	.counter {
+	.results {
 		position: fixed;
 		left: 1rem;
 		top: .6rem;
-		font: bold 180% Helvetica Neue, sans-serif;
+		font: bold 180%/1 Helvetica Neue, sans-serif;
+		content: counter(interactive) " interactive";
 
-		&::before {
+		.count-fail::before {
 			content: counter(fail) " failing";
-			display: block;
 			color: #b00;
 		}
 
-		&::after {
+		.count-pass::before {
 			content: counter(pass) " passing";
-			display: block;
 			color: hsl(80, 50%, 45%);
 			font-size: 75%;
+			line-height: 1.334;
+		}
+
+		.count-pass::after {
+			content: counter(interactive) " interactive";
+			display: block;
+			color: hsl(40, 100%, 50%);
+			font-size: 60%;
+			line-height: 1.667;
 		}
 	}
 
@@ -362,4 +374,12 @@ body > section > div {
 
 .pass {
 	counter-increment: pass;
+}
+
+.fail.interactive {
+	counter-increment: fail interactive;
+}
+
+.pass.interactive {
+	counter-increment: pass interactive;
 }

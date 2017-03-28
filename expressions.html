@@ -107,7 +107,7 @@
 
 </section>
 
-<section mv-storage="#countries">
+<section mv-app mv-storage="#countries">
 	<h1>With render (country data)</h1>
 
 	<table class="reftest">
@@ -432,7 +432,7 @@
 			</td>
 			<td>123</td>
 		</tr>
-		<tr title="Collection of primitives, interactive">
+		<tr class="interactive" title="Collection of primitives, interactive">
 			<td>
 				<span property="collection3" mv-multiple mv-mode="edit" mv-default="[$index]"></span>
 			</td>
@@ -496,7 +496,7 @@
 	<p>Check the checkbox. The displayed value next to it should go from "1 1 1" to "2 4 6 3 5 7"</p>
 
 	<table class="reftest">
-		<tr>
+		<tr class="interactive">
 			<td>
 				<input property="test" type="checkbox">
 				<span mv-if="test" class="if1">

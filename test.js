@@ -2,7 +2,7 @@ self.print = function print(text) {
 	if (document.readyState == "loading") {
 		document.write(text);
 	}
-	else if (document.currentScript.parentNode) {
+	else if (document.currentScript && document.currentScript.parentNode) {
 		document.currentScript.parentNode.appendChild(document.createTextNode(text));
 	}
 	else {
@@ -77,14 +77,6 @@ var _ = self.RefTest = $.Class({
 
 			script.parentNode.setAttribute("data-script", attr + code);
 			$.remove(script);
-		}
-
-		// Add instruction text if not present
-		if (!$("p", this.table.parentNode) && this.compare === _.defaultCompare) {
-			$.create("p", {
-				textContent: "First column must be the same as the second.",
-				before: this.table
-			});
 		}
 
 		// Add table header if not present
@@ -279,6 +271,10 @@ function test_mavoscript() {
 	});
 }
 
+var preMavo = Mavo.defer();
+// So that Mavo cannot init until we get a chance to do stuff
+Mavo.ready = Promise.all([Mavo.ready, preMavo]);
+
 $.ready().then(function(){
 	var page = location.pathname.match(/\/([a-z]+)(?:\.html|\/$)/)[1];
 
@@ -288,7 +284,7 @@ $.ready().then(function(){
 	}
 
 	if (page !== "index") {
-		// Create link to home
+		// Create link to home and to remote version
 		let h1 = $("body > h1");
 		if (h1) {
 			$.create("a", {
@@ -298,12 +294,40 @@ $.ready().then(function(){
 				target: "_top",
 				inside: h1
 			});
+
+			if (location.hostname == "localhost") {
+				var remote = Object.assign(new URL(location), {hostname: "test.mavo.io", port: "80"});
+				remote.pathname = remote.pathname.replace(/\/mavo-test/, "");
+
+				$.create("a", {
+					className: "remote",
+					textContent: "Remote",
+					href: remote,
+					target: "_top",
+					inside: h1
+				});
+			}
 		}
 
 		// Add div for counter at the end of body
 		$.create({
-			className: "counter",
-			inside: document.body
+			className: "results",
+			inside: document.body,
+			contents: [
+				{
+					className: "count-fail",
+					onclick: function(evt) {
+						Mavo.scrollIntoViewIfNeeded($(".fail"));
+					}
+				},
+				{
+					className: "count-pass",
+					onclick: function(evt) {
+						Mavo.scrollIntoViewIfNeeded($(".interactive"));
+					}
+				}
+			],
+
 		});
 	}
 
@@ -363,4 +387,6 @@ $.ready().then(function(){
 			table.reftest = new RefTest(table);
 		}
 	});
+
+	preMavo.resolve();
 });
