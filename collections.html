@@ -133,6 +133,34 @@
 	</table>
 </section>
 
+<section mv-app="primitives" mv-storage="#numbers-2">
+	<h1>Implied collection of primitives</h1>
+	<table class="reftest">
+		<tr mv-expressions="none">
+			<td><pre id="numbers-2">{
+	"numbers": [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
+}</pre></td>
+			<td><pre>{
+	"numbers": [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
+}</pre></td>
+		</tr>
+		<tr>
+			<td>
+				<div property="numbers">11</div>
+				<div property="numbers">12</div>
+				<div property="numbers">13</div>
+			</td>
+			<td>
+				<div>1</div><div>2</div><div>3</div>
+			</td>
+		</tr>
+		<tr>
+			<td>[numbers]</td>
+			<td>1, 2, 3</td>
+		</tr>
+	</table>
+</section>
+
 <script type="application/json" id="indexes" mv-expressions="none">
 {
 	"number": [
