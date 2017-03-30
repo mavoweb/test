@@ -113,6 +113,14 @@
 				.mv-bar .mv-clear + .mv-save + .mv-edit + .mv-logout + .mv-status
 			</td>
 		</tr>
+		<tr title="Custom button order, no login, no status">
+			<td mv-app="nologin" mv-storage="https://github.com/LeaVerou/mavo-test/blob/master/data/countries.json" mv-bar="clear save edit logout">
+				<span property="country"><span property="name">yolo</span></span>
+			</td>
+			<td>
+				.mv-bar .mv-clear + .mv-save + .mv-edit + .mv-logout:last-child
+			</td>
+		</tr>
 	</table>
 </section>
 
