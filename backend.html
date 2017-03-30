@@ -439,8 +439,9 @@ localStorage.localstoretest = `{
 
 <section>
 	<h1>Expression in mv-storage</h1>
+	<p>Check all checkboxes on the left column.</p>
 	<script mv-expressions="none">
-	localStorage.mvstoragexpressioninteractive = `{
+	localStorage.mvstoragexpression = localStorage.mvstoragexpression2 = `{
 		"prop1": "using localStorage"
 	}`;
 	</script>
@@ -457,7 +458,7 @@ localStorage.localstoretest = `{
 		</tr>
 		<tr>
 			<td mv-app="mvstoragexpression" mv-storage="[if(true, '#element-data-2', local)]">
-				<div property="prop1"></div>
+				<div property="prop1">yolo</div>
 			</td>
 			<td>
 				using element storage
@@ -498,6 +499,10 @@ localStorage.localstoretest = `{
 				</ul>
 			</td>
 		</tr>
+		<tr data-test="selector">
+			<td></td>
+			<td>.mv-bar .mv-edit + .mv-save + .mv-clear</td>
+		</tr>
 		<tr class="interactive" title="Interactive, setting to none">
 			<td mv-app="mvstoragexpression" mv-storage="[if(storage, none, '#element-data-2')]">
 				<label>
@@ -509,6 +514,15 @@ localStorage.localstoretest = `{
 			<td>
 				<input type="checkbox" checked /> No storage
 				using element storage
+			</td>
+		</tr>
+		<tr data-test="selector">
+			<td></td>
+			<td>
+				<ul>
+					<li>.mv-bar .mv-edit + .mv-clear</li>
+					<li class="not">.mv-save</li>
+				</ul>
 			</td>
 		</tr>
 	</table>

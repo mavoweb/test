@@ -62,7 +62,8 @@ self.Test = {
 var _ = self.RefTest = $.Class({
 	constructor: function(table) {
 		this.table = table;
-		this.compare = self[table.getAttribute("data-test")] || _.defaultCompare;
+		this.columns = Math.max.apply(Math, [...this.table.rows].map(row => row.cells.length));
+		this.compare = _.getTest(table.getAttribute("data-test"));
 		this.setup();
 		this.test();
 	},
@@ -124,21 +125,22 @@ var _ = self.RefTest = $.Class({
 	},
 
 	testRow: function(tr) {
-		var cells = tr.cells;
+		var cells = [...tr.cells];
 
 		if (!tr.compare) {
-			var customTest = tr.getAttribute("data-test");
-			var compare = self[customTest];
-
-			if (customTest && !compare) {
-				// No such function exists, maybe it's code?
-				compare = new Function("td", "ref", customTest);
-			}
-
-			tr.compare = compare || this.compare;
+			tr.compare = _.getTest(tr.getAttribute("data-test"), this.compare);
 		}
 
 		if (cells.length) {
+			if (this.columns == 2 && !cells[0].innerHTML) {
+				let previous = tr;
+				while (previous = previous.previousElementSibling) {
+					if (previous.cells[0].innerHTML) {
+						cells[0] = previous.cells[0];
+						break;
+					}
+				}
+			}
 
 			tr.classList.remove("pass", "fail");
 			tr.classList.add(tr.compare(...cells)? "pass" : "fail");
@@ -146,44 +148,75 @@ var _ = self.RefTest = $.Class({
 	},
 
 	static: {
-		defaultCompare: (...cells) => {
-			var td = cells[cells.length - 2] || cells[cells.length - 1];
-			var ref = cells[cells.length - 1];
-
-			var pass = Test.content(td).trim() == Test.content(ref).trim();
-
-			if (pass) {
-				let child = td.firstElementChild;
-				let refChild = ref.firstElementChild;
-
-				if (child && child == td.lastElementChild && refChild) {
-					if (child.matches("input")) {
-						// Compare values
-						pass = pass && child.value == refChild.value;
-					}
-					else if (child.matches("select")) {
-						// Compare select options
-						$$(child.options).forEach((option, i) => {
-							var refOption = refChild.options[i];
-							var same = option.textContent == refOption.textContent &&
-									   option.value == refOption.value;
-							pass = pass && same;
-						});
-					}
+		getTest: function(test, fallback) {
+			if (test) {
+				if (test in _.compare) {
+					return _.compare[test];
+				}
+				else if (test in self) {
+					return self[test];
+				}
+				else {
+					return new Function("td", "ref", test);
 				}
 			}
 
-			return pass;
+			return fallback || _.compare.contents;
 		},
 
-		compareAttribute: function(attribute, td, ref) {
-			var actual = $$("*", td).map(el => el[attribute]);
-			var expected = $$("*", ref).map(el => el[attribute]);
+		compare: {
+			contents: (...cells) => {
+				var td = cells[cells.length - 2] || cells[cells.length - 1];
+				var ref = cells[cells.length - 1];
 
-			return actual.length === expected.length && actual.every((v, i) => {
-				return v === expected[i];
+				var pass = Test.content(td).trim() == Test.content(ref).trim();
 
-			});
+				if (pass) {
+					let child = td.firstElementChild;
+					let refChild = ref.firstElementChild;
+
+					if (child && child == td.lastElementChild && refChild) {
+						if (child.matches("input")) {
+							// Compare values
+							pass = pass && child.value == refChild.value;
+						}
+						else if (child.matches("select")) {
+							// Compare select options
+							$$(child.options).forEach((option, i) => {
+								var refOption = refChild.options[i];
+								var same = option.textContent == refOption.textContent &&
+										   option.value == refOption.value;
+								pass = pass && same;
+							});
+						}
+					}
+				}
+
+				return pass;
+			},
+
+			attribute: function(attribute, td, ref) {
+				var actual = $$("*", td).map(el => el[attribute]);
+				var expected = $$("*", ref).map(el => el[attribute]);
+
+				return actual.length === expected.length && actual.every((v, i) => {
+					return v === expected[i];
+
+				});
+			},
+
+			selector: function(td, ref) {
+				if (ref.children.length) {
+					// Multiple selectors to test against in a list
+					return $$("li", ref).every(li => _.compare.selector(td, li));
+				}
+				else {
+
+					var negative = ref.classList.contains("not");
+					var has = !!$(ref.textContent, td);
+					return negative? !has : has;
+				}
+			},
 		},
 
 		presentCode: function(code) {

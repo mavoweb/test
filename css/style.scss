@@ -288,6 +288,26 @@ table.reftest {
 			text-shadow: 0 0 1px rgba(0,0,0,.5);
 		}
 	}
+
+	td:empty:nth-last-child(2)::before {
+		content: "(Same as above)";
+		color: rgba(0,0,0,.5);
+		font-style: italic;
+	}
+
+	&[data-test="selector"], [data-test="selector"] {
+		.not::before,
+		.not::after {
+			content: ":not(";
+			font-weight: bold;
+			color: red;
+			mix-blend-mode: multiply;
+		}
+
+		.not::after {
+			content: ")"
+		}
+	}
 }
 
 td[data-script] {

@@ -202,6 +202,19 @@ table.reftest {
       color: white;
       font: bold 75%/1 sans-serif;
       text-shadow: 0 0 1px rgba(0, 0, 0, 0.5); }
+  table.reftest td:empty:nth-last-child(2)::before {
+    content: "(Same as above)";
+    color: rgba(0, 0, 0, 0.5);
+    font-style: italic; }
+  table.reftest[data-test="selector"] .not::before,
+  table.reftest[data-test="selector"] .not::after, table.reftest [data-test="selector"] .not::before,
+  table.reftest [data-test="selector"] .not::after {
+    content: ":not(";
+    font-weight: bold;
+    color: red;
+    mix-blend-mode: multiply; }
+  table.reftest[data-test="selector"] .not::after, table.reftest [data-test="selector"] .not::after {
+    content: ")"; }
 
 td[data-script] {
   position: relative;

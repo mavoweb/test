@@ -68,6 +68,55 @@
 </section>
 
 <section>
+	<h1>Multiple callbacks</h1>
+	<table class="reftest">
+		<tr title="Multiple Mavo.Permissions#can()">
+			<td>
+				<script>
+					var a = new Mavo.Permissions();
+					a.can("read", () => print(1), () => print(2));
+					a.can("read", () => print(3), () => print(4));
+					a.read = true;
+				</script>
+			</td>
+			<td>
+				2413
+			</td>
+		</tr>
+		<tr title="Multiple Mavo.Permissions#can()">
+			<td>
+				<script>
+					var a = new Mavo.Permissions();
+					a.can(["read", "edit"], () => print(1), () => print(0));
+					a.read = true;
+					a.edit = true;
+					a.read = false;
+					a.edit = false;
+					a.read = true;
+				</script>
+			</td>
+			<td>
+				0101
+			</td>
+		</tr>
+		<tr title="Multiple Mavo.Permissions#can() + multiple permissions">
+			<td>
+				<script>
+					var a = new Mavo.Permissions();
+					a.can(["read", "edit"], () => print(1), () => print(2));
+					a.can(["read", "login"], () => print(3), () => print(4));
+					a.read = true;
+					a.login = true;
+				</script>
+			</td>
+			<td>
+				2413
+			</td>
+		</tr>
+	</table>
+</section>
+
+<section>
 	<h1>Inheritance</h1>
 
 	<table class="reftest">
