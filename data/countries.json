@@ -1,6 +1,7 @@
 {
 	"country": [
 		{
+			"code": "foo",
 			"name": "Online"
 		},
 		{
