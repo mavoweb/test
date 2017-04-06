@@ -4,7 +4,7 @@
 	<meta charset="UTF-8">
 	<title>Render tests</title>
 	<link rel="stylesheet" href="mavo/mavo.css" />
-	<link rel="stylesheet" href="css/style.css" />
+	<link rel="stylesheet" href="style.css" />
 	<script src="mavo/mavo.js"></script>
 </head>
 <body>
@@ -197,6 +197,46 @@
 	</table>
 </section>
 
+<section>
+	<h1>mv-path with getting collection item by id</h1>
+
+	<table class="reftest">
+		<tr>
+			<td>
+				<pre id="data-mvpath-7">{
+	"prop1": [
+		{
+			"id": "baz",
+			"prop2": "first bar"
+		},
+		{
+			"id": "foo",
+			"prop2": "correct!"
+		},
+		{
+			"id": "foo",
+			"prop2": "second foo"
+		},
+		{
+			"id": "bar",
+			"prop2": "second bar"
+		}
+	]
+}</pre>
+			</td>
+			<td>
+				<script>document.write($$("td pre").pop().outerHTML)</script>
+			</td>
+		</tr>
+		<tr>
+			<td mv-app mv-storage="#data-mvpath-7" mv-path="prop1/foo">
+				<span property="id"></span>
+				<span property="prop2"></span>
+			</td>
+			<td>foo correct!</td>
+		</tr>
+	</table>
+</section>
 <!-- <section mv-app mv-source="#deep">
 	<h1>Deep hierarchy with same property</h1>
 

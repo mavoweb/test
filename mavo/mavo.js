@@ -301,7 +301,7 @@ var _ = self.Mavo = $.Class({
 
 		this.permissions.can("login", () => {
 			// We also support a URL param to trigger login, in case the user doesn't want visible login UI
-			if (Mavo.Functions.urlOption("login") !== null && this.index == 1 || Mavo.Functions.urlOption(this.id + "-login") !== null) {
+			if ("login" in Mavo.Functions.$url && this.index == 1 || this.id + "-login" in Mavo.Functions.$url) {
 				this.primaryBackend.login();
 			}
 		});
@@ -444,28 +444,14 @@ var _ = self.Mavo = $.Class({
 		return _.toJSON(this.getData());
 	},
 
+	message: function(message, options) {
+		return new _.UI.Message(this, message, options);
+	},
+
 	error: function(message, ...log) {
-		var close = () => $.transition(error, {opacity: 0}).then($.remove);
-		var closeTimeout;
-		var error = $.create("p", {
-			className: "mv-error mv-ui",
-			contents: [
-				message,
-				{
-					tag: "button",
-					className: "mv-close mv-ui",
-					textContent: "×",
-					events: {
-						"click": close
-					}
-				}
-			],
-			events: {
-				mouseenter: e => clearTimeout(closeTimeout),
-				mouseleave: _.rr(e => closeTimeout = setTimeout(close, 5000)),
-				click: e => this.element.scrollIntoView({behavior: "smooth"})
-			},
-			start: this.element
+		this.message(message, {
+			classes: "mv-error",
+			dismiss: ["button", "timeout"]
 		});
 
 		// Log more info for programmers
@@ -563,11 +549,11 @@ var _ = self.Mavo = $.Class({
 		var previous = this[role], backend;
 
 		if (this.index == 1) {
-			backend = _.Functions.urlOption(role);
+			backend = _.Functions.$url[role];
 		}
 
 		if (!backend) {
-			backend =  _.Functions.urlOption(`${this.id}-${role}`) || this.element.getAttribute("mv-" + role) || null;
+			backend =  _.Functions.$url[`${this.id}-${role}`] || this.element.getAttribute("mv-" + role) || null;
 		}
 
 		if (backend) {
@@ -675,7 +661,7 @@ var _ = self.Mavo = $.Class({
 					var message = "Problem saving data";
 
 					if (err instanceof XMLHttpRequest) {
-						message += xhr.status? `: HTTP error ${err.status}: ${err.statusText}` : ": Can’t connect to the Internet";
+						message += err.status? `: HTTP error ${err.status}: ${err.statusText}` : ": Can’t connect to the Internet";
 					}
 
 					this.error(message, err);
@@ -783,10 +769,12 @@ var _ = self.Mavo = $.Class({
 
 		superKey: navigator.platform.indexOf("Mac") === 0? "metaKey" : "ctrlKey",
 
-		ready: Promise.all([
-			$.ready(),
-			$.include(Array.from && window.Intl && document.documentElement.closest, "https://cdn.polyfill.io/v2/polyfill.min.js?features=blissfuljs,Intl.~locale.en")
-		]),
+		ready: function() {
+			var isDecentBrowser = Array.from && window.Intl && document.documentElement.closest;
+			var polyfills = $.include(isDecentBrowser, "https://cdn.polyfill.io/v2/polyfill.min.js?features=blissfuljs,Intl.~locale.en");
+
+			Promise.all([$.ready(), polyfills, _.Plugins.load()]);
+		},
 
 		init: function(container = document) {
 			return $$(_.selectors.init, container)
@@ -795,21 +783,6 @@ var _ = self.Mavo = $.Class({
 		},
 
 		UI: {},
-
-		plugins: {},
-
-		plugin: function(o) {
-			_.hooks.add(o.hooks);
-
-			for (let Class in o.extend) {
-				let def = Class == "Mavo"? _ : _[Class];
-				$.Class(def, o.extend[Class]);
-			}
-
-			if (o.name) {
-				_.plugins[o.name] = o;
-			}
-		},
 
 		hooks: new $.Hooks(),
 
@@ -862,7 +835,7 @@ $.extend(_.selectors, {
 // Init mavo. Async to give other scripts a chance to modify stuff.
 requestAnimationFrame(() => _.ready.catch(console.error).then(() => Mavo.init()));
 
-Stretchy.selectors.filter = ".mv-editor:not([property])";
+Stretchy.selectors.filter = ".mv-editor:not([property]), .mv-autosize";
 
 })(Bliss, Bliss.$);
 
@@ -1025,9 +998,28 @@ var _ = $.extend(Mavo, {
 
 			return value;
 		}
+		else if (typeof obj == "object" && path && path.length) { // Get
+			return path.reduce((obj, property, i) => {
+				if (obj && property in obj) {
+					return obj[property];
+				}
+
+				if (Array.isArray(obj) && isNaN(property)) {
+					// Non-numeric property on array, try getting by id
+					for (var j=0; j<obj.length; j++) {
+						if (obj[j] && obj[j].id == property) {
+							path[i] = j;
+							return obj[j];
+						}
+					}
+				}
+
+				return obj;
+
+			}, obj);
+		}
 		else {
-			// Get
-			return typeof obj == "object" && path && path.length? $.value(obj, ...path) : obj;
+			return obj;
 		}
 	},
 
@@ -1251,6 +1243,87 @@ document.documentElement.addEventListener("mavo:datachange", evt => {
 });
 
 updateWithin("focus", document.activeElement !== document.body? document.activeElement : null);
+
+})(Bliss, Bliss.$);
+
+(function ($, $$) {
+
+Mavo.attributes.push("mv-plugins");
+
+var _ = Mavo.Plugins = {
+	loaded: {},
+
+	load: function() {
+		var element = $("[mv-plugins]");
+
+		if (!element) {
+			return;
+		}
+
+		_.plugins = _.plugins || element.getAttribute("mv-plugins").trim().split(/\s+/) || _.defaultPlugins;
+
+		if (_.plugins.length) {
+			// Fetch plugin index
+			$.fetch(_.url + "/plugins.json", {
+				responseType: "json"
+			}).then(xhr => {
+				// Fetch plugins
+				return Promise.all(xhr.response.plugin
+					.filter(plugin => plugins.indexOf(plugin.id) > -1)
+					.map(plugin => {
+						// Load plugin
+
+						if (plugin.repo) {
+							// Plugin hosted in a separate repo
+							var base = `https://raw.githubusercontent.com/${plugin.repo}/`;
+						}
+						else {
+							// Plugin hosted in the mavo-plugins repo
+							var base = `${_.url}/${plugin.id}/`;
+						}
+
+						// Load dependencies first
+						if (plugin.dependencies && plugin.dependencies.length) {
+							var dependencies = plugin.dependencies.map(url => new URL(url, base)).map(url => {
+								if (/\.css$/.test(url.pathname)) {
+									// CSS file
+									$.create("link", {
+										"href": url,
+										"rel": "stylesheet",
+										"inside": document.head
+									});
+
+									return Promise.resolve();
+								}
+
+								// JS file
+								return $.include(url);
+							});
+						}
+
+						var url = `${base}mavo-${plugin.id}.js`;
+
+						return dependencies.then(() => $.include(_.loaded[plugin.id], url));
+					}));
+			});
+		}
+	},
+
+	register: function(o) {
+		_.hooks.add(o.hooks);
+
+		for (let Class in o.extend) {
+			let def = Class == "Mavo"? _ : _[Class];
+			$.Class(def, o.extend[Class]);
+		}
+
+		if (o.name) {
+			_.plugins.loaded[o.name] = o;
+		}
+	},
+
+	url: "https://plugins.mavo.io/"
+};
 
 })(Bliss, Bliss.$);
 
@@ -1488,6 +1561,76 @@ var _ = Mavo.UI.Bar = $.Class({
 				permission: "logout"
 			}
 		}
+	}
+});
+
+})(Bliss, Bliss.$);
+
+(function ($, $$) {
+
+var _ = Mavo.UI.Message = $.Class({
+	constructor: function(mavo, message, o) {
+		this.mavo = mavo;
+		this.message = message;
+		this.closed = Mavo.defer();
+
+		this.element = $.create({
+			className: "mv-ui mv-message",
+			innerHTML: this.message,
+			events: {
+				click: e => Mavo.scrollIntoViewIfNeeded(this.mavo.element)
+			},
+			after: this.mavo.bar.element
+		});
+
+		if (o.classes) {
+			this.element.classList.add(o.classes);
+		}
+
+		o.dismiss = o.dismiss || {};
+
+		if (typeof o.dismiss == "string" || Array.isArray(o.dismiss)) {
+			var dismiss = {};
+			for (let prop of Mavo.toArray(o.dismiss)) {
+				dismiss[prop] = true;
+			}
+			o.dismiss = dismiss;
+		}
+
+		if (o.dismiss.button) {
+			$.create("button", {
+				className: "mv-close mv-ui",
+				textContent: "×",
+				events: {
+					"click": evt => this.close()
+				},
+				start: this.element
+			});
+		}
+
+		if (o.dismiss.timeout) {
+			var timeout = typeof o.dismiss.timeout === "number"? o.dismiss.timeout : 5000;
+			var closeTimeout;
+
+			$.events(this.element, {
+				mouseenter: e => clearTimeout(closeTimeout),
+				mouseleave: Mavo.rr(e => closeTimeout = setTimeout(() => this.close(), timeout)),
+			});
+		}
+
+		if (o.dismiss.submit) {
+			this.element.addEventListener("submit", evt => {
+				evt.preventDefault();
+				this.close(evt.target);
+			});
+		}
+	},
+
+	close: function(resolve) {
+		$.transition(this.element, {opacity: 0}).then(() => {
+			$.remove(this.element);
+			this.closed.resolve(resolve);
+		});
 	}
 });
 
@@ -1781,12 +1924,129 @@ var _ = Mavo.Backend = $.Class({
 	login: () => Promise.resolve(),
 	logout: () => Promise.resolve(),
 
+	isAuthenticated: function() {
+		return !!this.accessToken;
+	},
+
+	// Any extra params to be passed to the oAuth URL.
+	oAuthParams: () => "",
+
 	toString: function() {
 		return `${this.id} (${this.url})`;
 	},
 
 	equals: function(backend) {
 		return backend === this || (backend && this.id == backend.id && this.source == backend.source);
+	},
+
+	/**
+	 * Helper for making OAuth requests with JSON-based APIs.
+	 */
+	request: function(call, data, method = "GET", req = {}) {
+		req.method = req.method || method;
+		req.responseType = req.responseType || "json";
+		req.headers = req.headers || {};
+		req.headers["Content-Type"] = req.headers["Content-Type"] || "application/json; charset=utf-8";
+		req.data = data;
+
+		if (this.isAuthenticated()) {
+			req.headers["Authorization"] = req.headers["Authorization"] || `Bearer ${this.accessToken}`;
+		}
+
+		if (typeof req.data === "object") {
+			if (req.method == "GET") {
+				req.data = Object.keys(req.data).map(p => p + "=" + encodeURIComponent(req.data[p])).join("&");
+			}
+			else {
+				req.data = JSON.stringify(req.data);
+			}
+		}
+
+		call = new URL(call, this.constructor.apiDomain);
+
+		return $.fetch(call, req)
+			.catch(err => {
+				if (err && err.xhr) {
+					return Promise.reject(err.xhr);
+				}
+				else {
+					this.mavo.error("Something went wrong while connecting to " + this.id, err);
+				}
+			})
+			.then(xhr => req.method == "HEAD"? xhr : xhr.response);
+	},
+
+	/**
+	 * Helper method for authenticating in OAuth APIs
+	 */
+	oAuthenticate: function(passive) {
+		return this.ready.then(() => {
+			if (this.isAuthenticated()) {
+				return Promise.resolve();
+			}
+
+			return new Promise((resolve, reject) => {
+				var id = this.id.toLowerCase();
+
+				if (passive) {
+					this.accessToken = localStorage[`mavo:${id}token`];
+
+					if (this.accessToken) {
+						resolve(this.accessToken);
+					}
+				}
+				else {
+					// Show window
+					var popup = {
+						width: Math.min(1000, innerWidth - 100),
+						height: Math.min(800, innerHeight - 100)
+					};
+
+					popup.top = (innerHeight - popup.height)/2 + (screen.top || screenTop);
+					popup.left = (innerWidth - popup.width)/2 + (screen.left || screenLeft);
+
+					var state = {
+						url: location.href,
+						backend: this.id
+					};
+
+					this.authPopup = open(`${this.constructor.oAuth}?client_id=${this.key}&state=${encodeURIComponent(JSON.stringify(state))}` + this.oAuthParams(),
+						"popup", `width=${popup.width},height=${popup.height},left=${popup.left},top=${popup.top}`);
+
+					addEventListener("message", evt => {
+						if (evt.source === this.authPopup) {
+							if (evt.data.backend == this.id) {
+								this.accessToken = localStorage[`mavo:${id}token`] = evt.data.token;
+							}
+
+							if (!this.accessToken) {
+								reject(Error("Authentication error"));
+							}
+
+							resolve(this.accessToken);
+						}
+					});
+				}
+			});
+		});
+	},
+
+	/**
+	 * oAuth logout helper
+	 */
+	oAuthLogout: function() {
+		if (this.isAuthenticated()) {
+			var id = this.id.toLowerCase();
+
+			localStorage.removeItem(`mavo:${id}token`);
+			delete this.accessToken;
+
+			this.permissions.off(["edit", "add", "delete", "save"]).on("login");
+
+			this.mavo.element._.fire("mavo:logout", {backend: this});
+		}
+
+		return Promise.resolve();
 	},
 
 	static: {
@@ -2039,12 +2299,12 @@ var _ = Mavo.Node = $.Class({
 		this.uid = ++_.maxId;
 		this.nodeType = this.nodeType;
 		this.property = null;
+		this.element = element;
 
 		$.extend(this, env.options);
 
 		_.all.set(element, [...(_.all.get(this.element) || []), this]);
 
-		this.element = element;
 		this.template = env.options.template;
 
 		if (this.template) {
@@ -2503,8 +2763,8 @@ var _ = Mavo.Group = $.Class({
 			var obj = this.children[this.property] = new Mavo.Primitive(this.element, this.mavo, {group: this});
 		}
 
-		// Create Mavo objects for all properties in this group (primitives orgroups),
-		// but not properties in descendantgroups (they will be handled by their group)
+		// Create Mavo objects for all properties in this group (primitives or groups),
+		// but not properties in descendant groups (they will be handled by their group)
 		$$(Mavo.selectors.property, this.element).forEach(element => {
 			var property = Mavo.Node.getProperty(element);
 
@@ -3038,7 +3298,7 @@ var _ = Mavo.Primitive = $.Class({
 	},
 
 	clear: function() {
-		this.value = this.modes == "read"? this.templateValue : this.emptyValue;
+		this.value = this.templateValue;
 	},
 
 	dataRender: function(data) {
@@ -3793,7 +4053,7 @@ _.register({
 
 		setEditorValue: function(value) {
 			if (this.datatype && this.datatype != "string") {
-				return;
+				value = value + "";
 			}
 
 			var cs = getComputedStyle(this.element);
@@ -3925,12 +4185,15 @@ var _ = Mavo.Collection = $.Class({
 			data: []
 		};
 
+		var count = 0; // count of non-null items
+
 		for (item of this.children) {
 			if (!item.deleted || o.null) {
 				let itemData = item.getData(env.options);
 
 				if (itemData || o.null) {
 					env.data.push(itemData);
+					count += !!itemData;
 				}
 			}
 		}
@@ -3939,9 +4202,9 @@ var _ = Mavo.Collection = $.Class({
 			env.data = this.unhandled.before.concat(env.data, this.unhandled.after);
 		}
 
-		if (!this.mutable && env.data.length == 1) {
+		if (!this.mutable && count == 1) {
 			// See https://github.com/LeaVerou/mavo/issues/50#issuecomment-266079652
-			env.data = env.data[0];
+			env.data = env.data.filter(d => !!d)[0];
 		}
 
 		Mavo.hooks.run("node-getdata-end", env);
@@ -5102,7 +5365,7 @@ var _ = Mavo.Expressions = $.Class({
 			_.directives.push(name);
 			Mavo.attributes.push(name);
 
-			Mavo.plugin(o);
+			Mavo.Plugins.register(o);
 		}
 	}
 });
@@ -5419,26 +5682,21 @@ var _ = Mavo.Functions = {
 		return new Date();
 	},
 
-	urlOption: function(...names) {
-		var searchParams = "searchParams" in URL.prototype? new URL(location).searchParams : null;
-		var value = null;
+	// Read-only syntactic sugar for URL stuff
+	$url: (function() {
+		var ret = {};
+		var url = new URL(location);
 
-		for (let name of names) {
-			if (searchParams) {
-				value = searchParams.get(name);
-			}
-			else {
-				var match = location.search.match(RegExp(`[?&]${name}(?:=([^&]+))?(?=&|$)`, "i"));
-				value = match && (match[1] || "");
-			}
-
-			if (value !== null) {
-				return value;
-			}
+		for (let pair of url.searchParams) {
+			ret[pair[0]] = pair[1];
 		}
 
-		return null;
-	},
+		Object.defineProperty(ret, "toString", {
+			value: () => new URL(location)
+		});
+
+		return ret;
+	})(),
 
 	/**
 	 * Get a property of an object. Used by the . operator to prevent TypeErrors
@@ -5761,7 +6019,7 @@ Mavo.Script = {
 		"concatenate": {
 			symbol: "&",
 			identity: "",
-			scalar: (a, b) => "" + a + b
+			scalar: (a, b) => "" + (a || "") + (b || "")
 		},
 		"filter": {
 			scalar: (a, b) => b? a : null
@@ -5853,46 +6111,21 @@ function numbers(array, args) {
 
 (function($) {
 
-if (!self.Mavo) {
-	return;
-}
-
-var dropboxURL = "//cdnjs.cloudflare.com/ajax/libs/dropbox.js/0.10.2/dropbox.min.js";
-
-Mavo.Backend.register($.Class({
+var _ = Mavo.Backend.register($.Class({
 	extends: Mavo.Backend,
 	id: "Dropbox",
 	constructor: function() {
+		this.permissions.on(["login", "read"]);
+
+		this.key = this.mavo.element.getAttribute("mv-dropbox-key") || "2mx6061p054bpbp";
+
 		// Transform the dropbox shared URL into something raw and CORS-enabled
 		this.url = new URL(this.url, location);
 
-		if (this.url.protocol != "dropbox:") {
-			this.url.hostname = "dl.dropboxusercontent.com";
-			this.url.search = this.url.search.replace(/\bdl=0|^$/, "raw=1");
-			this.permissions.on("read"); // TODO check if file actually is publicly readable
-		}
+		this.url.hostname = "dl.dropboxusercontent.com";
+		this.url.search = this.url.search.replace(/\bdl=0|^$/, "raw=1");
 
-		this.permissions.on("login");
-
-		this.ready = $.include(self.Dropbox, dropboxURL).then((() => {
-			var referrer = new URL(document.referrer, location);
-
-			if (referrer.hostname === "www.dropbox.com" && location.hash.indexOf("#access_token=") === 0) {
-				// We’re in an OAuth response popup, do what you need then close this
-				Dropbox.AuthDriver.Popup.oauthReceiver();
-				$.fire(window, "load"); // hack because dropbox.js didn't foresee use cases like ours :/
-				close();
-				return;
-			}
-
-			this.path = (this.mavo.element.getAttribute("mv-dropbox-path") || "") + (new URL(this.url)).pathname.match(/[^/]*$/)[0];
-
-			this.key = this.mavo.element.getAttribute("mv-dropbox-key") || "fle6gsc61w5v79j";
-
-			this.client = new Dropbox.Client({ key: this.key });
-		})).then(() => {
-			this.login(true);
-		});
+		this.login(true);
 	},
 
 	/**
@@ -5900,71 +6133,65 @@ Mavo.Backend.register($.Class({
 	 * @param {Object} file - An object with name & data keys
 	 * @return {Promise} A promise that resolves when the file is saved.
 	 */
-	put: function(file = this.getFile()) {
-		return new Promise((resolve, reject) => {
-			this.client.writeFile(file.name, file.dataString, function(error, stat) {
-				if (error) {
-					return reject(Error(error));
-				}
-
-				console.log("File saved as revision " + stat.versionTag);
-				resolve(file);
-			});
+	put: function(serialized, path) {
+		return this.request("https://content.dropboxapi.com/2/files/upload", serialized, "POST", {
+			headers: {
+				"Dropbox-API-Arg": JSON.stringify({
+					path: this.path,
+					mode: "overwrite"
+				}),
+				"Content-Type": "application/octet-stream"
+			}
 		});
+	},
+
+	oAuthParams: () => `&redirect_uri=${encodeURIComponent("https://auth.mavo.io")}&response_type=code`,
+
+	getUser: function() {
+		if (this.user) {
+			return Promise.resolve(this.user);
+		}
+
+		return this.request("users/get_current_account", "null", "POST")
+			.then(info => {
+				this.user = {
+					username: info.email,
+					name: info.name.display_name,
+					avatar: info.profile_photo_url,
+					info
+				};
+			});
 	},
 
 	login: function(passive) {
-		return this.ready.then(() => {
-			return this.client.isAuthenticated()? Promise.resolve() : new Promise((resolve, reject) => {
-				this.client.authDriver(new Dropbox.AuthDriver.Popup({
-				    receiverUrl: new URL(location) + ""
-				}));
+		return this.oAuthenticate(passive)
+			.then(() => this.getUser())
+			.then(u => {
+				if (this.user) {
+					this.permissions.logout = true;
 
-				this.client.authenticate({interactive: !passive}, (error, client) => {
-
-					if (error) {
-						reject(Error(error));
-					}
-
-					if (this.client.isAuthenticated()) {
-						// TODO check if can actually edit the file
-						this.permissions.on(["logout", "edit"]);
-
-						resolve();
-					}
-					else {
-						this.permissions.off(["logout", "edit", "add", "delete"]);
-
-						reject();
-					}
-				});
-			});
-		}).then(() => {
-			// Not returning a promise here, since processes depending on login don't need to wait for this
-			this.client.getAccountInfo((error, accountInfo) => {
-				if (!error) {
-					$.fire(this.mavo.element, "mavo:login", $.extend({backend: this}, accountInfo));
+					// Check if can actually edit the file
+					this.request("sharing/get_shared_link_metadata", {
+						"url": this.source
+					}, "POST").then(info => {
+						this.path = info.path_lower;
+						this.permissions.on(["edit", "save"]);
+					});
 				}
 			});
-		}).catch(() => {});
 	},
 
 	logout: function() {
-		return !this.client.isAuthenticated()? Promise.resolve() : new Promise((resolve, reject) => {
-			this.client.signOut(null, () => {
-				this.permissions.off(["edit", "add", "delete"]).on("login");
-
-				this.mavo.element._.fire("mavo:logout", {backend: this});
-				resolve();
-			});
-		});
-
+		return this.oAuthLogout();
 	},
 
 	static: {
+		apiDomain: "https://api.dropboxapi.com/2/",
+		oAuth: "https://www.dropbox.com/oauth2/authorize",
+
 		test: function(url) {
 			url = new URL(url, location);
-			return /dropbox.com/.test(url.host) || url.protocol === "dropbox:";
+			return /dropbox.com/.test(url.host);
 		}
 	}
 }));
@@ -5973,15 +6200,11 @@ Mavo.Backend.register($.Class({
 
 (function($) {
 
-if (!self.Mavo) {
-	return;
-}
-
 var _ = Mavo.Backend.register($.Class({
 	extends: Mavo.Backend,
 	id: "Github",
 	constructor: function() {
-		this.permissions.on("login");
+		this.permissions.on(["login", "read"]);
 
 		this.key = this.mavo.element.getAttribute("mv-github-key") || "7e08e016048000bc594e";
 
@@ -5991,7 +6214,6 @@ var _ = Mavo.Backend.register($.Class({
 		if (parsedURL.username) {
 			$.extend(this, parsedURL);
 			this.repo = this.repo || "mv-data";
-			this.branch = this.branch || "master";
 			this.path = this.path || `${this.mavo.id}.json`;
 			this.apiCall = `repos/${this.username}/${this.repo}/contents/${this.path}`;
 		}
@@ -5999,47 +6221,11 @@ var _ = Mavo.Backend.register($.Class({
 			this.apiCall = this.url.pathname.slice(1);
 		}
 
-		this.permissions.on("read");
-
 		this.login(true);
 	},
 
-	get authenticated () {
-		return !!this.accessToken;
-	},
-
-	/**
-	 * Helper method to make a request with the Github API
-	 */
-	req: function(call, data, method = "GET", o = {method: method}) {
-		if (data) {
-			o.data =  JSON.stringify(data);
-		}
-
-		var request = $.extend(o, {
-			responseType: "json"
-		});
-
-		if (this.authenticated) {
-			request.headers = {
-				"Authorization": `token ${this.accessToken}`
-			};
-		}
-
-		return $.fetch(_.apiDomain + call, request)
-		.catch(err => {
-			if (err && err.xhr) {
-				return Promise.reject(err.xhr);
-			}
-			else {
-				this.mavo.error("Something went wrong while connecting to Github", err);
-			}
-		})
-		.then(xhr => Promise.resolve(xhr.response));
-	},
-
 	get: function() {
-		return this.req(this.apiCall)
+		return this.request(this.apiCall)
 		       .then(response => Promise.resolve(this.repo? _.atob(response.content) : response));
 	},
 
@@ -6049,78 +6235,157 @@ var _ = Mavo.Backend.register($.Class({
 	 * @param {String} path - Optional file path
 	 * @return {Promise} A promise that resolves when the file is saved.
 	 */
-	put: function(serialized, path) {
-		var fileCall = path? `repos/${this.username}/${this.repo}/contents/${path}` : this.apiCall;
+	put: function(serialized, path = this.path) {
+		if (!path) {
+			// Raw API calls are read-only for now
+			return;
+		}
 
-		return Promise.resolve(this.repoInfo || this.req("user/repos", {
-			name: this.repo
-		}, "POST"))
-		.then(repoInfo => {
-			this.repoInfo = repoInfo;
+		var repoCall = `repos/${this.username}/${this.repo}`;
+		var fileCall = `${repoCall}/contents/${path}`;
 
-			return this.req(fileCall, {
-				ref: this.branch
-			});
-		})
-		.then(fileInfo => this.req(fileCall, {
-			message: `Updated ${fileInfo.name || "file"}`,
-			content: _.btoa(serialized),
-			branch: this.branch,
-			sha: fileInfo.sha
-		}, "PUT"), xhr => {
-			if (xhr.status == 404) {
-				// File does not exist, create it
-				return this.req(fileCall, {
-					message: "Created file",
+		// Create repo if it doesn’t exist
+		var repoInfo = this.repoInfo || this.request("user/repos", {name: this.repo}, "POST").then(repoInfo => this.repoInfo = repoInfo);
+
+		return Promise.resolve(repoInfo)
+			.then(repoInfo => {
+				if (!this.canPush()) {
+					// Does not have permission to commit, create a fork
+					return this.request(`${repoCall}/forks`, {name: this.repo}, "POST")
+						.then(forkInfo => {
+							fileCall = `repos/${forkInfo.full_name}/contents/${path}`;
+							return this.forkInfo = forkInfo;
+						})
+						.then(forkInfo => {
+							// Ensure that fork is created (they take a while)
+							var timeout;
+							var test = (resolve, reject) => {
+								clearTimeout(timeout);
+								this.request(`repos/${forkInfo.full_name}/commits`, {until: "1970-01-01T00:00:00Z"}, "HEAD")
+									.then(x => {
+										resolve(forkInfo);
+									})
+									.catch(x => {
+										// Try again after 1 second
+										timeout = setTimeout(test, 1000);
+									});
+							};
+
+							return new Promise(test);
+						});
+				}
+
+				return repoInfo;
+			})
+			.then(repoInfo => {
+				return this.request(fileCall, {
+					ref: this.branch
+				}).then(fileInfo => this.request(fileCall, {
+					message: `Updated ${fileInfo.name || "file"}`,
 					content: _.btoa(serialized),
-					branch: this.branch
-				}, "PUT");
-			}
+					branch: this.branch,
+					sha: fileInfo.sha
+				}, "PUT"), xhr => {
+					if (xhr.status == 404) {
+						// File does not exist, create it
+						return this.request(fileCall, {
+							message: "Created file",
+							content: _.btoa(serialized),
+							branch: this.branch
+						}, "PUT");
+					}
 
-			return xhr;
-		});
+					return xhr;
+				});
+			})
+			.then(fileInfo => {
+				if (this.forkInfo) {
+					// We saved in a fork, do we have a pull request?
+					this.request(`repos/${this.username}/${this.repo}/pulls`, {
+						head: `${this.user.username}:${this.branch}`,
+						base: this.branch
+					}).then(prs => {
+						this.pullRequest(prs[0]);
+					});
+				}
+			});
+	},
+
+	pullRequest: function(existing) {
+		var previewURL = new URL(location);
+		previewURL.searchParams.set(this.mavo.id + "-storage", `https://github.com/${this.forkInfo.full_name}/${this.path}`);
+		var message = `Your edits are saved to <a href="${previewURL}" target="_blank">your own profile</a>, because you are not allowed to edit this page.`;
+
+		if (this.notice) {
+			this.notice.close();
+		}
+
+		if (existing) {
+			// We already have a pull request, ask about closing it
+			this.notice = this.mavo.message(`${message}
+				You have selected to suggest your edits to the page admins. Your suggestions have not been reviewed yet.
+				<form onsubmit="return false">
+					<button class="mv-danger">Revoke edit suggestion</button>
+				</form>`, {
+					classes: "mv-inline",
+					dismiss: ["button", "submit"]
+				});
+
+			this.notice.closed.then(form => {
+				if (!form) {
+					return;
+				}
+
+				// Close PR
+				this.request(`repos/${this.username}/${this.repo}/pulls/${existing.number}`, {
+					state: "closed"
+				}, "POST").then(prInfo => {
+					new Mavo.UI.Message(this.mavo, `<a href="${prInfo.html_url}">Edit suggestion cancelled successfully!</a>`, {
+						dismiss: ["button", "timeout"]
+					});
+
+					this.pullRequest();
+				});
+			});
+		}
+		else {
+			// Ask about creating a PR
+			this.notice = this.mavo.message(`${message}
+				Write a short description of your edits below to suggest them to the page admins:
+				<form onsubmit="return false">
+					<textarea name="edits" class="mv-autosize" placeholder="I added / corrected / deleted ..."></textarea>
+					<button>Send edit suggestion</button>
+				</form>`, {
+					classes: "mv-inline",
+					dismiss: ["button", "submit"]
+				});
+
+			this.notice.closed.then(form => {
+				if (!form) {
+					return;
+				}
+
+				// We want to send a pull request
+				this.request(`repos/${this.username}/${this.repo}/pulls`, {
+					title: "Suggested edits to data",
+					body: `Hello there! I used Mavo to suggest the following edits:
+${form.elements.edits.value}
+Preview my changes here: ${previewURL}`,
+					head: `${this.user.username}:${this.branch}`,
+					base: this.branch
+				}, "POST").then(prInfo => {
+					new Mavo.UI.Message(this.mavo, `<a href="${prInfo.html_url}">Edit suggestion sent successfully!</a>`, {
+						dismiss: ["button", "timeout"]
+					});
+
+					this.pullRequest(prInfo);
+				});
+			});
+		}
 	},
 
 	login: function(passive) {
-		return this.ready.then(() => {
-			if (this.authenticated) {
-				return Promise.resolve();
-			}
-
-			return (new Promise((resolve, reject) => {
-				if (passive) {
-					this.accessToken = localStorage["mavo:githubtoken"];
-
-					if (this.accessToken) {
-						resolve(this.accessToken);
-					}
-				}
-				else {
-					// Show window
-					var popup = {
-						width: Math.min(1000, innerWidth - 100),
-						height: Math.min(800, innerHeight - 100)
-					};
-
-					popup.top = (innerHeight - popup.height)/2 + (screen.top || screenTop);
-					popup.left = (innerWidth - popup.width)/2 + (screen.left || screenLeft);
-
-					this.authPopup = open(`https://github.com/login/oauth/authorize?client_id=${this.key}&scope=repo,gist&state=${location.href}`,
-						"popup", `width=${popup.width},height=${popup.height},left=${popup.left},top=${popup.top}`);
-
-					addEventListener("message", evt => {
-						if (evt.source === this.authPopup) {
-							this.accessToken = localStorage["mavo:githubtoken"] = evt.data;
-
-							if (!this.accessToken) {
-								reject(Error("Authentication error"));
-							}
-
-							resolve(this.accessToken);
-						}
-					});
-				}
-			}))
+		return this.oAuthenticate(passive)
 			.then(() => this.getUser())
 			.catch(xhr => {
 				if (xhr.status == 401) {
@@ -6130,47 +6395,46 @@ var _ = Mavo.Backend.register($.Class({
 			})
 			.then(u => {
 				if (this.user) {
-					this.permissions.on("logout");
+					this.permissions.on(["edit", "save", "logout"]);
 
 					if (this.repo) {
-						return this.req(`repos/${this.username}/${this.repo}`)
+						return this.request(`repos/${this.username}/${this.repo}`)
 							.then(repoInfo => {
-								this.repoInfo = repoInfo;
-
-								if (repoInfo.permissions.push) {
-									this.permissions.on(["edit", "save"]);
+								if (this.branch === undefined) {
+									this.branch = repoInfo.default_branch;
 								}
-							})
-							.catch(xhr => {
-								if (xhr.status == 404) {
-									// Repo does not exist so we can't check permissions
-									// Just check if authenticated user is the same as our URL username
-									if (this.user.login.toLowerCase() == this.username.toLowerCase()) {
-										this.permissions.on(["edit", "save"]);
-									}
-								}
+								
+								return this.repoInfo = repoInfo;
 							});
 					}
 				}
 			});
+	},
+
+	canPush: function() {
+		if (this.repoInfo) {
+			return this.repoInfo.permissions.push;
+		}
+
+		// Repo does not exist so we can't check permissions
+		// Just check if authenticated user is the same as our URL username
+		return this.user && this.user.username.toLowerCase() == this.username.toLowerCase();
+	},
+
+	oAuthParams: () => "&scope=repo,gist",
+
+	logout: function() {
+		return this.oAuthLogout().then(() => {
+			this.user = null;
 		});
 	},
 
-	logout: function() {
-		if (this.authenticated) {
-			localStorage.removeItem("mavo:githubtoken");
-			delete this.accessToken;
-
-			this.permissions.off(["edit", "add", "delete", "save"]).on("login");
-
-			this.mavo.element._.fire("mavo:logout", {backend: this});
+	getUser: function() {
+		if (this.user) {
+			return Promise.resolve(this.user);
 		}
 
-		return Promise.resolve();
-	},
-
-	getUser: function() {
-		return this.req("user").then(info => {
+		return this.request("user").then(info => {
 			this.user = {
 				username: info.login,
 				name: info.name || info.login,
@@ -6185,6 +6449,7 @@ var _ = Mavo.Backend.register($.Class({
 
 	static: {
 		apiDomain: "https://api.github.com/",
+		oAuth: "https://github.com/login/oauth/authorize",
 
 		test: function(url) {
 			url = new URL(url, location);

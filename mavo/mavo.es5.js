@@ -374,7 +374,7 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
 
 			this.permissions.can("login", function () {
 				// We also support a URL param to trigger login, in case the user doesn't want visible login UI
-				if (Mavo.Functions.urlOption("login") !== null && _this.index == 1 || Mavo.Functions.urlOption(_this.id + "-login") !== null) {
+				if ("login" in Mavo.Functions.$url && _this.index == 1 || _this.id + "-login" in Mavo.Functions.$url) {
 					_this.primaryBackend.login();
 				}
 			});
@@ -568,35 +568,14 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
 			return _.toJSON(this.getData());
 		},
 
-		error: function error(message) {
-			var _this2 = this;
+		message: function message(_message, options) {
+			return new _.UI.Message(this, _message, options);
+		},
 
-			var close = function close() {
-				return $.transition(error, { opacity: 0 }).then($.remove);
-			};
-			var closeTimeout;
-			var error = $.create("p", {
-				className: "mv-error mv-ui",
-				contents: [message, {
-					tag: "button",
-					className: "mv-close mv-ui",
-					textContent: "×",
-					events: {
-						"click": close
-					}
-				}],
-				events: {
-					mouseenter: function mouseenter(e) {
-						return clearTimeout(closeTimeout);
-					},
-					mouseleave: _.rr(function (e) {
-						return closeTimeout = setTimeout(close, 5000);
-					}),
-					click: function click(e) {
-						return _this2.element.scrollIntoView({ behavior: "smooth" });
-					}
-				},
-				start: this.element
+		error: function error(message) {
+			this.message(message, {
+				classes: "mv-error",
+				dismiss: ["button", "timeout"]
 			});
 
 			// Log more info for programmers
@@ -627,11 +606,11 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
 		},
 
 		clear: function clear() {
-			var _this3 = this;
+			var _this2 = this;
 
 			if (confirm("This will delete all your data. Are you sure?")) {
 				this.store(null).then(function () {
-					return _this3.root.clear();
+					return _this2.root.clear();
 				});
 			}
 		},
@@ -706,11 +685,11 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
 			    backend;
 
 			if (this.index == 1) {
-				backend = _.Functions.urlOption(role);
+				backend = _.Functions.$url[role];
 			}
 
 			if (!backend) {
-				backend = _.Functions.urlOption(this.id + "-" + role) || this.element.getAttribute("mv-" + role) || null;
+				backend = _.Functions.$url[this.id + "-" + role] || this.element.getAttribute("mv-" + role) || null;
 			}
 
 			if (backend) {
@@ -758,7 +737,7 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
    * @return {Promise}  A promise that resolves when the data is loaded.
    */
 		load: function load() {
-			var _this4 = this;
+			var _this3 = this;
 
 			var backend = this.source || this.storage;
 
@@ -772,10 +751,10 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
 				return backend.load();
 			}).catch(function (err) {
 				// Try again with init
-				if (_this4.init && _this4.init != backend) {
-					backend = _this4.init;
-					return _this4.init.ready.then(function () {
-						return _this4.init.load();
+				if (_this3.init && _this3.init != backend) {
+					backend = _this3.init;
+					return _this3.init.ready.then(function () {
+						return _this3.init.load();
 					});
 				}
 
@@ -786,7 +765,7 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
 					var xhr = err instanceof XMLHttpRequest ? err : err.xhr;
 
 					if (xhr && xhr.status == 404) {
-						_this4.render(null);
+						_this3.render(null);
 					} else {
 						var message = "Problem loading data";
 
@@ -794,20 +773,20 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
 							message += xhr.status ? ": HTTP error " + err.status + ": " + err.statusText : ": Can’t connect to the Internet";
 						}
 
-						_this4.error(message, err);
+						_this3.error(message, err);
 					}
 				}
 				return null;
 			}).then(function (data) {
-				return _this4.render(data);
+				return _this3.render(data);
 			}).then(function () {
-				_this4.inProgress = false;
-				$.fire(_this4.element, "mavo:load");
+				_this3.inProgress = false;
+				$.fire(_this3.element, "mavo:load");
 			});
 		},
 
 		store: function store() {
-			var _this5 = this;
+			var _this4 = this;
 
 			if (!this.storage) {
 				return Promise.resolve();
@@ -816,35 +795,35 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
 			this.inProgress = "Saving";
 
 			return this.storage.login().then(function () {
-				return _this5.storage.store(_this5.getData());
+				return _this4.storage.store(_this4.getData());
 			}).catch(function (err) {
 				if (err) {
 					var message = "Problem saving data";
 
 					if (err instanceof XMLHttpRequest) {
-						message += xhr.status ? ": HTTP error " + err.status + ": " + err.statusText : ": Can’t connect to the Internet";
+						message += err.status ? ": HTTP error " + err.status + ": " + err.statusText : ": Can’t connect to the Internet";
 					}
 
-					_this5.error(message, err);
+					_this4.error(message, err);
 				}
 
 				return null;
 			}).then(function (saved) {
-				_this5.inProgress = false;
+				_this4.inProgress = false;
 				return saved;
 			});
 		},
 
 		save: function save() {
-			var _this6 = this;
+			var _this5 = this;
 
 			return this.store().then(function (saved) {
 				if (saved) {
-					$.fire(_this6.element, "mavo:save", saved);
+					$.fire(_this5.element, "mavo:save", saved);
 
-					_this6.lastSaved = Date.now();
-					_this6.root.save();
-					_this6.unsavedChanges = false;
+					_this5.lastSaved = Date.now();
+					_this5.root.save();
+					_this5.unsavedChanges = false;
 				}
 			});
 		},
@@ -930,7 +909,12 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
 
 			superKey: navigator.platform.indexOf("Mac") === 0 ? "metaKey" : "ctrlKey",
 
-			ready: Promise.all([$.ready(), $.include(Array.from && window.Intl && document.documentElement.closest, "https://cdn.polyfill.io/v2/polyfill.min.js?features=blissfuljs,Intl.~locale.en")]),
+			ready: function ready() {
+				var isDecentBrowser = Array.from && window.Intl && document.documentElement.closest;
+				var polyfills = $.include(isDecentBrowser, "https://cdn.polyfill.io/v2/polyfill.min.js?features=blissfuljs,Intl.~locale.en");
+
+				Promise.all([$.ready(), polyfills, _.Plugins.load()]);
+			},
 
 			init: function init() {
 				var container = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : document;
@@ -944,21 +928,6 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
 			},
 
 			UI: {},
-
-			plugins: {},
-
-			plugin: function plugin(o) {
-				_.hooks.add(o.hooks);
-
-				for (var Class in o.extend) {
-					var def = Class == "Mavo" ? _ : _[Class];
-					$.Class(def, o.extend[Class]);
-				}
-
-				if (o.name) {
-					_.plugins[o.name] = o;
-				}
-			},
 
 			hooks: new $.Hooks(),
 
@@ -1026,7 +995,7 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
 		});
 	});
 
-	Stretchy.selectors.filter = ".mv-editor:not([property])";
+	Stretchy.selectors.filter = ".mv-editor:not([property]), .mv-autosize";
 })(Bliss, Bliss.$);
 "use strict";
 
@@ -1223,9 +1192,27 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
 				}
 
 				return value;
-			} else {
+			} else if ((typeof obj === "undefined" ? "undefined" : _typeof(obj)) == "object" && path && path.length) {
 				// Get
-				return (typeof obj === "undefined" ? "undefined" : _typeof(obj)) == "object" && path && path.length ? $.value.apply($, [obj].concat(_toConsumableArray(path))) : obj;
+				return path.reduce(function (obj, property, i) {
+					if (obj && property in obj) {
+						return obj[property];
+					}
+
+					if (Array.isArray(obj) && isNaN(property)) {
+						// Non-numeric property on array, try getting by id
+						for (var j = 0; j < obj.length; j++) {
+							if (obj[j] && obj[j].id == property) {
+								path[i] = j;
+								return obj[j];
+							}
+						}
+					}
+
+					return obj;
+				}, obj);
+			} else {
+				return obj;
 			}
 		},
 
@@ -1461,6 +1448,90 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
 	});
 
 	updateWithin("focus", document.activeElement !== document.body ? document.activeElement : null);
+})(Bliss, Bliss.$);
+"use strict";
+
+(function ($, $$) {
+
+	Mavo.attributes.push("mv-plugins");
+
+	var _ = Mavo.Plugins = {
+		loaded: {},
+
+		load: function load() {
+			var element = $("[mv-plugins]");
+
+			if (!element) {
+				return;
+			}
+
+			_.plugins = _.plugins || element.getAttribute("mv-plugins").trim().split(/\s+/) || _.defaultPlugins;
+
+			if (_.plugins.length) {
+				// Fetch plugin index
+				$.fetch(_.url + "/plugins.json", {
+					responseType: "json"
+				}).then(function (xhr) {
+					// Fetch plugins
+					return Promise.all(xhr.response.plugin.filter(function (plugin) {
+						return plugins.indexOf(plugin.id) > -1;
+					}).map(function (plugin) {
+						// Load plugin
+
+						if (plugin.repo) {
+							// Plugin hosted in a separate repo
+							var base = "https://raw.githubusercontent.com/" + plugin.repo + "/";
+						} else {
+							// Plugin hosted in the mavo-plugins repo
+							var base = _.url + "/" + plugin.id + "/";
+						}
+
+						// Load dependencies first
+						if (plugin.dependencies && plugin.dependencies.length) {
+							var dependencies = plugin.dependencies.map(function (url) {
+								return new URL(url, base);
+							}).map(function (url) {
+								if (/\.css$/.test(url.pathname)) {
+									// CSS file
+									$.create("link", {
+										"href": url,
+										"rel": "stylesheet",
+										"inside": document.head
+									});
+
+									return Promise.resolve();
+								}
+
+								// JS file
+								return $.include(url);
+							});
+						}
+
+						var url = base + "mavo-" + plugin.id + ".js";
+
+						return dependencies.then(function () {
+							return $.include(_.loaded[plugin.id], url);
+						});
+					}));
+				});
+			}
+		},
+
+		register: function register(o) {
+			_.hooks.add(o.hooks);
+
+			for (var Class in o.extend) {
+				var def = Class == "Mavo" ? _ : _[Class];
+				$.Class(def, o.extend[Class]);
+			}
+
+			if (o.name) {
+				_.plugins.loaded[o.name] = o;
+			}
+		},
+
+		url: "https://plugins.mavo.io/"
+	};
 })(Bliss, Bliss.$);
 "use strict";
 
@@ -1724,6 +1795,112 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
 					permission: "logout"
 				}
 			}
+		}
+	});
+})(Bliss, Bliss.$);
+"use strict";
+
+(function ($, $$) {
+
+	var _ = Mavo.UI.Message = $.Class({
+		constructor: function constructor(mavo, message, o) {
+			var _this = this;
+
+			this.mavo = mavo;
+			this.message = message;
+			this.closed = Mavo.defer();
+
+			this.element = $.create({
+				className: "mv-ui mv-message",
+				innerHTML: this.message,
+				events: {
+					click: function click(e) {
+						return Mavo.scrollIntoViewIfNeeded(_this.mavo.element);
+					}
+				},
+				after: this.mavo.bar.element
+			});
+
+			if (o.classes) {
+				this.element.classList.add(o.classes);
+			}
+
+			o.dismiss = o.dismiss || {};
+
+			if (typeof o.dismiss == "string" || Array.isArray(o.dismiss)) {
+				var dismiss = {};
+				var _iteratorNormalCompletion = true;
+				var _didIteratorError = false;
+				var _iteratorError = undefined;
+
+				try {
+					for (var _iterator = Mavo.toArray(o.dismiss)[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
+						var prop = _step.value;
+
+						dismiss[prop] = true;
+					}
+				} catch (err) {
+					_didIteratorError = true;
+					_iteratorError = err;
+				} finally {
+					try {
+						if (!_iteratorNormalCompletion && _iterator.return) {
+							_iterator.return();
+						}
+					} finally {
+						if (_didIteratorError) {
+							throw _iteratorError;
+						}
+					}
+				}
+
+				o.dismiss = dismiss;
+			}
+
+			if (o.dismiss.button) {
+				$.create("button", {
+					className: "mv-close mv-ui",
+					textContent: "×",
+					events: {
+						"click": function click(evt) {
+							return _this.close();
+						}
+					},
+					start: this.element
+				});
+			}
+
+			if (o.dismiss.timeout) {
+				var timeout = typeof o.dismiss.timeout === "number" ? o.dismiss.timeout : 5000;
+				var closeTimeout;
+
+				$.events(this.element, {
+					mouseenter: function mouseenter(e) {
+						return clearTimeout(closeTimeout);
+					},
+					mouseleave: Mavo.rr(function (e) {
+						return closeTimeout = setTimeout(function () {
+							return _this.close();
+						}, timeout);
+					})
+				});
+			}
+
+			if (o.dismiss.submit) {
+				this.element.addEventListener("submit", function (evt) {
+					evt.preventDefault();
+					_this.close(evt.target);
+				});
+			}
+		},
+
+		close: function close(resolve) {
+			var _this2 = this;
+
+			$.transition(this.element, { opacity: 0 }).then(function () {
+				$.remove(_this2.element);
+				_this2.closed.resolve(resolve);
+			});
 		}
 	});
 })(Bliss, Bliss.$);
@@ -2068,6 +2245,8 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
 })(Bliss);
 "use strict";
 
+var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
+
 (function ($) {
 
 	/**
@@ -2139,12 +2318,136 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
 			return Promise.resolve();
 		},
 
+		isAuthenticated: function isAuthenticated() {
+			return !!this.accessToken;
+		},
+
+		// Any extra params to be passed to the oAuth URL.
+		oAuthParams: function oAuthParams() {
+			return "";
+		},
+
 		toString: function toString() {
 			return this.id + " (" + this.url + ")";
 		},
 
 		equals: function equals(backend) {
 			return backend === this || backend && this.id == backend.id && this.source == backend.source;
+		},
+
+		/**
+   * Helper for making OAuth requests with JSON-based APIs.
+   */
+		request: function request(call, data) {
+			var _this3 = this;
+
+			var method = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : "GET";
+			var req = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : {};
+
+			req.method = req.method || method;
+			req.responseType = req.responseType || "json";
+			req.headers = req.headers || {};
+			req.headers["Content-Type"] = req.headers["Content-Type"] || "application/json; charset=utf-8";
+			req.data = data;
+
+			if (this.isAuthenticated()) {
+				req.headers["Authorization"] = req.headers["Authorization"] || "Bearer " + this.accessToken;
+			}
+
+			if (_typeof(req.data) === "object") {
+				if (req.method == "GET") {
+					req.data = Object.keys(req.data).map(function (p) {
+						return p + "=" + encodeURIComponent(req.data[p]);
+					}).join("&");
+				} else {
+					req.data = JSON.stringify(req.data);
+				}
+			}
+
+			call = new URL(call, this.constructor.apiDomain);
+
+			return $.fetch(call, req).catch(function (err) {
+				if (err && err.xhr) {
+					return Promise.reject(err.xhr);
+				} else {
+					_this3.mavo.error("Something went wrong while connecting to " + _this3.id, err);
+				}
+			}).then(function (xhr) {
+				return req.method == "HEAD" ? xhr : xhr.response;
+			});
+		},
+
+		/**
+   * Helper method for authenticating in OAuth APIs
+   */
+		oAuthenticate: function oAuthenticate(passive) {
+			var _this4 = this;
+
+			return this.ready.then(function () {
+				if (_this4.isAuthenticated()) {
+					return Promise.resolve();
+				}
+
+				return new Promise(function (resolve, reject) {
+					var id = _this4.id.toLowerCase();
+
+					if (passive) {
+						_this4.accessToken = localStorage["mavo:" + id + "token"];
+
+						if (_this4.accessToken) {
+							resolve(_this4.accessToken);
+						}
+					} else {
+						// Show window
+						var popup = {
+							width: Math.min(1000, innerWidth - 100),
+							height: Math.min(800, innerHeight - 100)
+						};
+
+						popup.top = (innerHeight - popup.height) / 2 + (screen.top || screenTop);
+						popup.left = (innerWidth - popup.width) / 2 + (screen.left || screenLeft);
+
+						var state = {
+							url: location.href,
+							backend: _this4.id
+						};
+
+						_this4.authPopup = open(_this4.constructor.oAuth + "?client_id=" + _this4.key + "&state=" + encodeURIComponent(JSON.stringify(state)) + _this4.oAuthParams(), "popup", "width=" + popup.width + ",height=" + popup.height + ",left=" + popup.left + ",top=" + popup.top);
+
+						addEventListener("message", function (evt) {
+							if (evt.source === _this4.authPopup) {
+								if (evt.data.backend == _this4.id) {
+									_this4.accessToken = localStorage["mavo:" + id + "token"] = evt.data.token;
+								}
+
+								if (!_this4.accessToken) {
+									reject(Error("Authentication error"));
+								}
+
+								resolve(_this4.accessToken);
+							}
+						});
+					}
+				});
+			});
+		},
+
+		/**
+   * oAuth logout helper
+   */
+		oAuthLogout: function oAuthLogout() {
+			if (this.isAuthenticated()) {
+				var id = this.id.toLowerCase();
+
+				localStorage.removeItem("mavo:" + id + "token");
+				delete this.accessToken;
+
+				this.permissions.off(["edit", "add", "delete", "save"]).on("login");
+
+				this.mavo.element._.fire("mavo:logout", { backend: this });
+			}
+
+			return Promise.resolve();
 		},
 
 		static: {
@@ -2432,12 +2735,12 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
 			this.uid = ++_.maxId;
 			this.nodeType = this.nodeType;
 			this.property = null;
+			this.element = element;
 
 			$.extend(this, env.options);
 
 			_.all.set(element, [].concat(_toConsumableArray(_.all.get(this.element) || []), [this]));
 
-			this.element = element;
 			this.template = env.options.template;
 
 			if (this.template) {
@@ -2934,8 +3237,8 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
 				var obj = this.children[this.property] = new Mavo.Primitive(this.element, this.mavo, { group: this });
 			}
 
-			// Create Mavo objects for all properties in this group (primitives orgroups),
-			// but not properties in descendantgroups (they will be handled by their group)
+			// Create Mavo objects for all properties in this group (primitives or groups),
+			// but not properties in descendant groups (they will be handled by their group)
 			$$(Mavo.selectors.property, this.element).forEach(function (element) {
 				var property = Mavo.Node.getProperty(element);
 
@@ -3518,7 +3821,7 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
 		},
 
 		clear: function clear() {
-			this.value = this.modes == "read" ? this.templateValue : this.emptyValue;
+			this.value = this.templateValue;
 		},
 
 		dataRender: function dataRender(data) {
@@ -4374,7 +4677,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
 
 			setEditorValue: function setEditorValue(value) {
 				if (this.datatype && this.datatype != "string") {
-					return;
+					value = value + "";
 				}
 
 				var cs = getComputedStyle(this.element);
@@ -4508,6 +4811,8 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
 				data: []
 			};
 
+			var count = 0; // count of non-null items
+
 			var _iteratorNormalCompletion = true;
 			var _didIteratorError = false;
 			var _iteratorError = undefined;
@@ -4521,6 +4826,7 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
 
 						if (itemData || o.null) {
 							env.data.push(itemData);
+							count += !!itemData;
 						}
 					}
 				}
@@ -4543,9 +4849,11 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
 				env.data = this.unhandled.before.concat(env.data, this.unhandled.after);
 			}
 
-			if (!this.mutable && env.data.length == 1) {
+			if (!this.mutable && count == 1) {
 				// See https://github.com/LeaVerou/mavo/issues/50#issuecomment-266079652
-				env.data = env.data[0];
+				env.data = env.data.filter(function (d) {
+					return !!d;
+				})[0];
 			}
 
 			Mavo.hooks.run("node-getdata-end", env);
@@ -5877,7 +6185,7 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
 				_.directives.push(name);
 				Mavo.attributes.push(name);
 
-				Mavo.plugin(o);
+				Mavo.Plugins.register(o);
 			}
 		}
 	});
@@ -6265,32 +6573,20 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
 			return new Date();
 		},
 
-		urlOption: function urlOption() {
-			var searchParams = "searchParams" in URL.prototype ? new URL(location).searchParams : null;
-			var value = null;
-
-			for (var _len = arguments.length, names = Array(_len), _key = 0; _key < _len; _key++) {
-				names[_key] = arguments[_key];
-			}
+		// Read-only syntactic sugar for URL stuff
+		$url: function () {
+			var ret = {};
+			var url = new URL(location);
 
 			var _iteratorNormalCompletion = true;
 			var _didIteratorError = false;
 			var _iteratorError = undefined;
 
 			try {
-				for (var _iterator = names[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
-					var name = _step.value;
+				for (var _iterator = url.searchParams[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
+					var pair = _step.value;
 
-					if (searchParams) {
-						value = searchParams.get(name);
-					} else {
-						var match = location.search.match(RegExp("[?&]" + name + "(?:=([^&]+))?(?=&|$)", "i"));
-						value = match && (match[1] || "");
-					}
-
-					if (value !== null) {
-						return value;
-					}
+					ret[pair[0]] = pair[1];
 				}
 			} catch (err) {
 				_didIteratorError = true;
@@ -6307,8 +6603,14 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
 				}
 			}
 
-			return null;
-		},
+			Object.defineProperty(ret, "toString", {
+				value: function value() {
+					return new URL(location);
+				}
+			});
+
+			return ret;
+		}(),
 
 		/**
    * Get a property of an object. Used by the . operator to prevent TypeErrors
@@ -6518,8 +6820,8 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
 			o.identity = o.identity === undefined ? 0 : o.identity;
 
 			return _[name] = o.code || function () {
-				for (var _len2 = arguments.length, operands = Array(_len2), _key2 = 0; _key2 < _len2; _key2++) {
-					operands[_key2] = arguments[_key2];
+				for (var _len = arguments.length, operands = Array(_len), _key = 0; _key < _len; _key++) {
+					operands[_key] = arguments[_key];
 				}
 
 				if (operands.length === 1) {
@@ -6738,7 +7040,7 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
 				symbol: "&",
 				identity: "",
 				scalar: function scalar(a, b) {
-					return "" + a + b;
+					return "" + (a || "") + (b || "");
 				}
 			},
 			"filter": {
@@ -6845,48 +7147,21 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
 
 (function ($) {
 
-	if (!self.Mavo) {
-		return;
-	}
-
-	var dropboxURL = "//cdnjs.cloudflare.com/ajax/libs/dropbox.js/0.10.2/dropbox.min.js";
-
-	Mavo.Backend.register($.Class({
+	var _ = Mavo.Backend.register($.Class({
 		extends: Mavo.Backend,
 		id: "Dropbox",
 		constructor: function constructor() {
-			var _this = this;
+			this.permissions.on(["login", "read"]);
+
+			this.key = this.mavo.element.getAttribute("mv-dropbox-key") || "2mx6061p054bpbp";
 
 			// Transform the dropbox shared URL into something raw and CORS-enabled
 			this.url = new URL(this.url, location);
 
-			if (this.url.protocol != "dropbox:") {
-				this.url.hostname = "dl.dropboxusercontent.com";
-				this.url.search = this.url.search.replace(/\bdl=0|^$/, "raw=1");
-				this.permissions.on("read"); // TODO check if file actually is publicly readable
-			}
+			this.url.hostname = "dl.dropboxusercontent.com";
+			this.url.search = this.url.search.replace(/\bdl=0|^$/, "raw=1");
 
-			this.permissions.on("login");
-
-			this.ready = $.include(self.Dropbox, dropboxURL).then(function () {
-				var referrer = new URL(document.referrer, location);
-
-				if (referrer.hostname === "www.dropbox.com" && location.hash.indexOf("#access_token=") === 0) {
-					// We’re in an OAuth response popup, do what you need then close this
-					Dropbox.AuthDriver.Popup.oauthReceiver();
-					$.fire(window, "load"); // hack because dropbox.js didn't foresee use cases like ours :/
-					close();
-					return;
-				}
-
-				_this.path = (_this.mavo.element.getAttribute("mv-dropbox-path") || "") + new URL(_this.url).pathname.match(/[^/]*$/)[0];
-
-				_this.key = _this.mavo.element.getAttribute("mv-dropbox-key") || "fle6gsc61w5v79j";
-
-				_this.client = new Dropbox.Client({ key: _this.key });
-			}).then(function () {
-				_this.login(true);
-			});
+			this.login(true);
 		},
 
 		/**
@@ -6894,77 +7169,70 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
    * @param {Object} file - An object with name & data keys
    * @return {Promise} A promise that resolves when the file is saved.
    */
-		put: function put() {
-			var _this2 = this;
+		put: function put(serialized, path) {
+			return this.request("https://content.dropboxapi.com/2/files/upload", serialized, "POST", {
+				headers: {
+					"Dropbox-API-Arg": JSON.stringify({
+						path: this.path,
+						mode: "overwrite"
+					}),
+					"Content-Type": "application/octet-stream"
+				}
+			});
+		},
 
-			var file = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : this.getFile();
+		oAuthParams: function oAuthParams() {
+			return "&redirect_uri=" + encodeURIComponent("https://auth.mavo.io") + "&response_type=code";
+		},
 
-			return new Promise(function (resolve, reject) {
-				_this2.client.writeFile(file.name, file.dataString, function (error, stat) {
-					if (error) {
-						return reject(Error(error));
-					}
+		getUser: function getUser() {
+			var _this = this;
 
-					console.log("File saved as revision " + stat.versionTag);
-					resolve(file);
-				});
+			if (this.user) {
+				return Promise.resolve(this.user);
+			}
+
+			return this.request("users/get_current_account", "null", "POST").then(function (info) {
+				_this.user = {
+					username: info.email,
+					name: info.name.display_name,
+					avatar: info.profile_photo_url,
+					info: info
+				};
 			});
 		},
 
 		login: function login(passive) {
-			var _this3 = this;
+			var _this2 = this;
 
-			return this.ready.then(function () {
-				return _this3.client.isAuthenticated() ? Promise.resolve() : new Promise(function (resolve, reject) {
-					_this3.client.authDriver(new Dropbox.AuthDriver.Popup({
-						receiverUrl: new URL(location) + ""
-					}));
+			return this.oAuthenticate(passive).then(function () {
+				return _this2.getUser();
+			}).then(function (u) {
+				if (_this2.user) {
+					_this2.permissions.logout = true;
 
-					_this3.client.authenticate({ interactive: !passive }, function (error, client) {
-
-						if (error) {
-							reject(Error(error));
-						}
-
-						if (_this3.client.isAuthenticated()) {
-							// TODO check if can actually edit the file
-							_this3.permissions.on(["logout", "edit"]);
-
-							resolve();
-						} else {
-							_this3.permissions.off(["logout", "edit", "add", "delete"]);
-
-							reject();
-						}
+					// Check if can actually edit the file
+					_this2.request("sharing/get_shared_link_metadata", {
+						"url": _this2.source
+					}, "POST").then(function (info) {
+						_this2.path = info.path_lower;
+						_this2.permissions.on(["edit", "save"]);
 					});
-				});
-			}).then(function () {
-				// Not returning a promise here, since processes depending on login don't need to wait for this
-				_this3.client.getAccountInfo(function (error, accountInfo) {
-					if (!error) {
-						$.fire(_this3.mavo.element, "mavo:login", $.extend({ backend: _this3 }, accountInfo));
-					}
-				});
-			}).catch(function () {});
-		},
-
-		logout: function logout() {
-			var _this4 = this;
-
-			return !this.client.isAuthenticated() ? Promise.resolve() : new Promise(function (resolve, reject) {
-				_this4.client.signOut(null, function () {
-					_this4.permissions.off(["edit", "add", "delete"]).on("login");
-
-					_this4.mavo.element._.fire("mavo:logout", { backend: _this4 });
-					resolve();
-				});
+				}
 			});
 		},
 
+		logout: function logout() {
+			return this.oAuthLogout();
+		},
+
 		static: {
+			apiDomain: "https://api.dropboxapi.com/2/",
+			oAuth: "https://www.dropbox.com/oauth2/authorize",
+
 			test: function test(url) {
 				url = new URL(url, location);
-				return (/dropbox.com/.test(url.host) || url.protocol === "dropbox:"
+				return (/dropbox.com/.test(url.host)
 				);
 			}
 		}
@@ -6974,15 +7242,11 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
 
 (function ($) {
 
-	if (!self.Mavo) {
-		return;
-	}
-
 	var _ = Mavo.Backend.register($.Class({
 		extends: Mavo.Backend,
 		id: "Github",
 		constructor: function constructor() {
-			this.permissions.on("login");
+			this.permissions.on(["login", "read"]);
 
 			this.key = this.mavo.element.getAttribute("mv-github-key") || "7e08e016048000bc594e";
 
@@ -6992,61 +7256,20 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
 			if (parsedURL.username) {
 				$.extend(this, parsedURL);
 				this.repo = this.repo || "mv-data";
-				this.branch = this.branch || "master";
 				this.path = this.path || this.mavo.id + ".json";
 				this.apiCall = "repos/" + this.username + "/" + this.repo + "/contents/" + this.path;
 			} else {
 				this.apiCall = this.url.pathname.slice(1);
 			}
 
-			this.permissions.on("read");
-
 			this.login(true);
 		},
 
-		get authenticated() {
-			return !!this.accessToken;
-		},
-
-		/**
-   * Helper method to make a request with the Github API
-   */
-		req: function req(call, data) {
+		get: function get() {
 			var _this = this;
 
-			var method = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : "GET";
-			var o = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : { method: method };
-
-			if (data) {
-				o.data = JSON.stringify(data);
-			}
-
-			var request = $.extend(o, {
-				responseType: "json"
-			});
-
-			if (this.authenticated) {
-				request.headers = {
-					"Authorization": "token " + this.accessToken
-				};
-			}
-
-			return $.fetch(_.apiDomain + call, request).catch(function (err) {
-				if (err && err.xhr) {
-					return Promise.reject(err.xhr);
-				} else {
-					_this.mavo.error("Something went wrong while connecting to Github", err);
-				}
-			}).then(function (xhr) {
-				return Promise.resolve(xhr.response);
-			});
-		},
-
-		get: function get() {
-			var _this2 = this;
-
-			return this.req(this.apiCall).then(function (response) {
-				return Promise.resolve(_this2.repo ? _.atob(response.content) : response);
+			return this.request(this.apiCall).then(function (response) {
+				return Promise.resolve(_this.repo ? _.atob(response.content) : response);
 			});
 		},
 
@@ -7056,130 +7279,204 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
    * @param {String} path - Optional file path
    * @return {Promise} A promise that resolves when the file is saved.
    */
-		put: function put(serialized, path) {
-			var _this3 = this;
+		put: function put(serialized) {
+			var _this2 = this;
 
-			var fileCall = path ? "repos/" + this.username + "/" + this.repo + "/contents/" + path : this.apiCall;
+			var path = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : this.path;
 
-			return Promise.resolve(this.repoInfo || this.req("user/repos", {
-				name: this.repo
-			}, "POST")).then(function (repoInfo) {
-				_this3.repoInfo = repoInfo;
+			if (!path) {
+				// Raw API calls are read-only for now
+				return;
+			}
 
-				return _this3.req(fileCall, {
-					ref: _this3.branch
-				});
-			}).then(function (fileInfo) {
-				return _this3.req(fileCall, {
-					message: "Updated " + (fileInfo.name || "file"),
-					content: _.btoa(serialized),
-					branch: _this3.branch,
-					sha: fileInfo.sha
-				}, "PUT");
-			}, function (xhr) {
-				if (xhr.status == 404) {
-					// File does not exist, create it
-					return _this3.req(fileCall, {
-						message: "Created file",
-						content: _.btoa(serialized),
-						branch: _this3.branch
-					}, "PUT");
+			var repoCall = "repos/" + this.username + "/" + this.repo;
+			var fileCall = repoCall + "/contents/" + path;
+
+			// Create repo if it doesn’t exist
+			var repoInfo = this.repoInfo || this.request("user/repos", { name: this.repo }, "POST").then(function (repoInfo) {
+				return _this2.repoInfo = repoInfo;
+			});
+
+			return Promise.resolve(repoInfo).then(function (repoInfo) {
+				if (!_this2.canPush()) {
+					// Does not have permission to commit, create a fork
+					return _this2.request(repoCall + "/forks", { name: _this2.repo }, "POST").then(function (forkInfo) {
+						fileCall = "repos/" + forkInfo.full_name + "/contents/" + path;
+						return _this2.forkInfo = forkInfo;
+					}).then(function (forkInfo) {
+						// Ensure that fork is created (they take a while)
+						var timeout;
+						var test = function test(resolve, reject) {
+							clearTimeout(timeout);
+							_this2.request("repos/" + forkInfo.full_name + "/commits", { until: "1970-01-01T00:00:00Z" }, "HEAD").then(function (x) {
+								resolve(forkInfo);
+							}).catch(function (x) {
+								// Try again after 1 second
+								timeout = setTimeout(test, 1000);
+							});
+						};
+
+						return new Promise(test);
+					});
 				}
 
-				return xhr;
+				return repoInfo;
+			}).then(function (repoInfo) {
+				return _this2.request(fileCall, {
+					ref: _this2.branch
+				}).then(function (fileInfo) {
+					return _this2.request(fileCall, {
+						message: "Updated " + (fileInfo.name || "file"),
+						content: _.btoa(serialized),
+						branch: _this2.branch,
+						sha: fileInfo.sha
+					}, "PUT");
+				}, function (xhr) {
+					if (xhr.status == 404) {
+						// File does not exist, create it
+						return _this2.request(fileCall, {
+							message: "Created file",
+							content: _.btoa(serialized),
+							branch: _this2.branch
+						}, "PUT");
+					}
+
+					return xhr;
+				});
+			}).then(function (fileInfo) {
+				if (_this2.forkInfo) {
+					// We saved in a fork, do we have a pull request?
+					_this2.request("repos/" + _this2.username + "/" + _this2.repo + "/pulls", {
+						head: _this2.user.username + ":" + _this2.branch,
+						base: _this2.branch
+					}).then(function (prs) {
+						_this2.pullRequest(prs[0]);
+					});
+				}
 			});
+		},
+
+		pullRequest: function pullRequest(existing) {
+			var _this3 = this;
+
+			var previewURL = new URL(location);
+			previewURL.searchParams.set(this.mavo.id + "-storage", "https://github.com/" + this.forkInfo.full_name + "/" + this.path);
+			var message = "Your edits are saved to <a href=\"" + previewURL + "\" target=\"_blank\">your own profile</a>, because you are not allowed to edit this page.";
+
+			if (this.notice) {
+				this.notice.close();
+			}
+
+			if (existing) {
+				// We already have a pull request, ask about closing it
+				this.notice = this.mavo.message(message + "\n\t\t\t\tYou have selected to suggest your edits to the page admins. Your suggestions have not been reviewed yet.\n\t\t\t\t<form onsubmit=\"return false\">\n\t\t\t\t\t<button class=\"mv-danger\">Revoke edit suggestion</button>\n\t\t\t\t</form>", {
+					classes: "mv-inline",
+					dismiss: ["button", "submit"]
+				});
+
+				this.notice.closed.then(function (form) {
+					if (!form) {
+						return;
+					}
+
+					// Close PR
+					_this3.request("repos/" + _this3.username + "/" + _this3.repo + "/pulls/" + existing.number, {
+						state: "closed"
+					}, "POST").then(function (prInfo) {
+						new Mavo.UI.Message(_this3.mavo, "<a href=\"" + prInfo.html_url + "\">Edit suggestion cancelled successfully!</a>", {
+							dismiss: ["button", "timeout"]
+						});
+
+						_this3.pullRequest();
+					});
+				});
+			} else {
+				// Ask about creating a PR
+				this.notice = this.mavo.message(message + "\n\t\t\t\tWrite a short description of your edits below to suggest them to the page admins:\n\t\t\t\t<form onsubmit=\"return false\">\n\t\t\t\t\t<textarea name=\"edits\" class=\"mv-autosize\" placeholder=\"I added / corrected / deleted ...\"></textarea>\n\t\t\t\t\t<button>Send edit suggestion</button>\n\t\t\t\t</form>", {
+					classes: "mv-inline",
+					dismiss: ["button", "submit"]
+				});
+
+				this.notice.closed.then(function (form) {
+					if (!form) {
+						return;
+					}
+
+					// We want to send a pull request
+					_this3.request("repos/" + _this3.username + "/" + _this3.repo + "/pulls", {
+						title: "Suggested edits to data",
+						body: "Hello there! I used Mavo to suggest the following edits:\n" + form.elements.edits.value + "\nPreview my changes here: " + previewURL,
+						head: _this3.user.username + ":" + _this3.branch,
+						base: _this3.branch
+					}, "POST").then(function (prInfo) {
+						new Mavo.UI.Message(_this3.mavo, "<a href=\"" + prInfo.html_url + "\">Edit suggestion sent successfully!</a>", {
+							dismiss: ["button", "timeout"]
+						});
+
+						_this3.pullRequest(prInfo);
+					});
+				});
+			}
 		},
 
 		login: function login(passive) {
 			var _this4 = this;
 
-			return this.ready.then(function () {
-				if (_this4.authenticated) {
-					return Promise.resolve();
+			return this.oAuthenticate(passive).then(function () {
+				return _this4.getUser();
+			}).catch(function (xhr) {
+				if (xhr.status == 401) {
+					// Unauthorized. Access token we have is invalid, discard it
+					_this4.logout();
 				}
+			}).then(function (u) {
+				if (_this4.user) {
+					_this4.permissions.on(["edit", "save", "logout"]);
 
-				return new Promise(function (resolve, reject) {
-					if (passive) {
-						_this4.accessToken = localStorage["mavo:githubtoken"];
-
-						if (_this4.accessToken) {
-							resolve(_this4.accessToken);
-						}
-					} else {
-						// Show window
-						var popup = {
-							width: Math.min(1000, innerWidth - 100),
-							height: Math.min(800, innerHeight - 100)
-						};
-
-						popup.top = (innerHeight - popup.height) / 2 + (screen.top || screenTop);
-						popup.left = (innerWidth - popup.width) / 2 + (screen.left || screenLeft);
-
-						_this4.authPopup = open("https://github.com/login/oauth/authorize?client_id=" + _this4.key + "&scope=repo,gist&state=" + location.href, "popup", "width=" + popup.width + ",height=" + popup.height + ",left=" + popup.left + ",top=" + popup.top);
-
-						addEventListener("message", function (evt) {
-							if (evt.source === _this4.authPopup) {
-								_this4.accessToken = localStorage["mavo:githubtoken"] = evt.data;
-
-								if (!_this4.accessToken) {
-									reject(Error("Authentication error"));
-								}
-
-								resolve(_this4.accessToken);
+					if (_this4.repo) {
+						return _this4.request("repos/" + _this4.username + "/" + _this4.repo).then(function (repoInfo) {
+							if (_this4.branch === undefined) {
+								_this4.branch = repoInfo.default_branch;
 							}
+
+							return _this4.repoInfo = repoInfo;
 						});
 					}
-				}).then(function () {
-					return _this4.getUser();
-				}).catch(function (xhr) {
-					if (xhr.status == 401) {
-						// Unauthorized. Access token we have is invalid, discard it
-						_this4.logout();
-					}
-				}).then(function (u) {
-					if (_this4.user) {
-						_this4.permissions.on("logout");
-
-						if (_this4.repo) {
-							return _this4.req("repos/" + _this4.username + "/" + _this4.repo).then(function (repoInfo) {
-								_this4.repoInfo = repoInfo;
-
-								if (repoInfo.permissions.push) {
-									_this4.permissions.on(["edit", "save"]);
-								}
-							}).catch(function (xhr) {
-								if (xhr.status == 404) {
-									// Repo does not exist so we can't check permissions
-									// Just check if authenticated user is the same as our URL username
-									if (_this4.user.login.toLowerCase() == _this4.username.toLowerCase()) {
-										_this4.permissions.on(["edit", "save"]);
-									}
-								}
-							});
-						}
-					}
-				});
+				}
 			});
 		},
 
-		logout: function logout() {
-			if (this.authenticated) {
-				localStorage.removeItem("mavo:githubtoken");
-				delete this.accessToken;
-
-				this.permissions.off(["edit", "add", "delete", "save"]).on("login");
-
-				this.mavo.element._.fire("mavo:logout", { backend: this });
+		canPush: function canPush() {
+			if (this.repoInfo) {
+				return this.repoInfo.permissions.push;
 			}
 
-			return Promise.resolve();
+			// Repo does not exist so we can't check permissions
+			// Just check if authenticated user is the same as our URL username
+			return this.user && this.user.username.toLowerCase() == this.username.toLowerCase();
+		},
+
+		oAuthParams: function oAuthParams() {
+			return "&scope=repo,gist";
+		},
+
+		logout: function logout() {
+			var _this5 = this;
+
+			return this.oAuthLogout().then(function () {
+				_this5.user = null;
+			});
 		},
 
 		getUser: function getUser() {
-			var _this5 = this;
+			var _this6 = this;
 
-			return this.req("user").then(function (info) {
-				_this5.user = {
+			if (this.user) {
+				return Promise.resolve(this.user);
+			}
+
+			return this.request("user").then(function (info) {
+				_this6.user = {
 					username: info.login,
 					name: info.name || info.login,
 					avatar: info.avatar_url,
@@ -7187,12 +7484,13 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
 					info: info
 				};
 
-				$.fire(_this5.mavo.element, "mavo:login", { backend: _this5 });
+				$.fire(_this6.mavo.element, "mavo:login", { backend: _this6 });
 			});
 		},
 
 		static: {
 			apiDomain: "https://api.github.com/",
+			oAuth: "https://github.com/login/oauth/authorize",
 
 			test: function test(url) {
 				url = new URL(url, location);
@@ -7230,7 +7528,7 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
 
 			// Fix atob() and btoa() so they can handle Unicode
 			btoa: function (_btoa) {
-				function btoa(_x3) {
+				function btoa(_x2) {
 					return _btoa.apply(this, arguments);
 				}
 

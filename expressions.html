@@ -4,7 +4,7 @@
 	<meta charset="UTF-8">
 	<title>Expression tests</title>
 	<link rel="stylesheet" href="mavo/mavo.css" />
-	<link rel="stylesheet" href="css/style.css" />
+	<link rel="stylesheet" href="style.css" />
 	<style>
 		[data-foo]::before {
 			content: "[data-foo=" attr(data-foo) "]";
@@ -447,7 +447,7 @@
 	<h1>mv-if</h1>
 
 	<table class="reftest">
-		<tr>
+		<!-- <tr>
 			<td>A<span mv-if="false">B</span>C</td>
 			<td>AC</td>
 		</tr>
@@ -474,8 +474,8 @@
 		<tr>
 			<td>A<span mv-if="false">B<span mv-if="true"><span property="prop2">C</span></span></span>[prop2]</td>
 			<td>A</td>
-		</tr>
-		<tr>
+		</tr> -->
+		<tr title="Property with same name across multiple mv-ifs">
 			<td>
 				<span mv-if="false">
 					<span property="prop3">A</span>

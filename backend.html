@@ -4,7 +4,7 @@
 	<meta charset="UTF-8">
 	<title>Backend Tests</title>
 	<link rel="stylesheet" href="mavo/mavo.css" />
-	<link rel="stylesheet" href="css/style.css" />
+	<link rel="stylesheet" href="style.css" />
 	<script src="mavo/mavo.js"></script>
 	<script src="test.js"></script>
 </head>
@@ -263,6 +263,54 @@ localStorage.localstoretest = `{
 	<h1>Github</h1>
 
 	<p>Need to login to Github and have access to the Mavo repo for this test to pass.</p>
+	<table class="reftest">
+		<tr>
+			<td>
+				<ul>
+					<li property="country" mv-multiple>
+						<span property="code">Code</span>
+						<span property="name">Name</span>
+					</li>
+				</ul>
+			</td>
+			<td>
+				<ul>
+					<li>Online</li>
+					<li>us United States</li>
+					<li>gb United Kingdom</li>
+				</ul>
+			</td>
+		</tr>
+	</table>
+</section>
+
+<section mv-app="githubtest" mv-storage="https://github.com/LeaVerou">
+	<h1>Github with profile URL</h1>
+
+	<table class="reftest">
+		<tr>
+			<td>
+				<ul>
+					<li property="country" mv-multiple>
+						<span property="code">Code</span>
+						<span property="name">Name</span>
+					</li>
+				</ul>
+			</td>
+			<td>
+				<ul>
+					<li>Online</li>
+					<li>us United States</li>
+					<li>gb United Kingdom</li>
+				</ul>
+			</td>
+		</tr>
+	</table>
+</section>
+
+<section mv-app="dropboxtest" mv-storage="https://www.dropbox.com/s/5djray22aj0v7le/countries.json?dl=0">
+	<h1>Dropbox</h1>
+
 	<table class="reftest">
 		<tr>
 			<td>
