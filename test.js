@@ -304,11 +304,7 @@ function test_mavoscript() {
 	});
 }
 
-var preMavo = Mavo.defer();
-// So that Mavo cannot init until we get a chance to do stuff
-Mavo.ready = Promise.all([Mavo.ready, preMavo]);
-
-$.ready().then(function(){
+Mavo.dependencies.push($.ready().then(function(){
 	var page = location.pathname.match(/\/([a-z]+)(?:\.html|\/$)/)[1];
 
 	// Legacy
@@ -420,6 +416,4 @@ $.ready().then(function(){
 			table.reftest = new RefTest(table);
 		}
 	});
-
-	preMavo.resolve();
-});
+}));
