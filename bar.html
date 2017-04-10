@@ -148,5 +148,32 @@
 
 </section>
 
+<section>
+	<h1>Sizing</h1>
+
+	<p>Mutation observers won't fire here, so just click edit to trigger them.</p>
+
+	<table class="reftest" data-test="selector">
+		<tr>
+			<td mv-app mv-storage="local" style="width: 500px; flex: none">
+				<div property="prop1"></div>
+			</td>
+			<td>.mv-bar:not(.mv-compact):not(.mv-tiny)</td>
+		</tr>
+		<tr>
+			<td mv-app mv-storage="local" style="width: 300px; flex: none">
+				<div property="prop1"></div>
+			</td>
+			<td>.mv-bar.mv-compact:not(.mv-tiny)</td>
+		</tr>
+		<tr>
+			<td mv-app mv-storage="local" style="width: 150px; flex: none">
+				<div property="prop1"></div>
+			</td>
+			<td>.mv-bar.mv-compact.mv-tiny</td>
+		</tr>
+	</table>
+</section>
+
 </body>
 </html>

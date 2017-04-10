@@ -217,6 +217,18 @@ var _ = self.RefTest = $.Class({
 					return negative? !has : has;
 				}
 			},
+
+			elements: function(td, ref) {
+				var elements = $$("*", td);
+
+				return $$("*", ref).every((refElement, i) => {
+					var element = elements[i];
+
+					return element.nodeName == refElement.nodeName
+							&& $$(refElement.attributes).every(attr => element.getAttribute(attr.name) === attr.value)
+							&& Test.content(element).trim() == Test.content(refElement).trim()
+				})
+			}
 		},
 
 		presentCode: function(code) {

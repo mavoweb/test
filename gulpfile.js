@@ -39,10 +39,12 @@ gulp.task("sass", function() {
 });
 
 gulp.task("update", function() {
-	setTimeout(() => {
-		gulp.src(["../mavo/dist/**/*"]).pipe(gulp.dest("mavo"));
-	}, 3000);
-
+	gulp.src(["../mavo/dist/**/*"])
+		.pipe(gulp.dest("mavo"))
+		.pipe(notify({
+			message: "Test Mavo updated!",
+			onLast: true
+		}));
 });
 
 gulp.task("watch", function() {

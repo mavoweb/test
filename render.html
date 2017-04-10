@@ -237,6 +237,38 @@
 		</tr>
 	</table>
 </section>
+
+<section>
+	<h1>Maintaining order of unhandled properties</h1>
+
+	<p>Click Save</p>
+
+	<table class="reftest">
+		<tr class="interactive">
+			<td>
+				<pre id="data-unhandled">{
+	"prop1": 1,
+	"prop2": 2,
+	"prop3": {
+		"prop5": 5,
+		"prop1": 6
+	},
+	"prop4": 4
+}</pre>
+			</td>
+			<td>
+				<script>document.write($$("td pre").pop().outerHTML)</script>
+			</td>
+		</tr>
+		<tr>
+			<td mv-app="unhandled" mv-storage="#data-unhandled">
+				<span property="prop2"></span>
+			</td>
+			<td>2</td>
+		</tr>
+	</table>
+</section>
+
 <!-- <section mv-app mv-source="#deep">
 	<h1>Deep hierarchy with same property</h1>
 
