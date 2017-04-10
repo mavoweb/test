@@ -269,16 +269,56 @@
 	</table>
 </section>
 
-<!-- <section mv-app mv-source="#deep">
-	<h1>Deep hierarchy with same property</h1>
+<section>
+	<h1>Maintaining leftover items in an immutable collection</h1>
+
+	<p>Click Save</p>
 
 	<table class="reftest">
+		<tr class="interactive">
+			<td>
+				<pre id="data-immutable-collection">{
+	"group": [
+		{
+			"prop1": 1,
+			"prop2": 2,
+			"prop3": {
+				"prop1": 4
+			}
+		},
+		{
+			"prop2": 5
+		},
+		{
+			"prop1": 6,
+			"prop2": 7
+		},
+		{
+			"prop1": 8
+		}
+	]
+}</pre>
+			</td>
+			<td>
+				<script>document.write($$("td pre").pop().outerHTML)</script>
+			</td>
+		</tr>
 		<tr>
-			<td><span property="deep1">?</span></td>
-			<td>YOLO</td>
+			<td mv-app="immutablecollection" mv-storage="#data-immutable-collection">
+				<div property="group">
+					<span property="prop1"></span>
+				</div>
+				<div property="group">
+					<span property="prop2"></span>
+				</div>
+			</td>
+			<td>
+				1<br>
+				5
+			</td>
 		</tr>
 	</table>
-</section> -->
+</section>
 
 <script src="test.js"></script>
 

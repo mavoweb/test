@@ -53,6 +53,7 @@
 			margin-left: auto;
 		}
 	</style>
+	<script src="mavo/mavo.js"></script>
 </head>
 <body>
 
@@ -137,12 +138,25 @@
 	<h1>Implied collection of primitives</h1>
 	<table class="reftest">
 		<tr mv-expressions="none">
-			<td><pre id="numbers-2">{
-	"numbers": [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
-}</pre></td>
-			<td><pre>{
-	"numbers": [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
-}</pre></td>
+			<td>
+				<pre id="numbers-2">{
+	"numbers": [
+		1,
+		2,
+		3,
+		4,
+		5,
+		6,
+		7,
+		8,
+		9,
+		10
+	]
+}</pre>
+			</td>
+			<td>
+				<script>document.write($$("td pre").pop().outerHTML)</script>
+			</td>
 		</tr>
 		<tr>
 			<td>
@@ -301,8 +315,6 @@
 	</table>
 </section>
 
-
-<script src="mavo/mavo.js"></script>
 <script src="test.js"></script>
 
 </body>
