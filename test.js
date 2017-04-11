@@ -56,7 +56,23 @@ self.Test = {
 		"input, textarea": e => e.value
 	},
 
-	contentIgnore: [".mv-ui"]
+	contentIgnore: [".mv-ui"],
+
+	equals: function(a, b) {
+		if (a === b) {
+			return true;
+		}
+
+		if (typeof a == "number" && typeof b == "number" && isNaN(a) && isNaN(b)) {
+			return true;
+		}
+
+		if (Array.isArray(a) && Array.isArray(b)) {
+			return a.length === b.length && a.reduce((prev, current, i) => prev && Test.equals(current, b[i]), true);
+		}
+
+		return false;
+	}
 };
 
 var _ = self.RefTest = $.Class({
@@ -245,76 +261,6 @@ var _ = self.RefTest = $.Class({
 		}
 	}
 });
-
-function equals(a, b) {
-	if (a === b) {
-		return true;
-	}
-
-	if (typeof a == "number" && typeof b == "number" && isNaN(a) && isNaN(b)) {
-		return true;
-	}
-
-	if (Array.isArray(a) && Array.isArray(b)) {
-		return a.length === b.length && a.reduce((prev, current, i) => prev && equals(current, b[i]), true);
-	}
-
-	return false;
-}
-
-// TODO migrate this to the new reftest format
-function test_mavoscript() {
-	Mavo.hooks.add("expression-eval-error", env => console.log(env.exception));
-
-	var tests = {
-		"rewrite": {
-			result: test => Mavo.Expression.rewrite(test)
-		},
-		"function": {
-			result: test => (new Mavo.Expression(test)).eval({}),
-			expected: expected => eval(expected)
-		}
-	};
-
-	$$(".tests dt").forEach(dt => {
-		var dd = dt.nextElementSibling;
-
-		if (!dd || !dd.matches("dd")) {
-			dd = $.create("dd", {
-				textContent: dt.textContent,
-				after: dt
-			});
-		}
-
-		dt.classList.remove("error");
-
-		var categoryTests = tests[dt.parentNode.id];
-
-		try {
-			var result = categoryTests.result(dt.textContent);
-			var expected = categoryTests.expected? categoryTests.expected(dd.textContent) : dd.textContent;
-			var pass = equals(result, expected);
-
-			dt.classList.toggle("pass", pass);
-			dt.classList.toggle("fail", !pass);
-
-			if (!pass) {
-				$.create("dd", {
-					textContent: result,
-					after: dd
-				});
-			}
-		}
-		catch (e) {
-			dt.classList.add("error");
-
-			$.create("dd", {
-				textContent: e,
-				after: dd
-			});
-		}
-	});
-}
 
 Mavo.dependencies.push($.ready().then(function(){
 	var page = location.pathname.match(/\/([a-z]+)(?:\.html|\/$)/)[1];

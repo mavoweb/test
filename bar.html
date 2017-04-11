@@ -12,6 +12,12 @@
 		[data-test="selector"] td:last-child {
 			flex: .6;
 		}
+		
+		td:empty:nth-last-child(2)::before {
+			content: "(Same as above)";
+			color: rgba(0,0,0,.5);
+			font-style: italic;
+		}
 	</style>
 </head>
 <body>

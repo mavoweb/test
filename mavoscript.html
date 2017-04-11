@@ -3,208 +3,328 @@
 <head>
 
 <meta charset="UTF-8">
-<title>MavoScript tests</title>
+<title>MavoScript Tests</title>
 <link rel="stylesheet" href="mavo/mavo.css" />
 <link rel="stylesheet" href="style.css" />
 <style>
-	body { max-width: 60em; }
+td {
+	font: bold 100%/1.5 Consolas, Monaco, monospace;
+}
 </style>
-
+<script src="mavo/mavo.js"></script>
 </head>
 <body>
 
+<h1>MavoScript Tests</h1>
+
 <section>
-	<h1>Expression Rewrite tests</h1>
+	<h1>Expression Rewrite</h1>
 
 	<p>These tests check if MavoScript is rewritten to JS correctly</p>
 
-	<dl id="rewrite" class="tests">
-		<dt>1 + 1</dt>
-		<dd>add(1, 1)</dd>
-
-		<dt>1 + 2 + 3</dt>
-		<dd>add(1, 2, 3)</dd>
-
-		<dt>if(2, 3, 4)</dt>
-		<dd>iff(2, 3, 4)</dd>
-
-		<dt>foo and 5 or baz</dt>
-		<dd>or(and(foo, 5), baz)</dd>
-
-		<dt>"foo"</dt>
-
-		<dt>if(foo >= 5, 1, 2)</dt>
-		<dd>iff(gte(foo, 5), 1, 2)</dd>
-
-		<dt>foo == "bar"</dt>
-		<dd>eq(foo, "bar")</dd>
-
-		<dt title="Single character equals">foo = 5</dt>
-		<dd>eq(foo, 5)</dd>
-
-		<dt>foo > bar</dt>
-		<dd>gt(foo, bar)</dd>
-
-		<dt title="3 operand comparison">foo > bar > baz</dt>
-		<dd>gt(foo, bar, baz)</dd>
-
-		<dt title="3 operand equality">foo = bar = baz</dt>
-		<dd>eq(foo, bar, baz)</dd>
-
-		<dt title="4 operand equality">foo = bar = baz = yolo</dt>
-		<dd>eq(foo, bar, baz, yolo)</dd>
-
-		<dt title="4 operand equality">foo = bar = baz == yolo</dt>
-		<dd>eq(foo, bar, baz, yolo)</dd>
-
-		<dt>foo != bar</dt>
-		<dd>neq(foo, bar)</dd>
-
-		<dt>foo != bar != baz</dt>
-		<dd>neq(foo, bar, baz)</dd>
-
-		<dt>foo & bar & baz</dt>
-		<dd>concatenate(foo, bar, baz)</dd>
-
-		<dt>foo.bar</dt>
-		<dd>get(foo, "bar")</dd>
-
-		<dt>foo["bar"]</dt>
-		<dd>get(foo, "bar")</dd>
-
-		<dt title="Pass-through to JS">foo.filter(a => a + 5)</dt>
-
-		<dt title="Pass-through to JS">/* js */ 5+5</dt>
-	</dl>
+	<table class="reftest" data-test="expressionRewrite">
+		<thead>
+			<tr>
+				<th>Test</th>
+				<th>Actual</th>
+				<th>Expected</th>
+			</tr>
+		</thead>
+		<tr>
+			<td>1 + 1</td>
+			<td>add(1, 1)</td>
+		</tr>
+		<tr>
+			<td>1 + 2 + 3</td>
+			<td>add(1, 2, 3)</td>
+		</tr>
+		<tr>
+			<td>if(2, 3, 4)</td>
+			<td>iff(2, 3, 4)</td>
+		</tr>
+		<tr>
+			<td>foo and 5 or baz</td>
+			<td>or(and(foo, 5), baz)</td>
+		</tr>
+		<tr>
+			<td>"foo"</td>
+		</tr>
+		<tr>
+			<td>if(foo >= 5, 1, 2)</td>
+			<td>iff(gte(foo, 5), 1, 2)</td>
+		</tr>
+		<tr>
+			<td>foo == "bar"</td>
+			<td>eq(foo, "bar")</td>
+		</tr>
+		<tr title="Single character equals">
+			<td>foo = 5</td>
+			<td>eq(foo, 5)</td>
+		</tr>
+		<tr>
+			<td>foo > bar</td>
+			<td>gt(foo, bar)</td>
+		</tr>
+		<tr title="3 operand comparison">
+			<td>foo > bar > baz</td>
+			<td>gt(foo, bar, baz)</td>
+		</tr>
+		<tr title="3 operand equality">
+			<td>foo = bar = baz</td>
+			<td>eq(foo, bar, baz)</td>
+		</tr>
+		<tr title="4 operand equality">
+			<td>foo = bar = baz = yolo</td>
+			<td>eq(foo, bar, baz, yolo)</td>
+		</tr>
+		<tr title="4 operand equality">
+			<td>foo = bar = baz == yolo</td>
+			<td>eq(foo, bar, baz, yolo)</td>
+		</tr>
+		<tr>
+			<td>foo != bar</td>
+			<td>neq(foo, bar)</td>
+		</tr>
+		<tr>
+			<td>foo != bar != baz</td>
+			<td>neq(foo, bar, baz)</td>
+		</tr>
+		<tr>
+			<td>foo & bar & baz</td>
+			<td>concatenate(foo, bar, baz)</td>
+		</tr>
+		<tr>
+			<td>foo.bar</td>
+			<td>get(foo, "bar")</td>
+		</tr>
+		<tr>
+			<td>foo["bar"]</td>
+			<td>get(foo, "bar")</td>
+		</tr>
+		<tr title="Pass-through to JS">
+			<td>foo.filter(a => a + 5)</td>
+		</tr>
+		<tr title="Pass-through to JS">
+			<td>/* js */ 5+5</td>
+		</tr>
+	</table>
 </section>
 
 <section>
-	<h1>Function tests</h1>
+	<h1>Functions</h1>
 
 	<p>These tests test whether Mavo functions produce correct results.</p>
 
-	<dl id="function" class="tests">
-		<dt>add("1", 1)</dt>
-		<dd>2</dd>
-
-		<dt>add("3", "5")</dt>
-		<dd>8</dd>
-
-		<dt>add([1, 2, 3])</dt>
-		<dd>6</dd>
-
-		<dt>add([1, 2, 3], [4, 5])</dt>
-		<dd>[5, 7, 3]</dd>
-
-		<dt>and(0, true)</dt>
-		<dd>false</dd>
-
-		<dt>and([0, 1, 2, 3], [true, false])</dt>
-		<dd>[false, false, 2, 3]</dd>
-
-		<dt>and([true, false], [0, 1, 2, 3])</dt>
-		<dd>[false, false, true, true]</dd>
-
-		<dt>or(true, false, false)</dt>
-		<dd>true</dd>
-
-		<dt>or(false, false, false)</dt>
-		<dd>false</dd>
-
-		<dt>eq(3, 3, 3, 3)</dt>
-		<dd>true</dd>
-
-		<dt>eq("l","l")</dt>
-		<dd>true</dd>
-
-		<dt>gt(3, 2, 1)</dt>
-		<dd>true</dd>
-
-		<dt>lt(1, 2, 3)</dt>
-		<dd>true</dd>
-
-		<dt>lt(1, 2, 1)</dt>
-		<dd>false</dd>
-
-		<dt>gt(3, 2, 3)</dt>
-		<dd>false</dd>
-
-		<dt>gt("2090-06-13", $now)</dt>
-		<dd>true</dd>
-
-		<dt>gt("1990-06-13", $now)</dt>
-		<dd>false</dd>
-
-		<dt>neq(2, 2)</dt>
-		<dd>false</dd>
-
-		<dt>neq(foo, bar)</dt>
-		<dd>true</dd>
-
-		<dt>neq(2, 2, 3)</dt>
-		<dd>false</dd>
-
-		<dt>iff(4, 1, 2)</dt>
-		<dd>1</dd>
-
-		<dt>iff([1, 0], 1, 2)</dt>
-		<dd>[1, 2]</dd>
-
-		<dt>iff([1, 0], [1, 2], [3, 4])</dt>
-		<dd>[1, 4]</dd>
-
-		<dt>iff([true, false, 0, 1], 1, [2, 3])</dt>
-		<dd>[1, 3, 3, 1]</dd>
-
-		<dt>"yolo" & 2</dt>
-		<dd>"yolo2"</dd>
-
-		<dt>[1, "hello"] & "#"</dt>
-		<dd>["1#", "hello#"]</dd>
-
-		<dt>[1, 2, 3] & "#" & ["a", "b", "c"]</dt>
-		<dd>["1#a", "2#b", "3#c"]</dd>
-
-		<dt>replace("foooo", "o", "aa")</dt>
-		<dd>"faaaaaaaa"</dd>
-
-		<dt title="Array haystack">replace(["bar", "baz"], "a", "o")</dt>
-		<dd>["bor", "boz"]</dd>
-
-		<dt title="Non-recursive replace">replace("foooo", "oo", "o")</dt>
-		<dd>"foo"</dd>
-
-		<dt title="Recursive replace">replace("foooo", "oo", "o", 10)</dt>
-		<dd>"fo"</dd>
-
-		<dt title="Recursive replace with bound">replace("fo", "o", "oo", 2)</dt>
-		<dd>"foooo"</dd>
-
-		<dt>filter(42, false)</dt>
-		<dd>null</dd>
-
-		<dt>filter(42, true)</dt>
-		<dd>42</dd>
-
-		<dt>filter([1, 2, 3], [false, true, false])</dt>
-		<dd>[null, 2, null]</dd>
-
-		<dt>filter([1, 2, 3], [true, true, false], [false, true, false])</dt>
-		<dd>[null, 2, null]</dd>
-
-		<dt>get({bar: 4}, "bar")</dt>
-		<dd>4</dd>
-
-		<dt>get({}, "bar")</dt>
-		<dd>null</dd>
-
-		<dt>get(null, "bar")</dt>
-		<dd>null</dd>
-	</dl>
+	<table class="reftest" data-test="expressionEvaluation">
+		<thead>
+			<tr>
+				<th>Test</th>
+				<th>Actual</th>
+				<th>Expected</th>
+			</tr>
+		</thead>
+		<tr>
+			<td>add("1", 1)</td>
+			<td>2</td>
+		</tr>
+		<tr>
+			<td>add("3", "5")</td>
+			<td>8</td>
+		</tr>
+		<tr>
+			<td>add([1, 2, 3])</td>
+			<td>6</td>
+		</tr>
+		<tr>
+			<td>add([1, 2, 3], [4, 5])</td>
+			<td>[5, 7, 3]</td>
+		</tr>
+		<tr>
+			<td>and(0, true)</td>
+			<td>false</td>
+		</tr>
+		<tr>
+			<td>and([0, 1, 2, 3], [true, false])</td>
+			<td>[false, false, 2, 3]</td>
+		</tr>
+		<tr>
+			<td>and([true, false], [0, 1, 2, 3])</td>
+			<td>[false, false, true, true]</td>
+		</tr>
+		<tr>
+			<td>or(true, false, false)</td>
+			<td>true</td>
+		</tr>
+		<tr>
+			<td>or(false, false, false)</td>
+			<td>false</td>
+		</tr>
+		<tr>
+			<td>eq(3, 3, 3, 3)</td>
+			<td>true</td>
+		</tr>
+		<tr>
+			<td>eq("l","l")</td>
+			<td>true</td>
+		</tr>
+		<tr>
+			<td>gt(3, 2, 1)</td>
+			<td>true</td>
+		</tr>
+		<tr>
+			<td>lt(1, 2, 3)</td>
+			<td>true</td>
+		</tr>
+		<tr>
+			<td>lt(1, 2, 1)</td>
+			<td>false</td>
+		</tr>
+		<tr>
+			<td>gt(3, 2, 3)</td>
+			<td>false</td>
+		</tr>
+		<tr>
+			<td>gt("2090-06-13", $now)</td>
+			<td>true</td>
+		</tr>
+		<tr>
+			<td>gt("1990-06-13", $now)</td>
+			<td>false</td>
+		</tr>
+		<tr>
+			<td>neq(2, 2)</td>
+			<td>false</td>
+		</tr>
+		<tr>
+			<td>neq(foo, bar)</td>
+			<td>true</td>
+		</tr>
+		<tr>
+			<td>neq(2, 2, 3)</td>
+			<td>false</td>
+		</tr>
+		<tr>
+			<td>iff(4, 1, 2)</td>
+			<td>1</td>
+		</tr>
+		<tr>
+			<td>iff([1, 0], 1, 2)</td>
+			<td>[1, 2]</td>
+		</tr>
+		<tr>
+			<td>iff([1, 0], [1, 2], [3, 4])</td>
+			<td>[1, 4]</td>
+		</tr>
+		<tr>
+			<td>iff([true, false, 0, 1], 1, [2, 3])</td>
+			<td>[1, 3, 3, 1]</td>
+		</tr>
+		<tr>
+			<td>"yolo" & 2</td>
+			<td>"yolo2"</td>
+		</tr>
+		<tr>
+			<td>[1, "hello"] & "#"</td>
+			<td>["1#", "hello#"]</td>
+		</tr>
+		<tr>
+			<td>[1, 2, 3] & "#" & ["a", "b", "c"]</td>
+			<td>["1#a", "2#b", "3#c"]</td>
+		</tr>
+		<tr>
+			<td>replace("foooo", "o", "aa")</td>
+			<td>"faaaaaaaa"</td>
+		</tr>
+		<tr title="Array haystack">
+			<td>replace(["bar", "baz"], "a", "o")</td>
+			<td>["bor", "boz"]</td>
+		</tr>
+		<tr title="Non-recursive replace">
+			<td>replace("foooo", "oo", "o")</td>
+			<td>"foo"</td>
+		</tr>
+		<tr title="Recursive replace">
+			<td>replace("foooo", "oo", "o", 10)</td>
+			<td>"fo"</td>
+		</tr>
+		<tr title="Recursive replace with bound">
+			<td>replace("fo", "o", "oo", 2)</td>
+			<td>"foooo"</td>
+		</tr>
+		<tr>
+			<td>filter(42, false)</td>
+			<td>null</td>
+		</tr>
+		<tr>
+			<td>filter(42, true)</td>
+			<td>42</td>
+		</tr>
+		<tr>
+			<td>filter([1, 2, 3], [false, true, false])</td>
+			<td>[null, 2, null]</td>
+		</tr>
+		<tr>
+			<td>filter([1, 2, 3], [true, true, false], [false, true, false])</td>
+			<td>[null, 2, null]</td>
+		</tr>
+		<tr>
+			<td>get({bar: 4}, "bar")</td>
+			<td>4</td>
+		</tr>
+		<tr>
+			<td>get({}, "bar")</td>
+			<td>null</td>
+		</tr>
+		<tr>
+			<td>get(null, "bar")</td>
+			<td>null</td>
+		</tr>
+	</table>
 </section>
 
-<script src="mavo/mavo.js"></script>
+
 <script src="test.js"></script>
+<script>
+function fixCells(test, result, expected) {
+	if (!result) {
+		result = $.create("td", {after: test});
+		expected = $.create("td", {after: test});
+	}
+	else if (!expected) {
+		// We need a result td
+		expected = result;
+		result = $.create("td", {after: test});
+	}
+
+	if (!expected.textContent) {
+		expected.textContent = test.textContent;
+	}
+
+	return [test, result, expected];
+}
+
+function expressionRewrite(test, result, expected) {
+	[test, result, expected] = fixCells(test, result, expected);
+
+	var r = result.textContent = Mavo.Expression.rewrite(test.textContent);
+
+	return Test.equals(r, expected.textContent);
+}
+
+function expressionEvaluation(test, result, expected) {
+	[test, result, expected] = fixCells(test, result, expected);
+
+	try {
+		var r = (new Mavo.Expression(test.textContent)).eval({});
+		result.textContent = r;
+		return Test.equals(r, eval(expected.textContent));
+	}
+	catch(e) {
+		result.textContent = "ERROR";
+		return false;
+	}
+}
+</script>
 
 </body>
 </html>

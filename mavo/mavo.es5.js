@@ -2473,6 +2473,9 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
 		},
 
 		get: function get() {
+			var url = new URL(this.url);
+			url.searchParams.set("timestamp", Date.now()); // ensure fresh copy
+
 			return $.fetch(this.url.href).then(function (xhr) {
 				return Promise.resolve(xhr.responseText);
 			}, function () {
