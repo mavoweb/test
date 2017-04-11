@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+
+<meta charset="UTF-8">
+<title>MavoScript Tests</title>
+<link rel="stylesheet" href="mavo/mavo.css" />
+<link rel="stylesheet" href="style.css" />
+<style>
+td {
+	font: bold 100%/1.5 Consolas, Monaco, monospace;
+}
+</style>
+<script src="mavo/mavo.js"></script>
+</head>
+<body>
+
+<h1>Function Tests</h1>
+
+<p>These tests test whether Mavo functions produce correct results.</p>
+
+<section>
+	<h1>Basic Operators</h1>
+
+	<table class="reftest" data-test="expressionEvaluation" data-columns="3">
+		<tr>
+			<td>add("1", 1)</td>
+			<td>2</td>
+		</tr>
+		<tr>
+			<td>add("3", "5")</td>
+			<td>8</td>
+		</tr>
+		<tr>
+			<td>add([1, 2, 3])</td>
+			<td>6</td>
+		</tr>
+		<tr>
+			<td>add([1, 2, 3], [4, 5])</td>
+			<td>[5, 7, 3]</td>
+		</tr>
+		<tr>
+			<td>and(0, true)</td>
+			<td>false</td>
+		</tr>
+		<tr>
+			<td>and([0, 1, 2, 3], [true, false])</td>
+			<td>[false, false, 2, 3]</td>
+		</tr>
+		<tr>
+			<td>and([true, false], [0, 1, 2, 3])</td>
+			<td>[false, false, true, true]</td>
+		</tr>
+		<tr>
+			<td>or(true, false, false)</td>
+			<td>true</td>
+		</tr>
+		<tr>
+			<td>or(false, false, false)</td>
+			<td>false</td>
+		</tr>
+		<tr>
+			<td>eq(3, 3, 3, 3)</td>
+			<td>true</td>
+		</tr>
+		<tr>
+			<td>eq("l","l")</td>
+			<td>true</td>
+		</tr>
+		<tr>
+			<td>gt(3, 2, 1)</td>
+			<td>true</td>
+		</tr>
+		<tr>
+			<td>lt(1, 2, 3)</td>
+			<td>true</td>
+		</tr>
+		<tr>
+			<td>lt(1, 2, 1)</td>
+			<td>false</td>
+		</tr>
+		<tr>
+			<td>gt(3, 2, 3)</td>
+			<td>false</td>
+		</tr>
+		<tr>
+			<td>gt("2090-06-13", $now)</td>
+			<td>true</td>
+		</tr>
+		<tr>
+			<td>gt("1990-06-13", $now)</td>
+			<td>false</td>
+		</tr>
+		<tr>
+			<td>neq(2, 2)</td>
+			<td>false</td>
+		</tr>
+		<tr>
+			<td>neq(foo, bar)</td>
+			<td>true</td>
+		</tr>
+		<tr>
+			<td>neq(2, 2, 3)</td>
+			<td>false</td>
+		</tr>
+	</table>
+</section>
+
+<section>
+	<h1>iff()</h1>
+
+	<table class="reftest" data-test="expressionEvaluation" data-columns="3">
+		<tr>
+			<td>iff(4, 1, 2)</td>
+			<td>1</td>
+		</tr>
+		<tr>
+			<td>iff([1, 0], 1, 2)</td>
+			<td>[1, 2]</td>
+		</tr>
+		<tr>
+			<td>iff([1, 0], [1, 2], [3, 4])</td>
+			<td>[1, 4]</td>
+		</tr>
+		<tr>
+			<td>iff([true, false, 0, 1], 1, [2, 3])</td>
+			<td>[1, 3, 3, 1]</td>
+		</tr>
+	</table>
+</section>
+
+<section>
+	<h1>Concatenation</h1>
+
+	<table class="reftest" data-test="expressionEvaluation" data-columns="3">
+		<tr>
+			<td>"yolo" & 2</td>
+			<td>"yolo2"</td>
+		</tr>
+		<tr>
+			<td>[1, "hello"] & "#"</td>
+			<td>["1#", "hello#"]</td>
+		</tr>
+		<tr>
+			<td>[1, 2, 3] & "#" & ["a", "b", "c"]</td>
+			<td>["1#a", "2#b", "3#c"]</td>
+		</tr>
+	</table>
+</section>
+
+<section>
+	<h1>get()</h1>
+
+	<table class="reftest" data-test="expressionEvaluation" data-columns="3">
+		<tr>
+			<td>get({bar: 4}, "bar")</td>
+			<td>4</td>
+		</tr>
+		<tr>
+			<td>get({}, "bar")</td>
+			<td>null</td>
+		</tr>
+		<tr>
+			<td>get(null, "bar")</td>
+			<td>null</td>
+		</tr>
+	</table>
+</section>
+
+<section>
+	<h1>filter()</h1>
+
+	<table class="reftest" data-test="expressionEvaluation" data-columns="3">
+		<tr>
+			<td>filter(42, false)</td>
+			<td>null</td>
+		</tr>
+		<tr>
+			<td>filter(42, true)</td>
+			<td>42</td>
+		</tr>
+		<tr>
+			<td>filter([1, 2, 3], [false, true, false])</td>
+			<td>[null, 2, null]</td>
+		</tr>
+		<tr>
+			<td>filter([1, 2, 3], [true, true, false], [false, true, false])</td>
+			<td>[null, 2, null]</td>
+		</tr>
+	</table>
+</section>
+
+<section>
+	<h1>replace()</h1>
+
+	<table class="reftest" data-test="expressionEvaluation" data-columns="3">
+		<tr>
+			<td>replace("foooo", "o", "aa")</td>
+			<td>"faaaaaaaa"</td>
+		</tr>
+		<tr title="Array haystack">
+			<td>replace(["bar", "baz"], "a", "o")</td>
+			<td>["bor", "boz"]</td>
+		</tr>
+		<tr title="Non-recursive replace">
+			<td>replace("foooo", "oo", "o")</td>
+			<td>"foo"</td>
+		</tr>
+		<tr title="Recursive replace">
+			<td>replace("foooo", "oo", "o", 10)</td>
+			<td>"fo"</td>
+		</tr>
+		<tr title="Recursive replace with bound">
+			<td>replace("fo", "o", "oo", 2)</td>
+			<td>"foooo"</td>
+		</tr>
+	</table>
+</section>
+
+<script src="test.js"></script>
+<script>
+function expressionEvaluation(test, result, expected) {
+	try {
+		var r = (new Mavo.Expression(test.textContent)).eval({});
+		result.textContent = r;
+		return Test.equals(r, eval(expected.textContent));
+	}
+	catch(e) {
+		result.textContent = "ERROR";
+		return false;
+	}
+}
+</script>
+
+</body>
+</html>

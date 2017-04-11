@@ -78,7 +78,7 @@ self.Test = {
 var _ = self.RefTest = $.Class({
 	constructor: function(table) {
 		this.table = table;
-		this.columns = Math.max.apply(Math, [...this.table.rows].map(row => row.cells.length));
+		this.columns = +this.table.getAttribute("data-columns") || Math.max.apply(Math, [...this.table.rows].map(row => row.cells.length));
 		this.compare = _.getTest(table.getAttribute("data-test"));
 		this.setup();
 		this.test();
@@ -103,6 +103,10 @@ var _ = self.RefTest = $.Class({
 			cells = cells.map(td => {
 				return {tag: "th"};
 			});
+
+			if (cells[cells.length - 3]) {
+				cells[cells.length - 3].textContent = "Test";
+			}
 
 			cells[cells.length - 2].textContent = "Actual";
 			cells[cells.length - 1].textContent = "Expected";
@@ -148,7 +152,23 @@ var _ = self.RefTest = $.Class({
 		}
 
 		if (cells.length) {
-			if (this.columns == 2 && !cells[0].innerHTML) {
+			if (this.columns == 3) {
+				// Test, actual, expected
+				if (cells.length == 1) {
+					// expected is the same as test
+					cells.push($.create("td", {after: cells[0]}));
+				}
+
+				if (cells.length == 2) {
+					// missing actual
+					cells.splice(1, 0, $.create("td", {after: cells[0]}));
+				}
+
+				if (!cells[2].textContent) {
+					cells[2].textContent = cells[0].textContent;
+				}
+			}
+			else if (this.columns == 2 && !cells[0].innerHTML) {
 				let previous = tr;
 				while (previous = previous.previousElementSibling) {
 					if (previous.cells[0].innerHTML) {
