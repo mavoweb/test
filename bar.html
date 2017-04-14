@@ -12,7 +12,7 @@
 		[data-test="selector"] td:last-child {
 			flex: .6;
 		}
-		
+
 		td:empty:nth-last-child(2)::before {
 			content: "(Same as above)";
 			color: rgba(0,0,0,.5);
@@ -26,6 +26,8 @@
 
 <section>
 	<h1>No storage</h1>
+
+	<p>Click Edit</p>
 
 	<table class="reftest" data-test="selector">
 		<tr>
@@ -44,7 +46,7 @@
 				</ul>
 			</td>
 		</tr>
-		<tr title="Does edit work? Interactive, click edit above" class="interactive">
+		<tr title="Does edit work? Interactive" class="interactive">
 			<td></td>
 			<td>[mv-mode="edit"]</td>
 		</tr>
@@ -57,6 +59,8 @@
 
 <section>
 	<h1>Element storage</h1>
+
+	<p>Click Save. The test should still pass</p>
 
 	<table class="reftest" data-test="selector">
 		<tr>
@@ -75,15 +79,15 @@
 				</ul>
 			</td>
 		</tr>
-		<tr title="Does save work? Interactive, click save" class="interactive" data-test="contents">
-			<td>
-				<pre id="data">{"prop2": 2, "prop1": "rendered"}</pre>
-			</td>
+		<tr title="Does save work? Interactive" class="interactive" data-test="contents">
 			<td>
 				<pre id="data">{
 	"prop1": "rendered",
 	"prop2": 2
 }</pre>
+			</td>
+			<td>
+				<script>document.write($$("td pre").pop().outerHTML)</script>
 			</td>
 		</tr>
 	</table>

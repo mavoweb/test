@@ -128,7 +128,7 @@ localStorage.localstoretest = `{
 
 	<p>Make changes, then refresh. The two columns must match.</p>
 	<table class="reftest">
-		<tr>
+		<tr class="interactive">
 			<td>
 				<input property="prop1" value="Edit this text and refresh">
 			</td>
@@ -136,7 +136,7 @@ localStorage.localstoretest = `{
 				<script>document.write(`<input value="${JSON.parse(localStorage.localnoedit || "{}").prop1}">`);</script>
 			</td>
 		</tr>
-		<tr>
+		<tr class="interactive">
 			<td>
 				<textarea property="prop2">Edit this text and refresh</textarea>
 			</td>
@@ -588,6 +588,23 @@ localStorage.localstoretest = `{
 			</td>
 		</tr>
 	</table>
+</section>
+
+<section class="interactive">
+	<h1>Mavo in about:srcdoc</h1>
+
+	<p>You should see the Mavo bar in the iframe</p>
+	<iframe style="width: 100%" srcdoc='
+		<head>
+			<link rel="stylesheet" href="mavo/mavo.css" />
+			<script src="mavo/mavo.js"></script>
+		</head>
+		<body>
+			<div mv-app mv-storage="local">
+				<div property="prop1">Initial property text</div>
+			</div>
+		</body>
+	'></iframe>
 </section>
 
 </body>

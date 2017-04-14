@@ -78,7 +78,7 @@ self.Test = {
 var _ = self.RefTest = $.Class({
 	constructor: function(table) {
 		this.table = table;
-		this.columns = +this.table.getAttribute("data-columns") || Math.max.apply(Math, [...this.table.rows].map(row => row.cells.length));
+		this.columns = +this.table.getAttribute("data-columns") || Math.max.apply(Math, $$(this.table.rows).map(row => row.cells.length));
 		this.compare = _.getTest(table.getAttribute("data-test"));
 		this.setup();
 		this.test();
@@ -97,8 +97,7 @@ var _ = self.RefTest = $.Class({
 		}
 
 		// Add table header if not present
-		var cells = [...this.table.rows[0].cells];
-
+		var cells = $$(this.table.rows[0].cells);
 
 		if (!$("thead", this.table) && this.columns > 1) {
 			var header = ["Test", "Actual", "Expected"].slice(-this.columns);
@@ -133,13 +132,13 @@ var _ = self.RefTest = $.Class({
 	},
 
 	test: function() {
-		for (let tr of this.table.tBodies[0].rows) {
+		for (let tr of $$(this.table.tBodies[0].rows)) {
 			this.testRow(tr);
 		}
 	},
 
 	testRow: function(tr) {
-		var cells = [...tr.cells];
+		var cells = $$(tr.cells);
 
 		if (!tr.compare) {
 			tr.compare = _.getTest(tr.getAttribute("data-test"), this.compare);
