@@ -13,7 +13,7 @@ self.print = function print(text) {
 self.Test = {
 	pseudo: (element, pseudo) => {
 		var content = getComputedStyle(element, ":" + pseudo).content;
-		return content.replace(/^"|"$/g, "");
+		return content.replace(/^["']|["']$/g, "");
 	},
 
 	content: function(node) {
