@@ -10,6 +10,9 @@
 td {
 	font: bold 100%/1.5 Consolas, Monaco, monospace;
 }
+table.reftest td:first-child {
+	flex: 2;
+}
 </style>
 <script src="mavo/mavo.js"></script>
 </head>
@@ -26,6 +29,10 @@ td {
 		<tr>
 			<td>add("1", 1)</td>
 			<td>2</td>
+		</tr>
+		<tr>
+			<td>add("", "")</td>
+			<td>0</td>
 		</tr>
 		<tr>
 			<td>add("3", "5")</td>
@@ -213,6 +220,85 @@ td {
 		<tr title="Recursive replace with bound">
 			<td>replace("fo", "o", "oo", 2)</td>
 			<td>"foooo"</td>
+		</tr>
+	</table>
+</section>
+
+<section>
+	<h1>Dates</h1>
+
+	<table class="reftest" data-test="expressionEvaluation" data-columns="3">
+		<tr>
+			<td>day("1986-06-13")</td>
+			<td>13</td>
+		</tr>
+		<tr>
+			<td>weekday("1986-06-13")</td>
+			<td>5</td>
+		</tr>
+		<tr>
+			<td>weekday("1986-06-13").name</td>
+			<td>"Friday"</td>
+		</tr>
+		<tr>
+			<td>weekday("1986-06-13").shortname</td>
+			<td>"Fri"</td>
+		</tr>
+		<tr>
+			<td>month("1986-06-13")</td>
+			<td>6</td>
+		</tr>
+		<tr>
+			<td>month("1986-06-13").twodigit</td>
+			<td>"06"</td>
+		</tr>
+		<tr>
+			<td>month("1986-06-13").name</td>
+			<td>"June"</td>
+		</tr>
+		<tr>
+			<td>month("1986-06-13").shortname</td>
+			<td>"Jun"</td>
+		</tr>
+		<tr>
+			<td>year("1986-06-13")</td>
+			<td>1986</td>
+		</tr>
+		<tr>
+			<td>date("1986-06-03 23:15:20")</td>
+			<td>"1986-06-03"</td>
+		</tr>
+		<tr>
+			<td>time("1986-06-03 23:15:20")</td>
+			<td>"23:15:20"</td>
+		</tr>
+		<tr>
+			<td>hour("1986-06-13 23:15:20")</td>
+			<td>23</td>
+		</tr>
+		<tr>
+			<td>hour12("1986-06-13 23:15:20")</td>
+			<td>"11 PM"</td>
+		</tr>
+		<tr>
+			<td>minute("1986-06-13 23:15:20")</td>
+			<td>15</td>
+		</tr>
+		<tr>
+			<td>second("1986-06-13 23:15:20")</td>
+			<td>20</td>
+		</tr>
+		<tr title="Subtract dates">
+			<td>subtract("1986-06-13", "1986-06-10")</td>
+			<td>259200</td>
+		</tr>
+		<tr>
+			<td>days(subtract("1986-06-13", "1986-06-10"))</td>
+			<td>3</td>
+		</tr>
+		<tr>
+			<td>months(subtract("1986-06-13", "1985-01-01"))</td>
+			<td>17</td>
 		</tr>
 	</table>
 </section>

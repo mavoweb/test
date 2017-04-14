@@ -683,6 +683,25 @@ var _ = self.Mavo = $.Class({
 			});
 	},
 
+	upload: function(file, path = "images/" + file.name) {
+		if (!this.uploadBackend) {
+			return Promise.reject();
+		}
+
+		this.inProgress = "Uploading";
+
+		return this.uploadBackend.upload(file, path)
+			.then(url => {
+				this.inProgress = false;
+				return url;
+			})
+			.catch(err => {
+				this.error("Error uploading file", err);
+				this.inProgress = false;
+				return null;
+			});
+	},
+
 	save: function() {
 		return this.store().then(saved => {
 			if (saved) {
@@ -747,6 +766,15 @@ var _ = self.Mavo = $.Class({
 				}
 
 				return value;
+			}
+		},
+
+		uploadBackend: {
+			get: function() {
+				if (this.storage && this.storage.upload) {
+					// Prioritize storage
+					return this.storage;
+				}
 			}
 		}
 	},
@@ -829,7 +857,7 @@ let andNot = s.andNot = (selector1, selector2) => and(selector1, not(selector2))
 $.extend(_.selectors, {
 	primitive: andNot(s.property, s.group),
 	rootGroup: andNot(s.group, s.property),
-	output: or(s.specificProperty("output"), ".mv-output, .mv-value")
+	output: or(s.specificProperty("output"), ".mv-output")
 });
 
 }
@@ -881,6 +909,16 @@ var _ = $.extend(Mavo, {
 
 		// JS file
 		return $.include(url);
+	},
+
+	readFile: (file, format = "DataURL") => {
+		var reader = new FileReader();
+
+		return new Promise((resolve, reject) => {
+			reader.onload = f => resolve(reader.result);
+			reader.onerror = reader.onabort = reject;
+			reader["readAs" + format](file);
+		});
 	},
 
 	toJSON: data => {
@@ -2077,7 +2115,7 @@ var _ = Mavo.Backend = $.Class({
 			req.headers["Authorization"] = req.headers["Authorization"] || `Bearer ${this.accessToken}`;
 		}
 
-		if (typeof req.data === "object") {
+		if ($.type(req.data) === "object") {
 			if (req.method == "GET") {
 				req.data = Object.keys(req.data).map(p => p + "=" + encodeURIComponent(req.data[p])).join("&");
 			}
@@ -3323,7 +3361,7 @@ var _ = Mavo.Primitive = $.Class({
 		}, this);
 
 		if (this.attribute || this.config.popup) {
-			this.popup = new _.Popup(this);
+			this.popup = new Mavo.UI.Popup(this);
 		}
 
 		if (!this.popup) {
@@ -3355,10 +3393,8 @@ var _ = Mavo.Primitive = $.Class({
 
 			var timer;
 
-			$.events(this.element, {
-				"click.mavo:preedit": resolve,
-				"focus.mavo:preedit": resolve
-			});
+			var events = "click focus dragover dragenter".split(" ").map(e => e + ".mavo:preedit").join(" ");
+			$.events(this.element, events, resolve);
 
 			if (!this.attribute) {
 				// Hovering over the element for over 150ms will trigger edit
@@ -3653,7 +3689,7 @@ var _ = Mavo.Primitive = $.Class({
 			return value;
 		},
 
-		getValue: function (element, { config, attribute, datatype }) {
+		getValue: function (element, {config, attribute, datatype} = {}) {
 			if (!config) {
 				config = _.getConfig(element, attribute);
 			}
@@ -3700,7 +3736,7 @@ var _ = Mavo.Primitive = $.Class({
 			return config;
 		},
 
-		setValue: function (element, value, {config, attribute, datatype}) {
+		setValue: function (element, value, {config, attribute, datatype} = {}) {
 			if ($.type(value) == "object" && "value" in value) {
 				var presentational = value.presentational;
 				value = value.value;
@@ -3793,17 +3829,45 @@ var _ = Mavo.Primitive = $.Class({
 	}
 });
 
-_.Popup = $.Class({
+})(Bliss, Bliss.$);
+
+(function($, $$) {
+
+var _ = Mavo.UI.Popup = $.Class({
 	constructor: function(primitive) {
 		this.primitive = primitive;
+
+		// Need to be defined here so that this is what expected
+		this.position = evt => {
+			var bounds = this.element.getBoundingClientRect();
+			var x = bounds.left;
+			var y = bounds.bottom;
+
+			if (this.popup.offsetHeight) {
+				// Is in the DOM, check if it fits
+				var popupBounds = this.popup.getBoundingClientRect();
+
+				if (popupBounds.height + y > innerHeight) {
+					y = innerHeight - popupBounds.height - 20;
+				}
+			}
+
+			$.style(this.popup, { top:  `${y}px`, left: `${x}px` });
+		};
 
 		this.popup = $.create("div", {
 			className: "mv-popup",
 			hidden: true,
-			contents: [
-				this.primitive.label + ":",
-				this.editor
-			],
+			contents: {
+				tag: "fieldset",
+				contents: [
+					{
+						tag: "legend",
+						textContent: this.primitive.label + ":"
+					},
+					this.editor
+				]
+			},
 			events: {
 				keyup: evt => {
 					if (evt.keyCode == 13 || evt.keyCode == 27) {
@@ -3814,7 +3878,8 @@ _.Popup = $.Class({
 						evt.stopPropagation();
 						this.hide();
 					}
-				}
+				},
+				transitionend: this.position
 			}
 		});
 
@@ -3833,15 +3898,6 @@ _.Popup = $.Class({
 			if (!this.popup.contains(evt.target) && !this.element.contains(evt.target)) {
 				this.hide();
 			}
-		};
-
-		this.position = evt => {
-			var bounds = this.element.getBoundingClientRect();
-			var x = bounds.left;
-			var y = bounds.bottom;
-
-			 // TODO what if it doesn’t fit?
-			$.style(this.popup, { top:  `${y}px`, left: `${x}px` });
 		};
 
 		this.position();
@@ -4021,10 +4077,91 @@ _.register({
 		default: true,
 		selector: "img, video, audio",
 		attribute: "src",
-		editor: {
-			"tag": "input",
-			"type": "url",
-			"placeholder": "http://example.com"
+		editor: function() {
+			var uploadBackend = this.mavo.storage && this.mavo.storage.upload? this.mavo.storage : this.uploadBackend;
+
+			var mainInput = $.create("input", {
+				"type": "url",
+				"placeholder": "http://example.com/image.png",
+				"className": "mv-output",
+				"aria-label": "URL to image"
+			});
+
+			if (uploadBackend && self.FileReader) {
+				var popup;
+				var type = this.element.nodeName.toLowerCase();
+				type = type == "img"? "image" : type;
+				var path = this.element.getAttribute("mv-uploads") || type + "s";
+
+				var upload = (file, name = file.name) => {
+					if (file && file.type.indexOf(type + "/") === 0) {
+						this.mavo.upload(file, path + "/" + name).then(url => {
+							mainInput.value = url;
+							$.fire(mainInput, "input");
+						});
+					}
+				};
+
+				var uploadEvents = {
+					"paste": evt => {
+						var item = evt.clipboardData.items[0];
+
+						if (item.kind == "file" && item.type.indexOf(type + "/") === 0) {
+							// Is a file of the correct type, upload!
+							var name = `pasted-${type}-${Date.now()}.${item.type.slice(6)}`; // image, video, audio are all 5 chars
+							upload(item.getAsFile(), name);
+							evt.preventDefault();
+						}
+					},
+					"drag dragstart dragend dragover dragenter dragleave drop": evt => {
+						evt.preventDefault();
+						evt.stopPropagation();
+					},
+					"dragover dragenter": evt => {
+						popup.classList.add("mv-dragover");
+						this.element.classList.add("mv-dragover");
+					},
+					"dragleave dragend drop": evt => {
+						popup.classList.remove("mv-dragover");
+						this.element.classList.remove("mv-dragover");
+					},
+					"drop": evt => {
+						upload(evt.dataTransfer.files[0]);
+					}
+				};
+
+				$.events(this.element, uploadEvents);
+
+				return popup = $.create({
+					className: "mv-upload-popup",
+					contents: [
+						mainInput, {
+							tag: "input",
+							type: "file",
+							"aria-label": "Upload image",
+							accept: type + "/*",
+							events: {
+								change: evt => {
+									var file = evt.target.files[0];
+
+									if (!file) {
+										return;
+									}
+
+									upload(file);
+								}
+							}
+						}, {
+							className: "mv-tip",
+							innerHTML: "<strong>Tip:</strong> You can also drag & drop or paste!"
+						}
+					],
+					events: uploadEvents
+				});
+			}
+			else {
+				return mainInput;
+			}
 		}
 	},
 
@@ -5781,10 +5918,6 @@ var _ = Mavo.Functions = {
 		"=": "eq"
 	},
 
-	get $now() {
-		return new Date();
-	},
-
 	// Read-only syntactic sugar for URL stuff
 	$url: (function() {
 		var ret = {};
@@ -5936,6 +6069,37 @@ var _ = Mavo.Functions = {
 
 	uppercase: str => (str + "").toUpperCase(),
 	lowercase: str => (str + "").toLowerCase(),
+
+	/*********************
+	 * Date functions
+	 *********************/
+
+	get $now() {
+		return new Date();
+	},
+
+	year: getDateComponent("year"),
+	month: getDateComponent("month"),
+	day: getDateComponent("day"),
+	weekday: getDateComponent("weekday"),
+	hour: getDateComponent("hour"),
+	hour12: getDateComponent("hour", "numeric", {hour12:true}),
+	minute: getDateComponent("minute"),
+	second: getDateComponent("second"),
+
+	date: date => {
+		return `${_.year(date)}-${_.month(date).twodigit}-${_.day(date).twodigit}`;
+	},
+	time: date => {
+		return `${_.hour(date).twodigit}:${_.minute(date).twodigit}:${_.second(date).twodigit}`;
+	},
+
+	minutes: seconds => Math.floor(Math.abs(seconds) / 60),
+	hours: seconds => Math.floor(Math.abs(seconds) / 3600),
+	days: seconds => Math.floor(Math.abs(seconds) / 86400),
+	weeks: seconds => Math.floor(Math.abs(seconds) / 604800),
+	months: seconds => Math.floor(Math.abs(seconds) / (30.4368 * 86400)),
+	years: seconds => Math.floor(Math.abs(seconds) / (30.4368 * 86400 * 12)),
 };
 
 Mavo.Script = {
@@ -5988,18 +6152,11 @@ Mavo.Script = {
 						result = b.map(n => o.scalar(a, n));
 					}
 				}
+				else if (Array.isArray(a)) {
+					result = a.map(n => o.scalar(n, b));
+				}
 				else {
-					// Operand is scalar
-					if (typeof o.identity == "number") {
-						b = +b;
-					}
-
-					if (Array.isArray(a)) {
-						result = a.map(n => o.scalar(n, b));
-					}
-					else {
-						result = o.scalar(a, b);
-					}
+					result = o.scalar(a, b);
 				}
 
 				if (o.reduce) {
@@ -6052,7 +6209,17 @@ Mavo.Script = {
 			symbol: "+"
 		},
 		"subtract": {
-			scalar: (a, b) => a - b,
+			scalar: (a, b) => {
+				if (isNaN(a) || isNaN(b)) {
+					var dateA = toDate(a), dateB = toDate(b);
+
+					if (dateA && dateB) {
+						return (dateA - dateB)/1000;
+					}
+				}
+
+				return a - b;
+			},
 			symbol: "-"
 		},
 		"mod": {
@@ -6132,9 +6299,9 @@ Mavo.Script = {
 	getNumericalOperands: function(a, b) {
 		if (isNaN(a) || isNaN(b)) {
 			// Try comparing as dates
-			var da = new Date(a), db = new Date(b);
+			var da = toDate(a), db = toDate(b);
 
-			if (!isNaN(da) && !isNaN(db)) {
+			if (da && db) {
 				// Both valid dates
 				return [da, db];
 			}
@@ -6210,6 +6377,68 @@ function numbers(array, args) {
 	return array.filter(number => !isNaN(number) && number !== "").map(n => +n);
 }
 
+function toDate(date) {
+	if (!date) {
+		return null;
+	}
+
+	if ($.type(date) === "string" && date.indexOf(":") === -1) {
+		// Dates without a time are parsed as UTC, we want local timezone
+		date += " 00:00:00";
+	}
+
+	date = new Date(date);
+
+	if (isNaN(date)) {
+		return null;
+	}
+
+	return date;
+}
+
+function getDateComponent(component, option = "numeric", o) {
+	var locale = document.documentElement.lang || "en-GB";
+
+	return function(date, format = option) {
+		date = toDate(date);
+
+		if (!date) {
+			return "";
+		}
+
+		var options = $.extend({
+			[component]: format,
+			hour12: false
+		}, o);
+
+		if (component == "weekday" && format == "numeric") {
+			ret = date.getDay() || 7;
+		}
+		else {
+			var ret = date.toLocaleString(locale, options);
+		}
+
+		if (format == "numeric" && !isNaN(ret)) {
+			ret = new Number(ret);
+
+			if (component == "month" || component == "weekday") {
+				options[component] = "long";
+				ret.name = date.toLocaleString(locale, options);
+
+				options[component] = "short";
+				ret.shortname = date.toLocaleString(locale, options);
+			}
+
+			if (component != "weekday") {
+				options[component] = "2-digit";
+				ret.twodigit = date.toLocaleString(locale, options);
+			}
+		}
+
+		return ret;
+	};
+}
+
 })();
 
 (function($) {
@@ -6223,12 +6452,20 @@ var _ = Mavo.Backend.register($.Class({
 		this.key = this.mavo.element.getAttribute("mv-dropbox-key") || "2mx6061p054bpbp";
 
 		// Transform the dropbox shared URL into something raw and CORS-enabled
-		this.url = new URL(this.url, location);
-
-		this.url.hostname = "dl.dropboxusercontent.com";
-		this.url.search = this.url.search.replace(/\bdl=0|^$/, "raw=1");
+		this.url = _.fixShareURL(this.url);
 
 		this.login(true);
+	},
+
+	upload: function(file, path) {
+		path = this.path.replace(/[^/]+$/, "") + path;
+
+		return this.put(file, path).then(fileInfo => this.getURL(path));
+	},
+
+	getURL: function(path) {
+		return this.request("sharing/create_shared_link_with_settings", {path}, "POST")
+			.then(shareInfo => _.fixShareURL(shareInfo.url));
 	},
 
 	/**
@@ -6236,11 +6473,11 @@ var _ = Mavo.Backend.register($.Class({
 	 * @param {Object} file - An object with name & data keys
 	 * @return {Promise} A promise that resolves when the file is saved.
 	 */
-	put: function(serialized, path) {
+	put: function(serialized, path = this.path, o = {}) {
 		return this.request("https://content.dropboxapi.com/2/files/upload", serialized, "POST", {
 			headers: {
 				"Dropbox-API-Arg": JSON.stringify({
-					path: this.path,
+					path,
 					mode: "overwrite"
 				}),
 				"Content-Type": "application/octet-stream"
@@ -6295,6 +6532,13 @@ var _ = Mavo.Backend.register($.Class({
 		test: function(url) {
 			url = new URL(url, location);
 			return /dropbox.com/.test(url.host);
+		},
+
+		fixShareURL: url => {
+			url = new URL(url, location);
+			url.hostname = "dl.dropboxusercontent.com";
+			url.search = url.search.replace(/\bdl=0|^$/, "raw=1");
+			return url;
 		}
 	}
 }));
@@ -6332,13 +6576,25 @@ var _ = Mavo.Backend.register($.Class({
 		       .then(response => Promise.resolve(this.repo? _.atob(response.content) : response));
 	},
 
+	upload: function(file, path = this.path) {
+		return Mavo.readFile(file).then(dataURL => {
+				var base64 = dataURL.slice(5); // remove data:
+				var media = base64.match(/^\w+\/[\w+]+/)[0];
+				base64 = base64.replace(RegExp(`^${media}(;base64)?,`), "");
+				path = this.path.replace(/[^/]+$/, "") + path;
+
+				return this.put(base64, path, {isEncoded: true});
+			})
+			.then(fileInfo => this.getURL(path, fileInfo.commit.sha));	
+	},
+
 	/**
 	 * Saves a file to the backend.
 	 * @param {String} serialized - Serialized data
 	 * @param {String} path - Optional file path
 	 * @return {Promise} A promise that resolves when the file is saved.
 	 */
-	put: function(serialized, path = this.path) {
+	put: function(serialized, path = this.path, o = {}) {
 		if (!path) {
 			// Raw API calls are read-only for now
 			return;
@@ -6349,6 +6605,8 @@ var _ = Mavo.Backend.register($.Class({
 
 		// Create repo if it doesn’t exist
 		var repoInfo = this.repoInfo || this.request("user/repos", {name: this.repo}, "POST").then(repoInfo => this.repoInfo = repoInfo);
+
+		serialized = o.isEncoded? serialized : _.btoa(serialized);
 
 		return Promise.resolve(repoInfo)
 			.then(repoInfo => {
@@ -6385,7 +6643,7 @@ var _ = Mavo.Backend.register($.Class({
 					ref: this.branch
 				}).then(fileInfo => this.request(fileCall, {
 					message: `Updated ${fileInfo.name || "file"}`,
-					content: _.btoa(serialized),
+					content: serialized,
 					branch: this.branch,
 					sha: fileInfo.sha
 				}, "PUT"), xhr => {
@@ -6393,7 +6651,7 @@ var _ = Mavo.Backend.register($.Class({
 						// File does not exist, create it
 						return this.request(fileCall, {
 							message: "Created file",
-							content: _.btoa(serialized),
+							content: serialized,
 							branch: this.branch
 						}, "PUT");
 					}
@@ -6411,6 +6669,8 @@ var _ = Mavo.Backend.register($.Class({
 						this.pullRequest(prs[0]);
 					});
 				}
+
+				return fileInfo;
 			});
 	},
 
@@ -6506,7 +6766,7 @@ Preview my changes here: ${previewURL}`,
 								if (this.branch === undefined) {
 									this.branch = repoInfo.default_branch;
 								}
-								
+
 								return this.repoInfo = repoInfo;
 							});
 					}
@@ -6547,6 +6807,27 @@ Preview my changes here: ${previewURL}`,
 			};
 
 			$.fire(this.mavo.element, "mavo:login", { backend: this });
+		});
+	},
+
+	getURL: function(path = this.path, sha) {
+		var repo = `${this.username}/${this.repo}`;
+		path = path.replace(/ /g, "%20");
+
+		return this.request(`repos/${repo}/pages`, {}, "GET", {
+			headers: {
+				"Accept": "application/vnd.github.mister-fantastic-preview+json"
+			}
+		})
+		.then(pagesInfo => pagesInfo.html_url + path)
+		.catch(xhr => {
+			// No Github Pages, return rawgit URL
+			if (sha) {
+				return `https://cdn.rawgit.com/${repo}/${sha}/${path}`;
+			}
+			else {
+				return `https://rawgit.com/${repo}/${this.branch}/${path}`;
+			}
 		});
 	},
 

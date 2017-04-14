@@ -63,8 +63,8 @@ self.Test = {
 			return true;
 		}
 
-		if (typeof a == "number" && typeof b == "number" && isNaN(a) && isNaN(b)) {
-			return true;
+		if ($.type(a) == "number" && $.type(b) == "number") {
+			return isNaN(a) && isNaN(b) || a == b;
 		}
 
 		if (Array.isArray(a) && Array.isArray(b)) {
@@ -99,23 +99,17 @@ var _ = self.RefTest = $.Class({
 		// Add table header if not present
 		var cells = [...this.table.rows[0].cells];
 
-		if (!$("thead", this.table) && cells.length > 1) {
-			cells = cells.map(td => {
-				return {tag: "th"};
-			});
 
-			if (cells[cells.length - 3]) {
-				cells[cells.length - 3].textContent = "Test";
-			}
-
-			cells[cells.length - 2].textContent = "Actual";
-			cells[cells.length - 1].textContent = "Expected";
+		if (!$("thead", this.table) && this.columns > 1) {
+			var header = ["Test", "Actual", "Expected"].slice(-this.columns);
 
 			$.create("thead", {
 				contents: [
 					{
 						tag: "tr",
-						contents:  cells
+						contents: header.map(text => {
+							return {tag: "th", textContent: text};
+						})
 					}
 				],
 				start: this.table
