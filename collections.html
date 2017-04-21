@@ -135,7 +135,7 @@
 </section>
 
 <section mv-app="primitives" mv-storage="#numbers-2">
-	<h1>Implied collection of primitives</h1>
+	<h1>Immutable collection of primitives</h1>
 	<table class="reftest">
 		<tr mv-expressions="none">
 			<td>
@@ -173,6 +173,46 @@
 		<tr>
 			<td>[numbers]</td>
 			<td>1, 2, 3</td>
+		</tr>
+	</table>
+</section>
+
+<section mv-app mv-storage="#immutable">
+	<h1>Immutable collection inside mutable collection</h1>
+
+	<table class="reftest">
+		<tr mv-expressions="none">
+			<td>
+				<pre id="immutable">{
+	"collection": [
+		{
+			"prop1": [3, 4]
+		},
+		{
+			"prop1": [5, 6]
+		}
+	]
+}</pre>
+			</td>
+			<td>
+				<script>document.write($$("td pre").pop().outerHTML)</script>
+			</td>
+		</tr>
+		<tr>
+			<td>
+				<div property="collection" mv-multiple>
+					<div property="prop1">1</div>
+					<div property="prop1">2</div>
+				</div>
+			</td>
+			<td>
+				<div>3 4</div>
+				<div>5 6</div>
+			</td>
+		</tr>
+		<tr>
+			<td>[prop1]</td>
+			<td>3, 4, 5, 6</td>
 		</tr>
 	</table>
 </section>
@@ -226,20 +266,20 @@
 	]
 }</script>
 <section mv-app="customitemcontrols" mv-storage="#countries" class="mv-autoedit">
-	<h1>Custom item controls placement</h1>
+	<h1>Custom item bar placement</h1>
 	<table class="reftest">
 		<tr>
 			<td>
 				<div property="country" mv-multiple>
-					<div class="mv-item-controls">A</div>
+					<div class="mv-item-controls mv-ui">A</div>
 					<span property="code"></span>
 					<span property="name"></span>
 				</div>
 			</td>
 			<td>
-				<div mv-multiple><div class="mv-item-controls">A</div> Online</div>
-				<div mv-multiple><div class="mv-item-controls">A</div> us United States</div>
-				<div mv-multiple><div class="mv-item-controls">A</div> gb United Kingdom </div>
+				<div mv-multiple><div class="mv-item-bar mv-ui">A</div> Online</div>
+				<div mv-multiple><div class="mv-item-bar mv-ui">A</div> us United States</div>
+				<div mv-multiple><div class="mv-item-bar mv-ui">A</div> gb United Kingdom </div>
 			</td>
 		</tr>
 	</table>

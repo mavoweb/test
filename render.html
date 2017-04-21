@@ -320,6 +320,49 @@
 	</table>
 </section>
 
+<section>
+	<h1>Rendering primitives on groups</h1>
+
+	<table class="reftest">
+		<tr class="interactive">
+			<td>
+				<pre id="data-primitive">5</pre>
+			</td>
+			<td>
+				<pre>{
+	"prop2": 5
+}</pre>
+			</td>
+		</tr>
+		<tr title="First writable property">
+			<td mv-app="primitiveongroup" mv-storage="#data-primitive">
+				<span property="prop1">[prop2]</span>
+				<span property="prop2">3</span>
+			</td>
+			<td>5 5</td>
+		</tr>
+		<tr class="interactive">
+			<td>
+				<pre id="data-primitive2">{
+	"foo": 2
+}</pre>
+			</td>
+			<td>
+				<script>document.write($$("td pre").pop().outerHTML)</script>
+			</td>
+		</tr>
+		<tr title="Same property">
+			<td mv-app="primitiveongroup" mv-storage="#data-primitive2">
+				<span property="foo">
+					[foo]
+					<span property="foo">1</span>
+				</span>
+			</td>
+			<td>2 2</td>
+		</tr>
+	</table>
+</section>
+
 <script src="test.js"></script>
 
 </body>

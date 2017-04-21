@@ -11,6 +11,7 @@
 			background: #efc;
 		}
 	</style>
+	<script src="mavo/mavo.js"></script>
 </head>
 <body>
 
@@ -45,6 +46,11 @@
 			<td>[40 +]</td>
 			<td>40 +</td>
 		</tr>
+		<tr title="Multiline expression">
+			<td>[
+				40 + 2]</td>
+			<td>42</td>
+		</tr>
 		<tr title="Expression in attribute, prop5">
 			<td><input property="prop5" value="[39 + 3]"></td>
 			<td><input value="42"></td>
@@ -53,15 +59,15 @@
 			<td><input type="number" value="[39 + 3]"></td>
 			<td><input type="number" value="42"></td>
 		</tr>
-		<tr title="Expression in attribute, type=number, prop6">
+		<tr title="Expression in attribute, type=number, prop6 = prop5 + 1">
 			<td><input property="prop6" type="number" value="[prop5 + 1]"></td>
 			<td><input type="number" value="43"></td>
 		</tr>
-		<tr title="Math with property, prop2">
+		<tr title="Math with property, prop2 = prop1 + 1">
 			<td property="prop2">[prop1 + 1]</td>
 			<td>43</td>
 		</tr>
-		<tr title="Math with computed property (2 steps), prop3">
+		<tr title="Math with computed property (2 steps), prop3 = prop2 + 1">
 			<td property="prop3">[prop2 + 1]</td>
 			<td>44</td>
 		</tr>
@@ -105,6 +111,50 @@
         </tr>
 	</table>
 
+</section>
+
+<section>
+	<h1>Saving</h1>
+
+	<p>Click Save</p>
+
+	<table class="reftest">
+		<tr>
+			<td>
+				<pre id="data-primitive">{
+	"normal": 5
+}</pre>
+			</td>
+			<td>
+				<script>document.write($$("td pre").pop().outerHTML)</script>
+			</td>
+		</tr>
+		<tr title="Computed properties must not be saved">
+			<td mv-app="primitiveongroup" mv-storage="#data-primitive">
+				<span property="computed">[normal]</span>
+				<span property="normal">3</span>
+			</td>
+			<td>5 5</td>
+		</tr>
+		<tr>
+			<td>
+				<pre id="data-primitive2">{
+	"normal": 5,
+	"computed": 5
+}</pre>
+			</td>
+			<td>
+				<script>document.write($$("td pre").pop().outerHTML)</script>
+			</td>
+		</tr>
+		<tr title="…unless explicitly declared">
+			<td mv-app="primitiveongroup" mv-storage="#data-primitive2">
+				<span property="computed" mv-storage="inherit">[normal]</span>
+				<span property="normal">3</span>
+			</td>
+			<td>5 5</td>
+		</tr>
+	</table>
 </section>
 
 <section mv-app mv-storage="#countries">
@@ -443,11 +493,36 @@
 	</table>
 </section>
 
-<section class="mv-app" id="mvIf">
+<section>
+	<h1>mv-value with array of primitives on group collection</h1>
+
+	<table class="reftest">
+		<tr>
+			<td>
+				<div mv-app="statuses">
+					[count(status)]
+					<dl property="status" mv-multiple mv-value="[1, 2, 3, 4]">
+						<dt property="prop1">[prop2]</dt>
+						<dd property="prop2">1</dd>
+					</dl>
+				</div>
+			</td>
+			<td>
+				4
+				1 1
+				2 2
+				3 3
+				4 4
+			</td>
+		</tr>
+	</table>
+</section>
+
+<section mv-app id="mvIf">
 	<h1>mv-if</h1>
 
 	<table class="reftest">
-		<!-- <tr>
+		<tr>
 			<td>A<span mv-if="false">B</span>C</td>
 			<td>AC</td>
 		</tr>
@@ -474,7 +549,7 @@
 		<tr>
 			<td>A<span mv-if="false">B<span mv-if="true"><span property="prop2">C</span></span></span>[prop2]</td>
 			<td>A</td>
-		</tr> -->
+		</tr>
 		<tr title="Property with same name across multiple mv-ifs">
 			<td>
 				<span mv-if="false">
@@ -621,7 +696,6 @@
 	</table>
 </section>
 
-<script src="mavo/mavo.js"></script>
 <script src="test.js"></script>
 <script>
 	var compareChecked = RefTest.compare.attribute.bind(null, "checked");

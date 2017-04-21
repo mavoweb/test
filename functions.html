@@ -3,7 +3,7 @@
 <head>
 
 <meta charset="UTF-8">
-<title>MavoScript Tests</title>
+<title>Function Tests</title>
 <link rel="stylesheet" href="mavo/mavo.css" />
 <link rel="stylesheet" href="style.css" />
 <style>
@@ -171,6 +171,10 @@ table.reftest td:first-child {
 			<td>get(null, "bar")</td>
 			<td>null</td>
 		</tr>
+		<tr title="Get collection item by id">
+			<td>get([{id: "foo", name: "fooname"}, {id: "bar", name: "barname"}], "bar").name</td>
+			<td>"barname"</td>
+		</tr>
 	</table>
 </section>
 
@@ -312,6 +316,7 @@ function expressionEvaluation(test, result, expected) {
 		return Test.equals(r, eval(expected.textContent));
 	}
 	catch(e) {
+		console.error(e);
 		result.textContent = "ERROR";
 		return false;
 	}
