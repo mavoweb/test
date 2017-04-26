@@ -103,6 +103,60 @@ td {
 	</table>
 </section>
 
+<section mv-app>
+	<h1>Mavo.Functions._Trap</h1>
+
+	<script>
+	window.foo = 5;
+	</script>
+
+	<table class="reftest" id="traptests">
+		<tr title="Unquoted strings">
+			<td>[foobar]</td>
+			<td>foobar</td>
+		</tr>
+		<tr title="Global variables">
+			<td>[foo]</td>
+			<td>5</td>
+		</tr>
+		<tr title="Functions">
+			<td>[add(1, 2)]</td>
+			<td>3</td>
+		</tr>
+		<tr title="Case insenstive functions">
+			<td>[ADD(1, 2)]</td>
+			<td>3</td>
+		</tr>
+		<tr title="Unquoted strings that are function names">
+			<td>[Average]</td>
+			<td>Average</td>
+		</tr>
+		<tr title="Same as above, different casing">
+			<td>[AVERAGE]</td>
+			<td>AVERAGE</td>
+		</tr>
+		<tr title="Math function">
+			<td>[pow(2, 2)]</td>
+			<td>4</td>
+		</tr>
+		<tr title="Unquoted strings that are Math function names">
+			<td>[pow]</td>
+			<td>pow</td>
+		</tr>
+	</table>
+	<script>
+	for (let test of $$("#traptests tr")) {
+		$.create("td", {
+			textContent: test.cells[0].textContent,
+			before: test.cells[0],
+			"mv-expressions": "none"
+		});
+	}
+	</script>
+</section>
+
+
+
 <script src="test.js"></script>
 <script>
 function expressionRewrite(test, result, expected) {

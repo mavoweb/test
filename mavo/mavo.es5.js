@@ -708,7 +708,7 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
 				// We have a string, convert to a backend object if different than existing
 				this[role] = backend = _.Backend.create(backend, {
 					mavo: this,
-					format: this.element.getAttribute("mv-format-" + role) || this.element.getAttribute("mv-format")
+					format: this.element.getAttribute("mv-" + role + "-format") || this.element.getAttribute("mv-format")
 				});
 			} else if (!backend) {
 				// We had a backend and now we will un-have it
@@ -1013,6 +1013,7 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
 		$.extend(_.selectors, {
 			primitive: andNot(s.property, s.group),
 			rootGroup: andNot(s.group, s.property),
+			item: or(s.multiple, s.group),
 			output: or(s.specificProperty("output"), ".mv-output")
 		});
 	}
@@ -1692,8 +1693,10 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
 			});
 		},
 
-		register: function register(o) {
-			if (o.name && _.loaded[o.name]) {
+		register: function register(name) {
+			var o = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
+
+			if (_.loaded[name]) {
 				// Do not register same plugin twice
 				return;
 			}
@@ -1730,9 +1733,7 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
 				(_Mavo$dependencies = Mavo.dependencies).push.apply(_Mavo$dependencies, ready);
 			}
 
-			if (o.name) {
-				_.loaded[o.name] = o;
-			}
+			_.loaded[name] = o;
 
 			if (o.init) {
 				Promise.all(ready).then(function () {
@@ -2904,7 +2905,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 				});
 			},
 
-			stringify: function stringify(serialized, me) {
+			stringify: function stringify(data, me) {
 				return csv.ready().then(function () {
 					var property = me ? me.property : "content";
 					var options = me ? me.options : csv.defaultOptions;
@@ -4762,7 +4763,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
 
 				try {
 					for (var _iterator = all[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
-						config = _step.value;
+						var config = _step.value;
 
 						config.attribute = Mavo.toArray(config.attribute || null);
 
@@ -4772,7 +4773,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
 
 						try {
 							for (var _iterator2 = config.attribute[Symbol.iterator](), _step2; !(_iteratorNormalCompletion2 = (_step2 = _iterator2.next()).done); _iteratorNormalCompletion2 = true) {
-								attribute = _step2.value;
+								var attribute = _step2.value;
 
 								var _o = $.extend({}, config);
 								_o.attribute = attribute;
@@ -4817,7 +4818,6 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
 		},
 		"search": {
 			value: function value(element, attribute, datatype) {
-
 				var matches = _.matches(element, attribute, datatype);
 
 				return matches[matches.length - 1] || { attribute: attribute };
@@ -5346,7 +5346,7 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
 
 			try {
 				for (var _iterator = this.children[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
-					item = _step.value;
+					var item = _step.value;
 
 					if (!item.deleted || env.options.live) {
 						var itemData = item.getData(env.options);
@@ -5463,8 +5463,6 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
 					});
 
 					_this.unsavedChanges = _this.mavo.unsavedChanges = true;
-
-					_this.mavo.expressions.update(env.item.element);
 				});
 			}
 
@@ -5552,11 +5550,11 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
 			var changed = [];
 
 			for (var i = 0; i < this.length; i++) {
-				var _item = this.children[i];
+				var item = this.children[i];
 
-				if (_item && _item.index !== i) {
-					_item.index = i;
-					changed.push(_item);
+				if (item && item.index !== i) {
+					item.index = i;
+					changed.push(item);
 				}
 			}
 
@@ -5721,12 +5719,12 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
 
 			try {
 				for (var _iterator4 = this.children[Symbol.iterator](), _step4; !(_iteratorNormalCompletion4 = (_step4 = _iterator4.next()).done); _iteratorNormalCompletion4 = true) {
-					var _item2 = _step4.value;
+					var item = _step4.value;
 
-					if (_item2.deleted) {
-						this.delete(_item2, true);
+					if (item.deleted) {
+						this.delete(item, true);
 					} else {
-						_item2.unsavedChanges = false;
+						item.unsavedChanges = false;
 					}
 				}
 			} catch (err) {
@@ -5836,7 +5834,10 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
 					// Keep position of the template in the DOM, since we might remove it
 					this.marker = document.createComment("mv-marker");
 					Mavo.data(this.marker, "collection", this);
-					$.after(this.marker, this.templateElement);
+
+					var ref = this.templateElement.parentNode ? this.templateElement : this.children[this.length - 1].element;
+
+					$.after(this.marker, ref);
 				}
 			}
 		},
@@ -6442,7 +6443,7 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
 			this.mavo.treeBuilt.then(function () {
 				if (!_this.template) {
 					// Only collection items and groups can have their own expressions arrays
-					_this.item = Mavo.Node.get(_this.element.closest(Mavo.selectors.multiple + ", " + Mavo.selectors.group));
+					_this.item = Mavo.Node.get(_this.element.closest(Mavo.selectors.item));
 					_this.item.expressions = [].concat(_toConsumableArray(_this.item.expressions || []), [_this]);
 				}
 
@@ -6533,7 +6534,7 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
 			}
 
 			if (env.ret.presentational === env.ret.value) {
-				ret = env.ret.value;
+				env.ret = env.ret.value;
 			}
 
 			this.output(env.ret);
@@ -6633,29 +6634,34 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
 		},
 
 		update: function update(evt) {
-			var root, rootGroup;
-
 			if (!this.active) {
 				return;
 			}
 
-			if (evt instanceof Element) {
-				root = evt.closest(Mavo.selectors.group);
+			var root, rootObject;
+
+			if (evt instanceof Mavo.Node) {
+				rootObject = evt;
 				evt = null;
+			} else if (evt instanceof Element) {
+				root = evt.closest(Mavo.selectors.item);
+				rootObject = Mavo.Node.get(root);
+				evt = null;
+			} else {
+				rootObject = this.mavo.root;
 			}
 
-			root = root || this.mavo.element;
-			rootGroup = Mavo.Node.get(root);
+			var allData = rootObject.getData({ live: true });
 
-			var allData = rootGroup.getData({ live: true });
-
-			rootGroup.walk(function (obj, path) {
+			rootObject.walk(function (obj, path) {
 				var data = $.value.apply($, [allData].concat(_toConsumableArray(path)));
 
 				if (obj.expressions && obj.expressions.length && !obj.isDeleted()) {
-					if ((typeof data === "undefined" ? "undefined" : _typeof(data)) != "object") {
+					if ((typeof data === "undefined" ? "undefined" : _typeof(data)) != "object" || data === null) {
 						var _data;
 
+						// Turn primitives into objects, so we can have $index, their property
+						// name etc resolve relative to them, not their parent group
 						var parentData = $.value.apply($, [allData].concat(_toConsumableArray(path.slice(0, -1))));
 
 						data = (_data = {}, _defineProperty(_data, Symbol.toPrimitive, function () {
@@ -6761,8 +6767,7 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
 			directive: function directive(name, o) {
 				_.directives.push(name);
 				Mavo.attributes.push(name);
-				o.name = name;
-				Mavo.Plugins.register(o);
+				Mavo.Plugins.register(name, o);
 			}
 		}
 	});
@@ -7683,18 +7688,26 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
 	// Make function names case insensitive
 	Mavo.Functions._Trap = self.Proxy ? new Proxy(_, {
 		get: function get(functions, property) {
+			var ret;
+
 			if (property in functions) {
-				return functions[property];
+				ret = functions[property];
+			} else {
+				var propertyL = property.toLowerCase && property.toLowerCase();
+
+				if (propertyL && functions.hasOwnProperty(propertyL)) {
+					ret = functions[propertyL];
+				} else if (property in Math || propertyL in Math) {
+					ret = Math[property] || Math[propertyL];
+				}
 			}
 
-			var propertyL = property.toLowerCase && property.toLowerCase();
-
-			if (propertyL && functions.hasOwnProperty(propertyL)) {
-				return functions[propertyL];
-			}
-
-			if (property in Math || propertyL in Math) {
-				return Math[property] || Math[propertyL];
+			if (ret) {
+				// For when function names are used as unquoted strings, see #160
+				ret.toString = function () {
+					return property;
+				};
+				return ret;
 			}
 
 			if (property in self) {
@@ -8015,7 +8028,7 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
 
 			var repoCall = "repos/" + this.username + "/" + this.repo;
 			var fileCall = repoCall + "/contents/" + path;
-			var commitPrefix = this.mavo.element.getAttribute("mv-github-commit-prefix");
+			var commitPrefix = this.mavo.element.getAttribute("mv-github-commit-prefix") || "";
 
 			// Create repo if it doesn’t exist
 			var repoInfo = this.repoInfo || this.request("user/repos", { name: this.repo }, "POST").then(function (repoInfo) {
@@ -8300,3 +8313,4 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
 		}
 	}));
 })(Bliss);
+//# sourceMappingURL=maps/mavo.es5.js.map

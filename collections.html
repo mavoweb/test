@@ -112,19 +112,19 @@
 	<table class="reftest">
 		<tr>
 			<td>
-				<div property="numbers" mv-multiple style="--prepend: '[numbers]'; --append: '[$index + 1]'"></div>
+				<div property="numbers" mv-multiple style="--prepend: '[numbers]'; --append: '[$index]'"></div>
 			</td>
 			<td>
-				<div mv-multiple="" style="--prepend: '1'; --append: '1'">1</div><!--
-				--><div mv-multiple="" style="--prepend: '2'; --append: '2'">2</div><!--
-				--><div mv-multiple="" style="--prepend: '3'; --append: '3'">3</div><!--
-				--><div mv-multiple="" style="--prepend: '4'; --append: '4'">4</div><!--
-				--><div mv-multiple="" style="--prepend: '5'; --append: '5'">5</div><!--
-				--><div mv-multiple="" style="--prepend: '6'; --append: '6'">6</div><!--
-				--><div mv-multiple="" style="--prepend: '7'; --append: '7'">7</div><!--
-				--><div mv-multiple="" style="--prepend: '8'; --append: '8'">8</div><!--
-				--><div mv-multiple="" style="--prepend: '9'; --append: '9'">9</div><!--
-				--><div mv-multiple="" style="--prepend: '10'; --append: '10'">10</div>
+				<div mv-multiple="" style="--prepend: '1'; --append: '0'">1</div><!--
+				--><div mv-multiple="" style="--prepend: '2'; --append: '1'">2</div><!--
+				--><div mv-multiple="" style="--prepend: '3'; --append: '2'">3</div><!--
+				--><div mv-multiple="" style="--prepend: '4'; --append: '3'">4</div><!--
+				--><div mv-multiple="" style="--prepend: '5'; --append: '4'">5</div><!--
+				--><div mv-multiple="" style="--prepend: '6'; --append: '5'">6</div><!--
+				--><div mv-multiple="" style="--prepend: '7'; --append: '6'">7</div><!--
+				--><div mv-multiple="" style="--prepend: '8'; --append: '7'">8</div><!--
+				--><div mv-multiple="" style="--prepend: '9'; --append: '8'">9</div><!--
+				--><div mv-multiple="" style="--prepend: '10'; --append: '9'">10</div>
 			</td>
 		</tr>
 		<tr>
@@ -213,6 +213,87 @@
 		<tr>
 			<td>[prop1]</td>
 			<td>3, 4, 5, 6</td>
+		</tr>
+	</table>
+</section>
+
+<section>
+	<h1>Duplicate mv-multiple properties</h1>
+
+	<table class="reftest">
+		<tr>
+			<td>
+				<pre id="duplicates-data">{
+	"prop1": [
+		{
+			"prop2": 1,
+			"prop3": 2
+		},
+		{
+			"prop2": 3,
+			"prop3": 4
+		},
+		{
+			"prop2": 5,
+			"prop3": 6
+		}
+	]
+}</pre>
+			</td>
+			<td>
+				<script>document.write($$("td pre").pop().outerHTML)</script>
+			</td>
+		</tr>
+		<tr title="First with mv-multiple, second without">
+			<td mv-app mv-storage="#duplicates-data">
+				<div property="prop1" mv-multiple>
+					<div property="prop2"></div>
+					<div property="prop3"></div>
+				</div>
+				<div property="prop1">
+					<div property="prop2"></div>
+					<div property="prop3"></div>
+				</div>
+			</td>
+			<td>
+				<div mv-multiple>1 2</div>
+				3 4
+				<div mv-multiple>5 6</div>
+			</td>
+		</tr>
+		<tr title="First without mv-multiple, second with">
+			<td mv-app mv-storage="#duplicates-data">
+				<div property="prop1">
+					<div property="prop2">7</div>
+					<div property="prop3">8</div>
+				</div>
+				<div property="prop1" mv-multiple>
+					<div property="prop2">9</div>
+					<div property="prop3">10</div>
+				</div>
+			</td>
+			<td>
+				1 2
+				<div mv-multiple>3 4</div>
+				<div mv-multiple>5 6</div>
+			</td>
+		</tr>
+		<tr title="Both with mv-multiple">
+			<td mv-app mv-storage="#duplicates-data">
+				<div property="prop1" mv-multiple>
+					<div property="prop2"></div>
+					<div property="prop3"></div>
+				</div>
+				<div property="prop1" mv-multiple>
+					<div property="prop2"></div>
+					<div property="prop3"></div>
+				</div>
+			</td>
+			<td>
+				<div mv-multiple>1 2</div>
+				<div mv-multiple>3 4</div>
+				<div mv-multiple>5 6</div>
+			</td>
 		</tr>
 	</table>
 </section>
