@@ -5,6 +5,11 @@
 	<title>Property tests</title>
 	<link rel="stylesheet" href="mavo/mavo.css" />
 	<link rel="stylesheet" href="style.css" />
+	<style>
+		[mv-mode="edit"] ::before {
+			content: var(--prepend-on-edit);
+		}
+	</style>
 </head>
 <body>
 
@@ -26,6 +31,60 @@
 		}
 	]
 }</script>
+
+<section mv-app>
+	<h1>Datetime formatting</h1>
+
+	<table class="reftest">
+		<tr title="Date, default formatting">
+			<td>
+				<time property="date" datetime="1986-06-13"></time>
+			</td>
+			<td>13 Jun 1986</td>
+		</tr>
+		<tr title="Date, default formatting, no date">
+			<td>
+				<time property="date1"></time>
+			</td>
+			<td>
+				<time style="--prepend-on-edit: '(No Date1)'"></time>
+			</td>
+		</tr>
+		<tr title="Time, default formatting">
+			<td>
+				<time property="time1" datetime="15:31"></time>
+			</td>
+			<td>15:31</td>
+		</tr>
+		<tr title="Date, custom formatting">
+			<td>
+				<time property="date2" datetime="1986-06-13">[month(date2).name] [ordinal(day(date2))], [year(date2)]</time>
+			</td>
+			<td>
+				June 13th, 1986
+			</td>
+		</tr>
+		<tr title="Date, custom formatting, no date">
+			<td>
+				<time property="date3">[month(date3).name] [ordinal(day(date3))], [year(date3)]</time>
+			</td>
+			<td>
+				<time style="--prepend-on-edit: '(No Date3)'"> ,</time>
+			</td>
+		</tr>
+		<tr title="Collection with dates">
+			<td>
+				<div property="collection" mv-multiple mv-value='[{"date4": "1986-06-13"}, {"date4": "1959-12-31"}]' mv-expressions="{{ }}">
+					<time property="date4"></time>
+				</div>
+			</td>
+			<td>
+				13 Jun 1986 <br>
+				30 Dec 1959
+			</td>
+		</tr>
+	</table>
+</section>
 
 <section mv-app="exposed">
 	<h1>Form values</h1>

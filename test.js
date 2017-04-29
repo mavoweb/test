@@ -118,6 +118,7 @@ var _ = self.RefTest = $.Class({
 		var test = () => {
 			requestAnimationFrame(() => this.test());
 		};
+		
 		this.observer = new MutationObserver(test);
 		this.observer.observe(this.table, {
 			subtree: true,
@@ -127,7 +128,7 @@ var _ = self.RefTest = $.Class({
 			attributeFilter: ["mv-mode"]
 		});
 
-		$.events(this.table, "input change mavo:datachange", test);
+		$.events(this.table, "input change click mavo:datachange", test);
 		$.events(this.table.closest("[mv-app]"), "mavo:load", test);
 	},
 

@@ -119,12 +119,12 @@ function checkAttribute(td) {
 <section mv-app="mvattribute">
 	<h1>mv-attribute</h1>
 	<table class="reftest" data-test="checkAttribute">
-		<tr>
+		<tr title='mv-attribute="title"'>
 			<td>
 				<span property="title" mv-attribute="title" data-test-attribute="title">Foo bar</span>
 			</td>
 		</tr>
-		<tr>
+		<tr title='mv-attribute="disabled"'>
 			<td>
 				<input property="disabled" mv-attribute="disabled" data-test-type="boolean" />
 			</td>
@@ -175,14 +175,25 @@ function checkAttribute(td) {
 	</table>
 </section>
 
-<section mv-app="nested" class="mv-autoedit">
-	<h1>Nested controls</h1>
-	<span property="country">
-		<select>
-			<option value="us">United States</option>
-			<option value="gb">United Kingdom</option>
-		</select>
-	</span>
+<section mv-app="select" class="mv-autoedit">
+	<h1>&lt;select> menu</h1>
+
+	<p>Try toggling Edit and verify the test still passes.</p>
+
+	<table class="reftest">
+		<tr>
+			<td>
+				<span property="country">
+					<select>
+						<option value="us">United States</option>
+						<option value="gb">United Kingdom</option>
+					</select>
+				</span>
+				[country]
+			</td>
+			<td>United States us</td>
+		</tr>
+	</table>
 </section>
 
 <section mv-app="empty" class="mv-autoedit">
