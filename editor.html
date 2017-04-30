@@ -175,14 +175,14 @@ function checkAttribute(td) {
 	</table>
 </section>
 
-<section mv-app="select" class="mv-autoedit">
+<section>
 	<h1>&lt;select> menu</h1>
 
 	<p>Try toggling Edit and verify the test still passes.</p>
 
 	<table class="reftest">
-		<tr>
-			<td>
+		<tr class="interactive">
+			<td mv-app="select" class="mv-autoedit">
 				<span property="country">
 					<select>
 						<option value="us">United States</option>
@@ -192,6 +192,59 @@ function checkAttribute(td) {
 				[country]
 			</td>
 			<td>United States us</td>
+		</tr>
+		<tr class="interactive">
+			<td mv-app="select">
+				<span property="country">
+					<select>
+						<option value="us">United States</option>
+						<option value="gb">United Kingdom</option>
+					</select>
+				</span>
+				[country]
+			</td>
+			<td>United States us</td>
+		</tr>
+		<tr title="Linked &lt;select>" class="interactive">
+			<td mv-app="select">
+				<span property="country" mv-edit="#countries-select"></span>
+				[country]
+			</td>
+			<td>United States us</td>
+		</tr>
+	</table>
+	<select id="countries-select">
+		<option value="us">United States</option>
+		<option value="gb">United Kingdom</option>
+	</select>
+</section>
+
+<section>
+	<h1>Numbers</h1>
+
+	<p>Try toggling Edit and verify the test still passes.</p>
+
+	<table class="reftest">
+		<tr class="interactive">
+			<td mv-app="numbers" class="mv-autoedit">
+				<span property="prop1" datatype="number">3141.59265358979</span>
+				[prop1]
+			</td>
+			<td>3,141.59 3,141.59</td>
+		</tr>
+		<tr class="interactive">
+			<td mv-app="numbers">
+				<span property="prop1" datatype="number">3141.59265358979</span>
+				foo bar [prop1]
+			</td>
+			<td>3,141.59 foo bar 3,141.59</td>
+		</tr>
+		<tr class="interactive">
+			<td mv-app="numbers">
+				<span property="prop1" datatype="number">[3141 + 0.59265358979]</span>
+				[prop1 + 1]
+			</td>
+			<td>3,141.59 3,142.59</td>
 		</tr>
 	</table>
 </section>
