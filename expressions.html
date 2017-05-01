@@ -471,10 +471,14 @@
 					{"number": 2},
 					{"number": 3}
 				]'>
-					#[number]
+					#<span property=number></span>
 				</div>
 			</td>
-			<td>#1<br>#2<br>#3</td>
+			<td>
+				#1<br>
+				#2<br>
+				#3
+			</td>
 		</tr>
 		<tr title="Collection of primitives">
 			<td>
@@ -608,6 +612,77 @@
 			</td>
 		</tr>
 	</table>
+</section>
+
+<section mv-app="mvifgroup">
+	<h1>mv-if inside collection items</h1>
+	<div property="segment" data-segtype="[type]" class="[if(absolute, 'absolute')]" mv-multiple mv-mode="edit">
+			<h1>
+				<select property="type">
+					<option value="m">Move</option>
+					<option value="l">Line</option>
+					<option value="h">Horizontal Line</option>
+					<option value="v">Vertical Line</option>
+					<option value="a">Arc</option>
+					<option value="s">Smooth Bézier curve</option>
+					<option value="c">Bézier curve</option>
+					<option value="t">Smooth Quadratic Bézier</option>
+					<option value="q">Quadratic Bézier</option>
+					<option value="z">Close path</option>
+				</select>
+[type]
+				<label mv-if="type != v and type != z">
+					X <input type="number" property="x" value="0" />
+				</label>
+
+				<label mv-if="type != h and type != z">
+					Y <input type="number" property="y" value="0" />
+				</label>
+
+				<label>
+					<input type="checkbox" property="absolute">
+					Absolute
+				</label>
+
+				<div class="mv-item-bar mv-ui"></div>
+			</h1>
+
+			<div mv-if="type = a">
+				<label>
+					rx: <input type="number" property="rx" value="0" />
+				</label>
+				<label>
+					ry: <input type="number" property="ry" mv-default="[rx]" />
+				</label>
+				<label>
+					X Axis rotation: <input type="number" property="axisRotation" value="0" />
+				</label>
+				<label>
+					<input type="checkbox" property="largeArc">
+					Large Arc
+				</label>
+				<label>
+					<input type="checkbox" property="sweep">
+					Other side
+				</label>
+				<meta property="arcFlags" content="[rx] [ry] [axisRotation] [largeArc + 0] [sweep + 0]">
+			</div>
+
+			<div mv-if="type = c or type = s or type = q">
+				<label mv-if="type = c or type = q">
+					<span mv-if="type = c">First</span> Control Point:
+					<input type="number" property="x1" value="0" />
+					<input type="number" property="y1" value="0" />
+				</label>
+				<label mv-if="type = c">
+					Second Control Point:
+					<input type="number" property="x2" value="0" />
+					<input type="number" property="y2" value="0" />
+				</label>
+			</div>
+
+			<meta property="pathsummary" content="[if(absolute, uppercase(type), type)] [arcFlags] [x] [y]">
+		</div>
 </section>
 
 <section mv-app="mvdefault">

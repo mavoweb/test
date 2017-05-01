@@ -13,6 +13,11 @@
 			pointer-events: auto;
 		}
 
+		[property="hobby"] {
+			padding: .5em;
+			background: rgba(0,0,0,.1);
+		}
+
 		div[mv-multiple] {
 			border: 1px solid rgba(0,0,0,.2);
 			background: rgba(0,0,0,.1);
@@ -112,7 +117,7 @@
 	<table class="reftest">
 		<tr>
 			<td>
-				<div property="numbers" mv-multiple style="--prepend: '[numbers]'; --append: '[$index]'"></div>
+				<div property="numbers" mv-multiple style="--prepend: '[numbers]'; --append: '[$index]';"></div>
 			</td>
 			<td>
 				<div mv-multiple="" style="--prepend: '1'; --append: '0'">1</div><!--
@@ -295,6 +300,22 @@
 				<div mv-multiple>5 6</div>
 			</td>
 		</tr>
+		<tr title="Both with mv-multiple, no render">
+			<td mv-app>
+				<div property="prop1" mv-multiple>
+					<div property="prop2">7</div>
+					<div property="prop3">8</div>
+				</div>
+				<div property="prop1" mv-multiple>
+					<div property="prop2">9</div>
+					<div property="prop3">10</div>
+				</div>
+			</td>
+			<td>
+				<div mv-multiple>7 8</div>
+				<div mv-multiple>9 10</div>
+			</td>
+		</tr>
 	</table>
 </section>
 
@@ -392,19 +413,50 @@
 	<button class="mv-add-number">Another number</button>
 </section>
 
-<script type="application/json" id="teams">{
-  "team": [
-      {"name": ["A"], "isBest": false, "wins": [true, true, false]},
-      {"name": ["B"], "isBest": true,  "wins": [true, true, true]},
-      {"name": ["C"], "isBest": false, "wins": [false, true, false]}
-  ]
-}</script>
-<section mv-app="bools" mv-storage="#teams">
+<section>
     <h1>Collections containing Boolean values</h1>
 
 	<table class="reftest">
 		<tr>
 			<td>
+				<pre id="boolcol-data">{
+	"team": [
+		{
+			"name": "A",
+			"isBest": false,
+			"wins": [
+				true,
+				true,
+				false
+			]
+		},
+		{
+			"name": "B",
+			"isBest": true,
+			"wins": [
+				true,
+				true,
+				true
+			]
+		},
+		{
+			"name": "C",
+			"isBest": false,
+			"wins": [
+				false,
+				true,
+				false
+			]
+		}
+	]
+}</pre>
+			</td>
+			<td>
+				<script>document.write($$("td pre").pop().outerHTML)</script>
+			</td>
+		</tr>
+		<tr>
+			<td mv-app="bools" mv-storage="#boolcol-data">
 				<div property="team" mv-multiple>
 					<b property="name">name</b>
 					<i property="isBest">is best</i>
@@ -416,21 +468,19 @@
 			<td>
 				<div mv-multiple>A
 					<ul>
-						<li>wins</li>
-						<li>wins</li>
+						<li>wins</li><li>wins</li>
 					</ul>
 				</div>
 				<div mv-multiple>B <i>is best</i>
 					<ul>
-					<li>wins</li>
-					<li>wins</li>
-					<li>wins</li>
+						<li>wins</li><li>wins</li><li>wins</li>
+					</ul>
 				</ul></div>
 				<div mv-multiple>C
 					<ul>
 						<li>wins</li>
 					</ul>
-			</div>
+				</div>
 			</td>
 		</tr>
 	</table>

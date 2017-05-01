@@ -20,6 +20,10 @@ self.Test = {
 		var ret = "";
 
 		if (node.nodeType == 1) {
+			if (getComputedStyle(node).display == "none") {
+				return "";
+			}
+
 			ret += Test.pseudo(node, "before");
 			var special = false;
 
@@ -53,7 +57,8 @@ self.Test = {
 	},
 
 	contentSpecial: {
-		"input, textarea": e => e.value
+		"input, textarea": e => e.value,
+		"select": e => e.selectedOptions[0] && e.selectedOptions[0].textContent
 	},
 
 	contentIgnore: [".mv-ui"],
@@ -118,7 +123,7 @@ var _ = self.RefTest = $.Class({
 		var test = () => {
 			requestAnimationFrame(() => this.test());
 		};
-		
+
 		this.observer = new MutationObserver(test);
 		this.observer.observe(this.table, {
 			subtree: true,
@@ -241,7 +246,6 @@ var _ = self.RefTest = $.Class({
 					return $$("li", ref).every(li => _.compare.selector(td, li));
 				}
 				else {
-
 					var negative = ref.classList.contains("not");
 					var has = !!$(ref.textContent, td);
 					return negative? !has : has;

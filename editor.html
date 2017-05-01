@@ -212,11 +212,138 @@ function checkAttribute(td) {
 			</td>
 			<td>United States us</td>
 		</tr>
+		<tr title="Exposed, add one">
+			<td mv-app="select" class="mv-autoedit">
+				<select property="exposed" mv-multiple>
+					<option value="us">United States</option>
+					<option value="gb">United Kingdom</option>
+				</select>
+			</td>
+			<td>United StatesUnited States</td>
+		</tr>
 	</table>
 	<select id="countries-select">
 		<option value="us">United States</option>
 		<option value="gb">United Kingdom</option>
 	</select>
+</section>
+
+<section mv-app="mvmode" mv-storage="local" class="mv-debug-saving">
+	<h1>mv-mode</h1>
+
+	<p>Hover over the cells in the first column.</p>
+
+	<table class="reftest" data-test="selector" mv-expressions="{ }">
+		<tr title="Normal property, edited on edit mode">
+			<td>
+				<div property="normalProperty">Edited on edit mode only</div>
+			</td>
+			<td>
+				<ul>
+					<li>[mv-app][mv-mode="edit"] [property][mv-mode="edit"] textarea,
+						[mv-app]:not([mv-mode="edit"]) [property]:not([mv-mode="edit"])</li>
+					<li class="not">[mv-app]:not([mv-mode="edit"]) [property][mv-mode="edit"]</li>
+					<li class="not">[mv-app]:not([mv-mode="edit"]) [property] textarea</li>
+				</ul>
+			</td>
+		</tr>
+		<tr title="Never edited">
+			<td>
+				<div title='mv-mode="read"' property="constant" mv-mode="read">Never edited</div>
+			</td>
+			<td class="not">[property] textarea</td>
+		</tr>
+		<tr title="Always edited">
+			<td>
+				<div title='mv-mode="edit"' property="alwaysEdited" mv-mode="edit">Always edited</div>
+			</td>
+			<td>
+				[property][mv-mode^="edit"] textarea
+			</td>
+		</tr>
+		<tr title='mv-mode="read" via expression'>
+			<td>
+				<div property="dynamicConstant" mv-mode="{if(true, read, edit)}">Never edited</div>
+			</td>
+			<td class="not">[property] textarea</td>
+		</tr>
+		<tr title='mv-mode="edit" via expression'>
+			<td>
+				<div property="dynamicEdited" mv-mode="{if(false, read, edit)}">Always edited</div>
+			</td>
+			<td>
+				[property][mv-mode^="edit"] textarea
+			</td>
+		</tr>
+		<tr title='Inherited mv-mode="edit"'>
+			<td>
+				<div mv-mode="edit">
+					<div property="inheritEdit">Always edited</div>
+				</div>
+			</td>
+			<td>
+				[property][mv-mode^="edit"] textarea
+			</td>
+		</tr>
+		<tr title='Inherited mv-mode="read"'>
+			<td>
+				<div mv-mode="read">
+					<div property="inheritRead">Never edited</div>
+				</div>
+			</td>
+			<td class="not">
+				[property][mv-mode^="edit"] textarea
+			</td>
+		</tr>
+		<tr title="Interactive mv-mode">
+			<td>
+				<input type="checkbox" property="checkbox1">
+				<span property="interactiveEdit" mv-mode="{if(checkbox1, edit, read)}">Edited when checkbox is checked</span>
+			</td>
+			<td>
+				:checked + [property][mv-mode^="edit"] input,
+				input:not(:checked) + [property][mv-mode="read"]
+			</td>
+		</tr>
+		<tr title="Inherited interactive mv-mode">
+			<td mv-mode="{if(checkbox2, edit, read)}">
+				<input type="checkbox" property="checkbox2">
+				<span property="inheritInteractiveEdit">Edited when checkbox is checked</span>
+			</td>
+			<td>
+				:checked + [property][mv-mode^="edit"] input,
+				input:not(:checked) + [property]:not([mv-mode])
+			</td>
+		</tr>
+		<tr title="Inherited from group interactive mv-mode">
+			<td property="group1" mv-mode="{if(checkbox2, edit, read)}">
+				<input type="checkbox" property="checkbox2">
+				<span property="inheritGroupInteractiveEdit">Edited when checkbox is checked</span>
+			</td>
+			<td>
+				:checked + [property][mv-mode^="edit"] input,
+				input:not(:checked) + [property]:not([mv-mode])
+			</td>
+		</tr>
+		<tr title="Editing the first item of a collection but not the collection (testcase for #131)">
+			<td>
+				<div property="collection1" mv-multiple mv-mode="{if($index = 0, edit, read)}">
+					<span property="firstItemEdit">Edited when it’s the first item</span>
+				</div>
+			</td>
+			<td>
+				<ul>
+					<li>div:first-child [property][mv-mode="edit"] input</li>
+					<li class="not">div:not(:first-child) [property][mv-mode="edit"] input</li>
+				</ul>
+			</td>
+		</tr>
+	</table>
+
+
+
+
+
 </section>
 
 <section>

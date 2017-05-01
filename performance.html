@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Stress tests</title>
+	<link rel="stylesheet" href="mavo/mavo.css" />
+	<link rel="stylesheet" href="style.css" />
+
+	<script src="mavo/mavo.js"></script>
+</head>
+<body>
+
+<h1>Stress tests</h1>
+
+
+
+<section mv-app mv-storage="#data">
+	<h1>Long bottom-up collection</h1>
+
+	count: [count(collection)]
+
+	prop2: [prop2]
+
+	<div property="collection" mv-multiple>
+		<div property="prop1">prop1</div>
+		<div property="prop2">prop2</div>
+		<div property="prop3">prop3</div>
+		[prop2]
+	</div>
+</section>
+
+<details>
+	<summary>Data</summary>
+	<script>
+		var o = {collection: []};
+		for (var i=0; i<100; i++) {
+			o.collection.push({
+				prop1: "foo",
+				prop2: 2,
+				prop3: true
+			});
+		}
+		document.write("<pre id=data>" + JSON.stringify(o, null, "\t") + "</pre>");
+	</script>
+</details>
+
+<script src="test.js"></script>
+
+</body>
+</html>

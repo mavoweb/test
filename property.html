@@ -74,8 +74,11 @@
 		</tr>
 		<tr title="Collection with dates">
 			<td>
-				<div property="collection" mv-multiple mv-value='[{"date4": "1986-06-13"}, {"date4": "1959-12-31"}]' mv-expressions="{{ }}">
-					<time property="date4"></time>
+				<div property="collection" mv-multiple>
+					<time property="date4" datetime="1986-06-13"></time>
+				</div>
+				<div property="collection" mv-multiple>
+					<time property="date4" datetime="1959-12-31"></time>
 				</div>
 			</td>
 			<td>
@@ -94,6 +97,11 @@
 			<td><input property="name" value="Lea Verou"/></td>
 			<td>[name]</td>
 			<td>Lea Verou</td>
+		</tr>
+		<tr>
+			<td><input type="number" property="number" value="10"/></td>
+			<td>[number]</td>
+			<td>10</td>
 		</tr>
 		<tr>
 			<td><input property="strength" type="range" /></td>
@@ -157,43 +165,55 @@
 </section>
 
 <section mv-app="buttons">
-	<div>
-		<button property="myButton">Click me</button>
-		Value: [myButton]
-	</div>
-	<div>
-		<a href="#somehash" class="counter" property="myCounter">I change the URL <strong>and</strong> increment</a>
-		Value: [myCounter]
-	</div>
+	<h1>Counters</h1>
+
+	<p>Click the button and link twice</p>
+
+	<table class="reftest">
+		<tr class="interactive">
+			<td><button property="myButton">Click me twice</button></td>
+			<td>[myButton]</td>
+			<td>2</td>
+		</tr>
+		<tr class="interactive">
+			<td><a href="#somehash" class="counter" property="myCounter">I change the URL <strong>and</strong> increment</a></td>
+			<td>[myCounter]</td>
+			<td>2</td>
+		</tr>
+	</table>
 </section>
 
-<section mv-app="mvmode" mv-storage="local" class="mv-debug-saving">
-	<h1>mv-mode</h1>
-	<div property="normalProperty">Edited on edit mode only</div>
-	<div title='mv-mode="read"' property="constant" mv-mode="read">Never edited</div>
-	<div title='mv-mode="edit"' property="alwaysEdited" mv-mode="edit">Always edited</div>
-	<div title='mv-mode="read" via expression' property="dynamicConstant" mv-mode="[if(true, read, edit)]">Never edited</div>
-	<div title='mv-mode="edit" via expression' property="dynamicEdited" mv-mode="[if(false, read, edit)]">Always edited</div>
-	<div title="Inherited mv-mode" mv-mode="edit">
-		<div property="inheritEdit">Always edited</div>
-	</div>
-	<div title="Interactive mv-mode">
-		<input type="checkbox" property="checkbox1">
-		<span property="interactiveEdit" mv-mode="[if(checkbox1, edit, read)]">Edited when checkbox is checked</span>
-	</div>
-	<div title="Inherited interactive mv-mode" mv-mode="[if(checkbox2, edit, read)]">
-		<input type="checkbox" property="checkbox2">
-		<span property="inheritInteractiveEdit">Edited when checkbox is checked</span>
-	</div>
-	<div title="Inherited from group interactive mv-mode" property="group1" mv-mode="[if(checkbox2, edit, read)]">
-		<input type="checkbox" property="checkbox2">
-		<span property="inheritGroupInteractiveEdit">Edited when checkbox is checked</span>
-	</div>
-	<div property="collection1" mv-multiple mv-mode="[if($index = 0, edit, read)]" foo="[if($index = 0, edit, read)]"
-	     title="Editing the first item of a collection but not the collection (testcase for #131)">
-		<span property="firstItemEdit">Edited when it’s the first item</span>
-	</div>
+<section mv-app="booleans">
+	<h1>Booleans</h1>
 
+	<table class="reftest">
+		<tr>
+			<td>
+				<span property="prop1" datatype="boolean">Foo bar</span>
+				[prop1]
+			</td>
+			<td>false</td>
+		</tr>
+		<tr title="With custom attribute">
+			<td>
+				<span property="prop2" datatype="boolean" mv-attribute="data-foo">Foo bar</span>
+				[prop2]
+			</td>
+			<td>false</td>
+		</tr>
+		<tr title="Via checkbox editor">
+			<td>
+				<span property="prop3">
+					Foo bar
+					<input type="checkbox" checked>
+				</span>
+				[prop3]
+			</td>
+			<td>
+				Foo bar true
+			</td>
+		</tr>
+	</table>
 </section>
 
 
