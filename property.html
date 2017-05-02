@@ -10,6 +10,7 @@
 			content: var(--prepend-on-edit);
 		}
 	</style>
+	<script src="mavo/mavo.js"></script>
 </head>
 <body>
 
@@ -69,7 +70,7 @@
 				<time property="date3">[month(date3).name] [ordinal(day(date3))], [year(date3)]</time>
 			</td>
 			<td>
-				<time style="--prepend-on-edit: '(No Date3)'"> ,</time>
+				<time style="--prepend-on-edit: '(No Date3)'"></time>
 			</td>
 		</tr>
 		<tr title="Collection with dates">
@@ -164,6 +165,16 @@
 	</table>
 </section>
 
+<section>
+	<h1>Filter</h1>
+	<div mv-app="">
+		<label property="statusFilter" mv-multiple mv-value='[{id: "new", name: "New"}, {id: "accepted", name: "Accepted"}, {id: "deferred", name: "Deferred"}]'>
+			<input type="checkbox" property="show" checked>
+			<span property="name"></span>
+		</label>
+	</div>
+</section>
+
 <section mv-app="buttons">
 	<h1>Counters</h1>
 
@@ -183,31 +194,52 @@
 	</table>
 </section>
 
-<section mv-app="booleans">
+<section>
 	<h1>Booleans</h1>
 
 	<table class="reftest">
 		<tr>
-			<td>
+			<td mv-app="booleans">
 				<span property="prop1" datatype="boolean">Foo bar</span>
 				[prop1]
 			</td>
 			<td>false</td>
 		</tr>
 		<tr title="With custom attribute">
-			<td>
-				<span property="prop2" datatype="boolean" mv-attribute="data-foo">Foo bar</span>
-				[prop2]
+			<td mv-app="booleans">
+				<span property="prop1" datatype="boolean" mv-attribute="data-foo">Foo bar</span>
+				[prop1]
 			</td>
 			<td>false</td>
 		</tr>
 		<tr title="Via checkbox editor">
-			<td>
-				<span property="prop3">
+			<td mv-app="booleans">
+				<span property="prop1">
 					Foo bar
 					<input type="checkbox" checked>
 				</span>
-				[prop3]
+				[prop1]
+			</td>
+			<td>
+				Foo bar true
+			</td>
+		</tr>
+		<tr>
+			<td>
+				<pre id="boolean-data">{
+	"prop1": false
+}</pre>
+			</td>
+			<td>
+				<script>document.write($$("td pre").pop().outerHTML)</script>
+			</td>
+		</tr>
+		<tr title="Via render" class="interactive">
+			<td mv-app="booleans" mv-storage="#boolean-data">
+				<span property="prop1">
+					Foo bar
+				</span>
+				[prop1]
 			</td>
 			<td>
 				Foo bar true
@@ -216,8 +248,6 @@
 	</table>
 </section>
 
-
-<script src="mavo/mavo.js"></script>
 <script src="test.js"></script>
 
 </body>
