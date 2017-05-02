@@ -15,13 +15,14 @@
 
 
 <section mv-app mv-storage="#data">
-	<h1>Long bottom-up collection</h1>
+	<h1>Long collection</h1>
 
 	<div>[count(collection)] items, [count(prop1)] inner items</div>
 
 	<div>All prop2 values: [prop2]</div>
 
 	<div property="collection" mv-multiple>
+		[$index]
 		<div property="prop1" mv-multiple>prop1</div>
 		<div property="prop2">prop2</div>
 		<div property="prop3">prop3</div>
@@ -34,7 +35,7 @@
 	<summary>Data</summary>
 	<script>
 		var o = {collection: []};
-		for (var i=0; i<500; i++) {
+		for (var i=0; i<1000; i++) {
 			o.collection.push({
 				prop1: ["foo", "bar"],
 				prop2: 2,
