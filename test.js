@@ -42,7 +42,7 @@ self.Test = {
 			}
 
 			if (!special) {
-				for (let child of node.childNodes) {
+				for (let child of $$(node.childNodes)) {
 					ret += Test.content(child);
 				}
 			}
@@ -138,9 +138,7 @@ var _ = self.RefTest = $.Class({
 	},
 
 	test: function() {
-		for (let tr of $$(this.table.tBodies[0].rows)) {
-			this.testRow(tr);
-		}
+		$$(this.table.tBodies[0].rows).forEach(tr => this.testRow(tr));
 	},
 
 	testRow: function(tr) {
@@ -388,8 +386,6 @@ Mavo.dependencies.push($.ready().then(function(){
 	onhashchange = hashchanged;
 
 	requestAnimationFrame(() => {
-		for (let table of $$("table.reftest")) {
-			table.reftest = new RefTest(table);
-		}
+		$$("table.reftest").forEach(table => table.reftest = new RefTest(table));
 	});
 }));
