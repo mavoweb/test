@@ -13,6 +13,11 @@ self.print = function print(text) {
 self.Test = {
 	pseudo: (element, pseudo) => {
 		var content = getComputedStyle(element, ":" + pseudo).content;
+
+		if (content == "none") {
+			return "";
+		}
+		
 		return content.replace(/^["']|["']$/g, "");
 	},
 
