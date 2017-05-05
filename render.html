@@ -364,105 +364,105 @@
 </section>
 
 <section>
-  <h1>Rendering data from an alias</h1>
+	<h1>Rendering data from an alias</h1>
 
-  <table class="reftest">
+	<table class="reftest">
 
-    <tr>
-      <td>
-        <pre id="data-alias-group">
-          {
-            "alias1": {
-              "inner1": 8
-            }
-          }
-        </pre>
-      </td>
-			<td>
-				<script>document.write($$("td pre").pop().outerHTML)</script>
-			</td>
-    </tr>
-    <tr title="mv-alias on group">
-      <td mv-app="mvalias1", mv-storage="#data-alias-group">
-        <span property="prop1" mv-alias="alias1">
-          <span property="inner1"></span>
-        </span> 
-      </td>
-      <td>
-        8
-      </td>
-    </tr>
+	<tr>
+		<td>
+			<pre id="data-alias-group">
+{
+	"alias1": {
+		"inner1": 8
+	}
+}
+			</pre>
+		</td>
+		<td>
+			<script>document.write($$("td pre").pop().outerHTML)</script>
+		</td>
+	</tr>
+	<tr title="mv-alias on group">
+		<td mv-app="mvalias1", mv-storage="#data-alias-group">
+			<span property="prop1" mv-alias="alias1">
+				<span property="inner1"></span>
+			</span> 
+		</td>
+		<td>
+			8
+		</td>
+	</tr>
 
-    <tr>
-      <td>
-        <pre id="data-alias-collection">
-          {
-            "alias1": ["a", "b", "c"]
-          }
-        </pre>
-      </td>
-			<td>
-				<script>document.write($$("td pre").pop().outerHTML)</script>
-			</td>
-    </tr>
-    <tr title="mv-alias on collection">
-      <td mv-app="mvalias2", mv-storage="#data-alias-collection">
-        <span property="prop1" mv-alias="alias1" mv-multiple></span> 
-      </td>
-      <td>
-        abc
-      </td>
-    </tr>
-    
-    <tr>
-      <td>
-        <pre id="data-alias-primitive">
-          {
-            "alias1": 10
-          }
-        </pre>
-      </td>
-			<td>
-				<script>document.write($$("td pre").pop().outerHTML)</script>
-			</td>
-    </tr>
-    <tr title="mv-alias on primitive">
-      <td mv-app="mvalias3", mv-storage="#data-alias-primitive">
-        <span property="prop1" mv-alias="alias1"></span> 
-      </td>
-      <td>
-        10
-      </td>
-    </tr>
+	<tr>
+		<td>
+			<pre id="data-alias-collection">
+{
+	"alias1": ["a", "b", "c"]
+}
+			</pre>
+		</td>
+		<td>
+			<script>document.write($$("td pre").pop().outerHTML)</script>
+		</td>
+	</tr>
+	<tr title="mv-alias on collection">
+		<td mv-app="mvalias2", mv-storage="#data-alias-collection">
+			<span property="prop1" mv-alias="alias1" mv-multiple></span> 
+		</td>
+		<td>
+			abc
+		</td>
+	</tr>
 
-    <tr>
-      <td>
-        <pre id="data-alias-property-alias-same">
-          {
-            "prop1": {
-              "inner1": 5
-            }, "alias1": {
-              "inner1": 8
-            }
-          }
-        </pre>
-      </td>
-			<td>
-				<script>document.write($$("td pre").pop().outerHTML)</script>
-			</td>
-    </tr>
-    <tr title="mv-alias when alias has the same name as existing property">
-      <td mv-app="mvalias4", mv-storage="#data-alias-property-alias-same">
-        <span property="prop1" mv-alias="alias1">
-          <span property="inner1"></span>
-        </span> 
-      </td>
-      <td>
-        5
-      </td>
-    </tr>
-    
-  </table>
+	<tr>
+		<td>
+			<pre id="data-alias-primitive">
+{
+	"alias1": 10
+}
+			</pre>
+		</td>
+		<td>
+			<script>document.write($$("td pre").pop().outerHTML)</script>
+		</td>
+	</tr>
+	<tr title="mv-alias on primitive">
+		<td mv-app="mvalias3", mv-storage="#data-alias-primitive">
+			<span property="prop1" mv-alias="alias1"></span> 
+		</td>
+		<td>
+			10
+		</td>
+	</tr>
+
+	<tr>
+		<td>
+			<pre id="data-alias-property-alias-same">
+{
+	"prop1": {
+		"inner1": 5
+	}, "alias1": {
+		"inner1": 8
+	}
+}
+			</pre>
+		</td>
+		<td>
+			<script>document.write($$("td pre").pop().outerHTML)</script>
+		</td>
+	</tr>
+	<tr title="mv-alias when alias has the same name as existing property">
+		<td mv-app="mvalias4", mv-storage="#data-alias-property-alias-same">
+			<span property="prop1" mv-alias="alias1">
+				<span property="inner1"></span>
+			</span> 
+		</td>
+		<td>
+			5
+		</td>
+	</tr>
+
+	</table>
 </section>
 
 <script src="test.js"></script>
