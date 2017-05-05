@@ -1,207 +1,3 @@
-!function(){"use strict";function t(e,r,s){return r=void 0===r?1:r,s=s||r+1,1>=s-r?function(){if(arguments.length<=r||"string"===n.type(arguments[r]))return e.apply(this,arguments);var t,s=arguments[r];for(var i in s){var o=Array.from(arguments);o.splice(r,1,i,s[i]),t=e.apply(this,o)}return t}:t(t(e,r+1,s),r,s-1)}function e(t,n,s){var i=r(s);if("string"===i){var o=Object.getOwnPropertyDescriptor(n,s);!o||o.writable&&o.configurable&&o.enumerable&&!o.get&&!o.set?t[s]=n[s]:(delete t[s],Object.defineProperty(t,s,o))}else if("array"===i)s.forEach(function(r){r in n&&e(t,n,r)});else for(var a in n)s&&("regexp"===i&&!s.test(a)||"function"===i&&!s.call(n,a))||e(t,n,a);return t}function r(t){if(null===t)return"null";if(void 0===t)return"undefined";var e=(Object.prototype.toString.call(t).match(/^\[object\s+(.*?)\]$/)[1]||"").toLowerCase();return"number"==e&&isNaN(t)?"nan":e}var n=self.Bliss=e(function(t,e){return 2==arguments.length&&!e||!t?null:"string"===n.type(t)?(e||document).querySelector(t):t||null},self.Bliss);e(n,{extend:e,overload:t,type:r,property:n.property||"_",sources:{},noop:function(){},$:function(t,e){return t instanceof Node||t instanceof Window?[t]:2!=arguments.length||e?Array.from("string"==typeof t?(e||document).querySelectorAll(t):t||[]):[]},defined:function(){for(var t=0;t<arguments.length;t++)if(void 0!==arguments[t])return arguments[t]},create:function(t,e){return t instanceof Node?n.set(t,e):(1===arguments.length&&("string"===n.type(t)?e={}:(e=t,t=e.tag,e=n.extend({},e,function(t){return"tag"!==t}))),n.set(document.createElement(t||"div"),e))},each:function(t,e,r){r=r||{};for(var n in t)r[n]=e.call(t,n,t[n]);return r},ready:function(t){return t=t||document,new Promise(function(e,r){"loading"!==t.readyState?e():t.addEventListener("DOMContentLoaded",function(){e()})})},Class:function(t){var e,r=["constructor","extends","abstract","static"].concat(Object.keys(n.classProps)),s=t.hasOwnProperty("constructor")?t.constructor:n.noop;2==arguments.length?(e=arguments[0],t=arguments[1]):(e=function(){if(this.constructor.__abstract&&this.constructor===e)throw new Error("Abstract classes cannot be directly instantiated.");e["super"]&&e["super"].apply(this,arguments),s.apply(this,arguments)},e["super"]=t["extends"]||null,e.prototype=n.extend(Object.create(e["super"]?e["super"].prototype:Object),{constructor:e}),e.prototype["super"]=e["super"]?e["super"].prototype:null,e.__abstract=!!t["abstract"]);var i=function(t){return this.hasOwnProperty(t)&&-1===r.indexOf(t)};if(t["static"]){n.extend(e,t["static"],i);for(var o in n.classProps)o in t["static"]&&n.classProps[o](e,t["static"][o])}n.extend(e.prototype,t,i);for(var o in n.classProps)o in t&&n.classProps[o](e.prototype,t[o]);return e},classProps:{lazy:t(function(t,e,r){return Object.defineProperty(t,e,{get:function(){var t=r.call(this);return Object.defineProperty(this,e,{value:t,configurable:!0,enumerable:!0,writable:!0}),t},set:function(t){Object.defineProperty(this,e,{value:t,configurable:!0,enumerable:!0,writable:!0})},configurable:!0,enumerable:!0}),t}),live:t(function(t,e,r){return"function"===n.type(r)&&(r={set:r}),Object.defineProperty(t,e,{get:function(){var t=this["_"+e],n=r.get&&r.get.call(this,t);return void 0!==n?n:t},set:function(t){var n=this["_"+e],s=r.set&&r.set.call(this,t,n);this["_"+e]=void 0!==s?s:t},configurable:r.configurable,enumerable:r.enumerable}),t})},include:function(){var t=arguments[arguments.length-1],e=2===arguments.length?arguments[0]:!1,r=document.createElement("script");return e?Promise.resolve():new Promise(function(e,s){n.set(r,{async:!0,onload:function(){e(),n.remove(r)},onerror:function(){s()},src:t,inside:document.head})})},fetch:function(t,r){if(!t)throw new TypeError("URL parameter is mandatory and cannot be "+t);var s=e({url:new URL(t,location),data:"",method:"GET",headers:{},xhr:new XMLHttpRequest},r);s.method=s.method.toUpperCase(),n.hooks.run("fetch-args",s),"GET"===s.method&&s.data&&(s.url.search+=s.data),document.body.setAttribute("data-loading",s.url),s.xhr.open(s.method,s.url.href,s.async!==!1,s.user,s.password);for(var i in r)if(i in s.xhr)try{s.xhr[i]=r[i]}catch(o){self.console&&console.error(o)}"GET"===s.method||s.headers["Content-type"]||s.headers["Content-Type"]||s.xhr.setRequestHeader("Content-type","application/x-www-form-urlencoded");for(var a in s.headers)s.xhr.setRequestHeader(a,s.headers[a]);return new Promise(function(t,e){s.xhr.onload=function(){document.body.removeAttribute("data-loading"),0===s.xhr.status||s.xhr.status>=200&&s.xhr.status<300||304===s.xhr.status?t(s.xhr):e(n.extend(Error(s.xhr.statusText),{xhr:s.xhr,get status(){return this.xhr.status}}))},s.xhr.onerror=function(){document.body.removeAttribute("data-loading"),e(n.extend(Error("Network Error"),{xhr:s.xhr}))},s.xhr.ontimeout=function(){document.body.removeAttribute("data-loading"),e(n.extend(Error("Network Timeout"),{xhr:s.xhr}))},s.xhr.send("GET"===s.method?null:s.data)})},value:function(t){var e="string"!==n.type(t);return n.$(arguments).slice(+e).reduce(function(t,e){return t&&t[e]},e?t:self)}}),n.Hooks=new n.Class({add:function(t,e,r){if("string"==typeof arguments[0])(Array.isArray(t)?t:[t]).forEach(function(t){this[t]=this[t]||[],e&&this[t][r?"unshift":"push"](e)},this);else for(var t in arguments[0])this.add(t,arguments[0][t],arguments[1])},run:function(t,e){this[t]=this[t]||[],this[t].forEach(function(t){t.call(e&&e.context?e.context:e,e)})}}),n.hooks=new n.Hooks;var s=n.property;n.Element=function(t){this.subject=t,this.data={},this.bliss={}},n.Element.prototype={set:t(function(t,e){t in n.setProps?n.setProps[t].call(this,e):t in this?this[t]=e:this.setAttribute(t,e)},0),transition:function(t,e){return e=+e||400,new Promise(function(r,s){if("transition"in this.style){var i=n.extend({},this.style,/^transition(Duration|Property)$/);n.style(this,{transitionDuration:(e||400)+"ms",transitionProperty:Object.keys(t).join(", ")}),n.once(this,"transitionend",function(){clearTimeout(o),n.style(this,i),r(this)});var o=setTimeout(r,e+50,this);n.style(this,t)}else n.style(this,t),r(this)}.bind(this))},fire:function(t,e){var r=document.createEvent("HTMLEvents");return r.initEvent(t,!0,!0),this.dispatchEvent(n.extend(r,e))},unbind:t(function(t,e){(t||"").split(/\s+/).forEach(function(t){if(s in this&&(t.indexOf(".")>-1||!e)){t=(t||"").split(".");var r=t[1];t=t[0];var n=this[s].bliss.listeners=this[s].bliss.listeners||{};for(var i in n)if(!t||i===t)for(var o,a=0;o=n[i][a];a++)r&&r!==o.className||e&&e!==o.callback||(this.removeEventListener(i,o.callback,o.capture),a--)}else this.removeEventListener(t,e)},this)},0)},n.setProps={style:function(t){for(var e in t)e in this.style?this.style[e]=t[e]:this.style.setProperty(e,t[e])},attributes:function(t){for(var e in t)this.setAttribute(e,t[e])},properties:function(t){n.extend(this,t)},events:function(t){if(t&&t.addEventListener){var e=this;if(t[s]&&t[s].bliss){var r=t[s].bliss.listeners;for(var i in r)r[i].forEach(function(t){e.addEventListener(i,t.callback,t.capture)})}for(var o in t)0===o.indexOf("on")&&(this[o]=t[o])}else if(arguments.length>1&&"string"===n.type(t)){var a=arguments[1],u=arguments[2];t.split(/\s+/).forEach(function(t){this.addEventListener(t,a,u)},this)}else for(var c in t)n.events(this,c,t[c])},once:t(function(t,e){t=t.split(/\s+/);var r=this,n=function(){return t.forEach(function(t){r.removeEventListener(t,n)}),e.apply(r,arguments)};t.forEach(function(t){r.addEventListener(t,n)})},0),delegate:t(function(t,e,r){this.addEventListener(t,function(t){t.target.closest(e)&&r.call(this,t)})},0,2),contents:function(t){(t||0===t)&&(Array.isArray(t)?t:[t]).forEach(function(t){var e=n.type(t);/^(string|number)$/.test(e)?t=document.createTextNode(t+""):"object"===e&&(t=n.create(t)),t instanceof Node&&this.appendChild(t)},this)},inside:function(t){t.appendChild(this)},before:function(t){t.parentNode.insertBefore(this,t)},after:function(t){t.parentNode.insertBefore(this,t.nextSibling)},start:function(t){t.insertBefore(this,t.firstChild)},around:function(t){t.parentNode&&n.before(this,t),(/^template$/i.test(this.nodeName)?this.content||this:this).appendChild(t)}},n.Array=function(t){this.subject=t},n.Array.prototype={all:function(t){var e=$$(arguments).slice(1);return this[t].apply(this,e)}},n.add=t(function(t,e,r,s){r=n.extend({$:!0,element:!0,array:!0},r),"function"==n.type(e)&&(!r.element||t in n.Element.prototype&&s||(n.Element.prototype[t]=function(){return this.subject&&n.defined(e.apply(this.subject,arguments),this.subject)}),!r.array||t in n.Array.prototype&&s||(n.Array.prototype[t]=function(){var t=arguments;return this.subject.map(function(r){return r&&n.defined(e.apply(r,t),r)})}),r.$&&(n.sources[t]=n[t]=e,(r.array||r.element)&&(n[t]=function(){var e=[].slice.apply(arguments),s=e.shift(),i=r.array&&Array.isArray(s)?"Array":"Element";return n[i].prototype[t].apply({subject:s},e)})))},0),n.add(n.Array.prototype,{element:!1}),n.add(n.Element.prototype),n.add(n.setProps),n.add(n.classProps,{element:!1,array:!1});var i=document.createElement("_");n.add(n.extend({},HTMLElement.prototype,function(t){return"function"===n.type(i[t])}),null,!0)}(),function(t){"use strict";if(Bliss&&!Bliss.shy){var e=Bliss.property;if(t.add({clone:function(){var e=this.cloneNode(!0),r=t.$("*",e).concat(e);return t.$("*",this).concat(this).forEach(function(e,n,s){t.events(r[n],e),r[n]._.data=t.extend({},e._.data)}),e}},{array:!1}),Object.defineProperty(Node.prototype,e,{get:function o(){return Object.defineProperty(Node.prototype,e,{get:void 0}),Object.defineProperty(this,e,{value:new t.Element(this)}),Object.defineProperty(Node.prototype,e,{get:o}),this[e]},configurable:!0}),Object.defineProperty(Array.prototype,e,{get:function(){return Object.defineProperty(this,e,{value:new t.Array(this)}),this[e]},configurable:!0}),self.EventTarget&&"addEventListener"in EventTarget.prototype){var r=EventTarget.prototype.addEventListener,n=EventTarget.prototype.removeEventListener,s=function(t,e,r){return r.callback===t&&r.capture==e},i=function(){return!s.apply(this,arguments)};EventTarget.prototype.addEventListener=function(t,n,i){if(this&&this[e]&&this[e].bliss&&n){var o=this[e].bliss.listeners=this[e].bliss.listeners||{};if(t.indexOf(".")>-1){t=t.split(".");var a=t[1];t=t[0]}o[t]=o[t]||[],0===o[t].filter(s.bind(null,n,i)).length&&o[t].push({callback:n,capture:i,className:a})}return r.call(this,t,n,i)},EventTarget.prototype.removeEventListener=function(t,r,s){if(this&&this[e]&&this[e].bliss&&r){var o=this[e].bliss.listeners=this[e].bliss.listeners||{};o[t]&&(o[t]=o[t].filter(i.bind(null,r,s)))}return n.call(this,t,r,s)}}self.$=self.$||t,self.$$=self.$$||t.$}}(Bliss);
-/*
- * Stretchy: Form element autosizing, the way it should be.
- * by Lea Verou http://lea.verou.me
- * MIT license
- */
-(function() {
-
-if (!self.Element) {
-	return; // super old browser
-}
-
-if (!Element.prototype.matches) {
-	Element.prototype.matches = Element.prototype.webkitMatchesSelector || Element.prototype.mozMatchesSelector || Element.prototype.msMatchesSelector || Element.prototype.oMatchesSelector || null;
-}
-
-if (!Element.prototype.matches) {
-	return;
-}
-
-function $$(expr, con) {
-	return expr instanceof Node || expr instanceof Window? [expr] :
-	       [].slice.call(typeof expr == "string"? (con || document).querySelectorAll(expr) : expr || []);
-}
-
-var _ = self.Stretchy = {
-	selectors: {
-		base: 'textarea, select:not([size]), input:not([type]), input[type="' + "text url email tel".split(" ").join('"], input[type="') + '"]',
-		filter: "*"
-	},
-
-	// Script element this was included with, if any
-	script: document.currentScript || $$("script").pop(),
-
-	// Autosize one element. The core of Stretchy.
-	resize: function(element) {
-		if (!_.resizes(element)) {
-			return;
-		}
-
-		var cs = getComputedStyle(element);
-		var offset = 0;
-
-		if (!element.value && element.placeholder) {
-			var empty = true;
-			element.value = element.placeholder;
-		}
-
-		var type = element.nodeName.toLowerCase();
-
-		if (type == "textarea") {
-			element.style.height = "0";
-
-			if (cs.boxSizing == "border-box") {
-				offset = element.offsetHeight;
-			}
-			else if (cs.boxSizing == "content-box") {
-				offset = -element.clientHeight;
-			}
-
-			element.style.height = element.scrollHeight + offset + "px";
-		}
-		else if(type == "input") {
-			// First test that it is actually visible, otherwise all measurements are off
-			element.style.width = "1000px";
-
-			if (element.offsetWidth) {
-				element.style.width = "0";
-
-				if (cs.boxSizing == "border-box") {
-					offset = element.offsetWidth;
-				}
-				else if (cs.boxSizing == "padding-box") {
-					offset = element.clientWidth;
-				}
-
-				// Safari misreports scrollWidth, so we will instead set scrollLeft to a
-				// huge number, and read that back to see what it was clipped to
-				element.scrollLeft = 1e+10;
-
-				var width = Math.max(element.scrollLeft + offset, element.scrollWidth - element.clientWidth);
-
-				element.style.width = width + "px";
-			}
-			else {
-				// Element is invisible, just set to something reasonable
-				element.style.width = element.value.length + 1 + "ch";
-			}
-		}
-		else if (type == "select") {
-			var selectedIndex = element.selectedIndex > 0? element.selectedIndex : 0;
-
-			// Need to use dummy element to measure :(
-			var option = document.createElement("_");
-			option.textContent = element.options[selectedIndex].textContent;
-			element.parentNode.insertBefore(option, element.nextSibling);
-
-			// The name of the appearance property, as it might be prefixed
-			var appearance;
-
-			for (var property in cs) {
-				var value = cs[property];
-				if (!/^(width|webkitLogicalWidth|length)$/.test(property) && typeof value == "string") {
-					//console.log(property, option.offsetWidth, cs[property]);
-					option.style[property] = value;
-
-					if (/appearance$/i.test(property)) {
-						appearance = property;
-					}
-				}
-			}
-
-			option.style.width = "";
-
-			if (option.offsetWidth > 0) {
-				element.style.width = option.offsetWidth + "px";
-
-				if (!cs[appearance] || cs[appearance] !== "none") {
-					// Account for arrow
-					element.style.width = "calc(" + element.style.width + " + 2em)";
-				}
-			}
-
-			option.parentNode.removeChild(option);
-			option = null;
-		}
-
-		if (empty) {
-			element.value = "";
-		}
-	},
-
-	// Autosize multiple elements
-	resizeAll: function(elements) {
-		$$(elements || _.selectors.base).forEach(function (element) {
-			_.resize(element);
-		});
-	},
-
-	active: true,
-
-	// Will stretchy do anything for this element?
-	resizes: function(element) {
-		return element &&
-		       element.parentNode &&
-		       element.matches &&
-		       element.matches(_.selectors.base) &&
-		       element.matches(_.selectors.filter);
-	},
-
-	init: function(){
-		_.selectors.filter = _.script.getAttribute("data-filter") ||
-		                     ($$("[data-stretchy-filter]").pop() || document.body).getAttribute("data-stretchy-filter") || Stretchy.selectors.filter || "*";
-
-		_.resizeAll();
-	},
-
-	$$: $$
-};
-
-// Autosize all elements once the DOM is loaded
-
-// DOM already loaded?
-if (document.readyState !== "loading") {
-	_.init();
-}
-else {
-	// Wait for it
-	document.addEventListener("DOMContentLoaded", _.init);
-}
-
-// Listen for changes
-var listener = function(evt) {
-	if (_.active) {
-		_.resize(evt.target);
-	}
-};
-
-document.documentElement.addEventListener("input", listener);
-
-// Firefox fires a change event instead of an input event
-document.documentElement.addEventListener("change", listener);
-
-// Listen for new elements
-if (self.MutationObserver) {
-	(new MutationObserver(function(mutations) {
-		if (_.active) {
-			mutations.forEach(function(mutation) {
-				if (mutation.type == "childList") {
-					Stretchy.resizeAll(mutation.addedNodes);
-				}
-			});
-		}
-	})).observe(document.documentElement, {
-		childList: true,
-		subtree: true
-	});
-}
-
-})();
-
-/* jsep v0.3.1 (http://jsep.from.so/) */
-!function(a){"use strict";var b="Compound",c="Identifier",d="MemberExpression",e="Literal",f="ThisExpression",g="CallExpression",h="UnaryExpression",i="BinaryExpression",j="LogicalExpression",k="ConditionalExpression",l="ArrayExpression",m=46,n=44,o=39,p=34,q=40,r=41,s=91,t=93,u=63,v=59,w=58,x=function(a,b){var c=new Error(a+" at character "+b);throw c.index=b,c.description=a,c},y=!0,z={"-":y,"!":y,"~":y,"+":y},A={"||":1,"&&":2,"|":3,"^":4,"&":5,"==":6,"!=":6,"===":6,"!==":6,"<":7,">":7,"<=":7,">=":7,"<<":8,">>":8,">>>":8,"+":9,"-":9,"*":10,"/":10,"%":10},B=function(a){var b,c=0;for(var d in a)(b=d.length)>c&&a.hasOwnProperty(d)&&(c=b);return c},C=B(z),D=B(A),E={"true":!0,"false":!1,"null":null},F="this",G=function(a){return A[a]||0},H=function(a,b,c){var d="||"===a||"&&"===a?j:i;return{type:d,operator:a,left:b,right:c}},I=function(a){return a>=48&&a<=57},J=function(a){return 36===a||95===a||a>=65&&a<=90||a>=97&&a<=122||a>=128&&!A[String.fromCharCode(a)]},K=function(a){return 36===a||95===a||a>=65&&a<=90||a>=97&&a<=122||a>=48&&a<=57||a>=128&&!A[String.fromCharCode(a)]},L=function(a){for(var i,j,y=0,B=a.charAt,L=a.charCodeAt,M=function(b){return B.call(a,b)},N=function(b){return L.call(a,b)},O=a.length,P=function(){for(var a=N(y);32===a||9===a||10===a||13===a;)a=N(++y)},Q=function(){var a,b,c=S();return P(),N(y)!==u?c:(y++,a=Q(),a||x("Expected expression",y),P(),N(y)===w?(y++,b=Q(),b||x("Expected expression",y),{type:k,test:c,consequent:a,alternate:b}):void x("Expected :",y))},R=function(){P();for(var b=a.substr(y,D),c=b.length;c>0;){if(A.hasOwnProperty(b))return y+=c,b;b=b.substr(0,--c)}return!1},S=function(){var a,b,c,d,e,f,g,h;if(f=T(),b=R(),!b)return f;for(e={value:b,prec:G(b)},g=T(),g||x("Expected expression after "+b,y),d=[f,e,g];(b=R())&&(c=G(b),0!==c);){for(e={value:b,prec:c};d.length>2&&c<=d[d.length-2].prec;)g=d.pop(),b=d.pop().value,f=d.pop(),a=H(b,f,g),d.push(a);a=T(),a||x("Expected expression after "+b,y),d.push(e,a)}for(h=d.length-1,a=d[h];h>1;)a=H(d[h-1].value,d[h-2],a),h-=2;return a},T=function(){var b,c,d;if(P(),b=N(y),I(b)||b===m)return U();if(b===o||b===p)return V();if(J(b)||b===q)return Y();if(b===s)return $();for(c=a.substr(y,C),d=c.length;d>0;){if(z.hasOwnProperty(c))return y+=d,{type:h,operator:c,argument:T(),prefix:!0};c=c.substr(0,--d)}return!1},U=function(){for(var a,b,c="";I(N(y));)c+=M(y++);if(N(y)===m)for(c+=M(y++);I(N(y));)c+=M(y++);if(a=M(y),"e"===a||"E"===a){for(c+=M(y++),a=M(y),"+"!==a&&"-"!==a||(c+=M(y++));I(N(y));)c+=M(y++);I(N(y-1))||x("Expected exponent ("+c+M(y)+")",y)}return b=N(y),J(b)?x("Variable names cannot start with a number ("+c+M(y)+")",y):b===m&&x("Unexpected period",y),{type:e,value:parseFloat(c),raw:c}},V=function(){for(var a,b="",c=M(y++),d=!1;y<O;){if(a=M(y++),a===c){d=!0;break}if("\\"===a)switch(a=M(y++)){case"n":b+="\n";break;case"r":b+="\r";break;case"t":b+="\t";break;case"b":b+="\b";break;case"f":b+="\f";break;case"v":b+="\x0B";break;default:b+="\\"+a}else b+=a}return d||x('Unclosed quote after "'+b+'"',y),{type:e,value:b,raw:c+b+c}},W=function(){var b,d=N(y),g=y;for(J(d)?y++:x("Unexpected "+M(y),y);y<O&&(d=N(y),K(d));)y++;return b=a.slice(g,y),E.hasOwnProperty(b)?{type:e,value:E[b],raw:b}:b===F?{type:f}:{type:c,name:b}},X=function(a){for(var c,d,e=[],f=!1;y<O;){if(P(),c=N(y),c===a){f=!0,y++;break}c===n?y++:(d=Q(),d&&d.type!==b||x("Expected comma",y),e.push(d))}return f||x("Expected "+String.fromCharCode(a),y),e},Y=function(){var a,b;for(a=N(y),b=a===q?Z():W(),P(),a=N(y);a===m||a===s||a===q;)y++,a===m?(P(),b={type:d,computed:!1,object:b,property:W()}):a===s?(b={type:d,computed:!0,object:b,property:Q()},P(),a=N(y),a!==t&&x("Unclosed [",y),y++):a===q&&(b={type:g,arguments:X(r),callee:b}),P(),a=N(y);return b},Z=function(){y++;var a=Q();return P(),N(y)===r?(y++,a):void x("Unclosed (",y)},$=function(){return y++,{type:l,elements:X(t)}},_=[];y<O;)i=N(y),i===v||i===n?y++:(j=Q())?_.push(j):y<O&&x('Unexpected "'+M(y)+'"',y);return 1===_.length?_[0]:{type:b,body:_}};if(L.version="0.3.1",L.toString=function(){return"JavaScript Expression Parser (JSEP) v"+L.version},L.addUnaryOp=function(a){return C=Math.max(a.length,C),z[a]=y,this},L.addBinaryOp=function(a,b){return D=Math.max(a.length,D),A[a]=b,this},L.addLiteral=function(a,b){return E[a]=b,this},L.removeUnaryOp=function(a){return delete z[a],a.length===C&&(C=B(z)),this},L.removeBinaryOp=function(a){return delete A[a],a.length===D&&(D=B(A)),this},L.removeLiteral=function(a){return delete E[a],this},"undefined"==typeof exports){var M=a.jsep;a.jsep=L,L.noConflict=function(){return a.jsep===L&&(a.jsep=M),L}}else"undefined"!=typeof module&&module.exports?exports=module.exports=L:exports.parse=L}(this);
-//# sourceMappingURL=jsep.min.js.map
 "use strict";
 
 function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr2 = Array(arr.length); i < arr.length; i++) { arr2[i] = arr[i]; } return arr2; } else { return Array.from(arr); } }
@@ -521,9 +317,7 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
 				});
 			} else {
 				// No storage or source
-				requestAnimationFrame(function () {
-					$.fire(_this.element, "mavo:load");
-				});
+				$.fire(this.element, "mavo:load");
 			}
 
 			this.permissions.can("save", function () {
@@ -581,7 +375,7 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
 
 		error: function error(message) {
 			this.message(message, {
-				type: "error",
+				classes: "mv-error",
 				dismiss: ["button", "timeout"]
 			});
 
@@ -877,7 +671,6 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
 		live: {
 			inProgress: function inProgress(value) {
 				$.toggleAttribute(this.element, "mv-progress", value, value);
-				$.toggleAttribute(this.element, "aria-busy", !!value, !!value);
 			},
 
 			unsavedChanges: function unsavedChanges(value) {
@@ -963,13 +756,7 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
 
 			hooks: new $.Hooks(),
 
-			attributes: ["mv-app", "mv-storage", "mv-source", "mv-init", "mv-path", "mv-format", "mv-attribute", "mv-default", "mv-mode", "mv-edit", "mv-permisssions", "mv-rel"],
-
-			lazy: {
-				locale: function locale() {
-					return document.documentElement.lang || "en-GB";
-				}
-			}
+			attributes: ["mv-app", "mv-storage", "mv-source", "mv-init", "mv-path", "mv-format", "mv-attribute", "mv-default", "mv-mode", "mv-edit", "mv-permisssions", "mv-rel"]
 		}
 	});
 
@@ -1029,19 +816,9 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
 
 	// Init mavo. Async to give other scripts a chance to modify stuff.
 	requestAnimationFrame(function () {
-		var polyfills = [];
+		var isDecentBrowser = Array.from && window.Intl && document.documentElement.closest && self.URL && "searchParams" in URL.prototype;
 
-		$.each({
-			"blissfuljs": Array.from && document.documentElement.closest && self.URL && "searchParams" in URL.prototype,
-			"Intl.~locale.en": self.Intl,
-			"IntersectionObserver": self.IntersectionObserver
-		}, function (id, supported) {
-			if (!supported) {
-				polyfills.push(id);
-			}
-		});
-
-		_.dependencies.push($.ready(), _.Plugins.load(), $.include(!polyfills.length, "https://cdn.polyfill.io/v2/polyfill.min.js?features=" + polyfills.join(",")));
+		_.dependencies.push($.ready(), _.Plugins.load(), $.include(isDecentBrowser, "https://cdn.polyfill.io/v2/polyfill.min.js?features=blissfuljs,Intl.~locale.en"));
 
 		_.ready = _.all(_.dependencies);
 		_.inited = _.ready.catch(console.error).then(function () {
@@ -1227,51 +1004,7 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
 				return $.value(element, "_", "data", "mavo", name);
 			} else {
 				element._.data.mavo = element._.data.mavo || {};
-
-				if (value === undefined) {
-					delete element._.data.mavo[name];
-				} else {
-					return element._.data.mavo[name] = value;
-				}
-			}
-		},
-
-		elementPath: function elementPath(ancestor, element) {
-			var types = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : [1, 3];
-
-			var elementsOnly = types.length === 1 && types[0] == 1;
-
-			if (Array.isArray(element)) {
-				// Get element by path
-				var path = element;
-				return path.reduce(function (acc, cur) {
-					if (elementsOnly) {
-						var children = acc.children;
-					} else {
-						var children = [].concat(_toConsumableArray(acc.childNodes)).filter(function (node) {
-							return types.indexOf(node.nodeType) > -1;
-						});
-					}
-					return children[cur];
-				}, ancestor);
-			} else {
-				// Get path
-				var path = [];
-
-				for (var parent = element; parent && parent != ancestor; parent = parent.parentNode) {
-					var index = 0;
-					var element = parent;
-
-					while (element = element["previous" + (elementsOnly ? "Element" : "") + "Sibling"]) {
-						if (types.indexOf(element.nodeType) > -1) {
-							index++;
-						}
-					}
-
-					path.unshift(index);
-				}
-
-				return parent ? path : null;
+				return element._.data.mavo[name] = value;
 			}
 		},
 
@@ -1324,97 +1057,19 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
 				}
 
 				return false;
-			},
-
-			setAttribute: function setAttribute(element, attribute, value) {
-				var previousValue = _.data(element, "attribute-" + attribute);
-
-				if (previousValue === undefined) {
-					// Only set this when there's no old value stored, otherwise
-					// if called multiple times, it could result in losing the original value
-					_.data(element, "attribute-" + attribute, element.getAttribute(attribute));
-				}
-
-				element.setAttribute(attribute, value);
-			},
-
-			restoreAttribute: function restoreAttribute(element, attribute) {
-				var previousValue = _.data(element, "attribute-" + attribute);
-
-				if (previousValue !== undefined) {
-					$.toggleAttribute(element, attribute, previousValue);
-					_.data(element, "attribute-" + attribute, undefined);
-				}
 			}
 		},
 
-		inView: {
-			is: function is(element) {
-				var r = element.getBoundingClientRect();
+		inViewport: function inViewport(element) {
+			var r = element.getBoundingClientRect();
 
-				return (0 <= r.bottom && r.bottom <= innerHeight || 0 <= r.top && r.top <= innerHeight) && ( // vertical
-				0 <= r.right && r.right <= innerWidth || 0 <= r.left && r.left <= innerWidth); // horizontal
-			},
-
-			when: function when(element) {
-				var observer = _.inView.observer = _.inView.observer || new IntersectionObserver(function (entries) {
-					var _iteratorNormalCompletion2 = true;
-					var _didIteratorError2 = false;
-					var _iteratorError2 = undefined;
-
-					try {
-						for (var _iterator2 = entries[Symbol.iterator](), _step2; !(_iteratorNormalCompletion2 = (_step2 = _iterator2.next()).done); _iteratorNormalCompletion2 = true) {
-							var entry = _step2.value;
-
-							this.unobserve(entry.target);
-							$.fire(entry.target, "mavo:inview", { entry: entry });
-						}
-					} catch (err) {
-						_didIteratorError2 = true;
-						_iteratorError2 = err;
-					} finally {
-						try {
-							if (!_iteratorNormalCompletion2 && _iterator2.return) {
-								_iterator2.return();
-							}
-						} finally {
-							if (_didIteratorError2) {
-								throw _iteratorError2;
-							}
-						}
-					}
-				});
-
-				return new Promise(function (resolve) {
-					if (_.is(element)) {
-						resolve();
-					}
-
-					observer.observe(element);
-
-					var callback = function callback(evt) {
-						element.removeEventListener("mavo:inview", callback);
-						evt.stopPropagation();
-						resolve();
-					};
-
-					element.addEventListener("mavo:inview", callback);
-				});
-			}
+			return (0 <= r.bottom && r.bottom <= innerHeight || 0 <= r.top && r.top <= innerHeight) && ( // vertical
+			0 <= r.right && r.right <= innerWidth || 0 <= r.left && r.left <= innerWidth); // horizontal
 		},
 
 		scrollIntoViewIfNeeded: function scrollIntoViewIfNeeded(element) {
-			if (element && !Mavo.inView.is(element)) {
+			if (element && !Mavo.inViewport(element)) {
 				element.scrollIntoView({ behavior: "smooth" });
-			}
-		},
-
-		/**
-   * Set attribute only if it doesn’t exist
-   */
-		setAttributeShy: function setAttributeShy(element, attribute, value) {
-			if (!element.hasAttribute(attribute)) {
-				element.setAttribute(attribute, value);
 			}
 		},
 
@@ -1616,13 +1271,13 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
    */
 		all: function all(iterable) {
 			// Turn rejected promises into resolved ones
-			var _iteratorNormalCompletion3 = true;
-			var _didIteratorError3 = false;
-			var _iteratorError3 = undefined;
+			var _iteratorNormalCompletion2 = true;
+			var _didIteratorError2 = false;
+			var _iteratorError2 = undefined;
 
 			try {
-				for (var _iterator3 = iterable[Symbol.iterator](), _step3; !(_iteratorNormalCompletion3 = (_step3 = _iterator3.next()).done); _iteratorNormalCompletion3 = true) {
-					var promise = _step3.value;
+				for (var _iterator2 = iterable[Symbol.iterator](), _step2; !(_iteratorNormalCompletion2 = (_step2 = _iterator2.next()).done); _iteratorNormalCompletion2 = true) {
+					var promise = _step2.value;
 
 					if ($.type(promise) == "promise") {
 						promise = promise.catch(function (err) {
@@ -1631,16 +1286,16 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
 					}
 				}
 			} catch (err) {
-				_didIteratorError3 = true;
-				_iteratorError3 = err;
+				_didIteratorError2 = true;
+				_iteratorError2 = err;
 			} finally {
 				try {
-					if (!_iteratorNormalCompletion3 && _iterator3.return) {
-						_iterator3.return();
+					if (!_iteratorNormalCompletion2 && _iterator2.return) {
+						_iterator2.return();
 					}
 				} finally {
-					if (_didIteratorError3) {
-						throw _iteratorError3;
+					if (_didIteratorError2) {
+						throw _iteratorError2;
 					}
 				}
 			}
@@ -2190,7 +1845,7 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
 			this.closed = Mavo.defer();
 
 			this.element = $.create({
-				className: "mv-ui mv-message" + (o.type ? " mv-" + type : ""),
+				className: "mv-ui mv-message",
 				innerHTML: this.message,
 				events: {
 					click: function click(e) {
@@ -2202,12 +1857,6 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
 
 			if (o.classes) {
 				this.element.classList.add(o.classes);
-			}
-
-			if (o.type == "error") {
-				this.element.setAttribute("role", "alert");
-			} else {
-				this.element.setAttribute("aria-live", "polite");
 			}
 
 			o.dismiss = o.dismiss || {};
@@ -3135,6 +2784,8 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
 
 			this.template = env.options.template;
 
+			this.alias = this.element.getAttribute("mv-alias");
+
 			if (this.template) {
 				this.template.copies.push(this);
 			} else {
@@ -3194,8 +2845,10 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
 			return this.storage !== "none";
 		},
 
-		get parent() {
-			return this.collection || this.parentGroup;
+		get path() {
+			var path = this.parentGroup ? this.parentGroup.path : [];
+
+			return this.property ? [].concat(_toConsumableArray(path), [this.property]) : path;
 		},
 
 		/**
@@ -3298,12 +2951,6 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
 			this.propagate("done");
 
 			Mavo.hooks.run("node-done-end", this);
-		},
-
-		clear: function clear() {
-			if (this.modes != "read") {
-				this.propagate("clear");
-			}
 		},
 
 		propagate: function propagate(callback) {
@@ -3634,14 +3281,6 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
 
 					this.dataChanged("undelete");
 				}
-			},
-
-			path: {
-				get: function get() {
-					var path = this.parent ? this.parent.path : [];
-
-					return this.property ? [].concat(_toConsumableArray(path), [this.property]) : path;
-				}
 			}
 		},
 
@@ -3903,7 +3542,7 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
 			this.unsavedChanges = false;
 		},
 
-		propagated: ["save", "import"],
+		propagated: ["save", "import", "clear"],
 
 		// Do not call directly, call this.render() instead
 		dataRender: function dataRender(data) {
@@ -3936,11 +3575,15 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
 				this.data = Mavo.subset(this.data, this.inPath, data);
 
 				this.propagate(function (obj) {
-					obj.render(data[obj.property]);
+					var propertyData = data[obj.property];
+					var renderData = propertyData === undefined && obj.alias ? data[obj.alias] : propertyData;
+					obj.render(renderData);
 				});
 			} else {
 				this.propagate(function (obj) {
-					obj.render(data[obj.property]);
+					var propertyData = data[obj.property];
+					var renderData = propertyData === undefined && obj.alias ? data[obj.alias] : propertyData;
+					obj.render(renderData);
 				});
 
 				// Fire datachange events for properties not in the template,
@@ -3993,7 +3636,7 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
 		constructor: function constructor(element, mavo, o) {
 			var _this = this;
 
-			if (!this.fromTemplate("config", "attribute", "templateValue", "originalEditor")) {
+			if (!this.fromTemplate("config", "attribute", "templateValue")) {
 				this.config = _.getConfig(element);
 
 				// Which attribute holds the data, if any?
@@ -4017,11 +3660,21 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
 			this.expressionText = Mavo.DOMExpression.search(this.element, this.attribute);
 
 			if (this.expressionText && !this.expressionText.mavoNode) {
-				// Computed property
 				this.expressionText.primitive = this;
 				this.storage = this.storage || "none";
 				this.modes = "read";
-				this.element.setAttribute("aria-live", "polite");
+			}
+
+			if (this.config.init) {
+				this.config.init.call(this, this.element);
+			}
+
+			if (this.config.changeEvents) {
+				$.events(this.element, this.config.changeEvents, function (evt) {
+					if (evt.target === _this.element) {
+						_this.value = _this.getValue();
+					}
+				});
 			}
 
 			/**
@@ -4030,15 +3683,15 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
 
 			// Linked widgets
 			if (!this.editor && this.element.hasAttribute("mv-edit")) {
-				if (!this.originalEditor) {
-					this.originalEditor = $(this.element.getAttribute("mv-edit"));
-				}
+				var original = $(this.element.getAttribute("mv-edit"));
 
-				if (this.originalEditor) {
+				if (original) {
+					this.editor = original.cloneNode(true);
+
 					// Update editor if original mutates
 					// This means that expressions on mv-edit for individual collection items will not be picked up
 					if (!this.template) {
-						this.originalEditorObserver = new Mavo.Observer(this.originalEditor, "all", function (records) {
+						new Mavo.Observer(original, "all", function (records) {
 							var all = _this.copies.concat(_this);
 
 							var _iteratorNormalCompletion = true;
@@ -4049,10 +3702,7 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
 								for (var _iterator = all[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
 									var primitive = _step.value;
 
-									if (primitive.editor) {
-										primitive.editor = _this.originalEditor.cloneNode(true);
-									}
-
+									primitive.editor = original.cloneNode(true);
 									primitive.setValue(primitive.value, { force: true, silent: true });
 								}
 							} catch (err) {
@@ -4075,32 +3725,15 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
 			}
 
 			// Nested widgets
-			if (!this.editor && !this.originalEditor && !this.attribute) {
+			if (!this.editor && !this.attribute) {
 				this.editor = $$(this.element.children).filter(function (el) {
 					return el.matches(Mavo.selectors.formControl) && !el.matches(Mavo.selectors.property);
 				})[0];
 
 				if (this.editor) {
+					this.element.textContent = this.editorValue;
 					$.remove(this.editor);
 				}
-			}
-
-			var editorValue = this.editorValue;
-
-			if (!this.datatype && (typeof editorValue == "number" || typeof editorValue == "boolean")) {
-				this.datatype = typeof editorValue === "undefined" ? "undefined" : _typeof(editorValue);
-			}
-
-			if (this.config.init) {
-				this.config.init.call(this, this.element);
-			}
-
-			if (this.config.changeEvents) {
-				$.events(this.element, this.config.changeEvents, function (evt) {
-					if (evt.target === _this.element) {
-						_this.value = _this.getValue();
-					}
-				});
 			}
 
 			this.templateValue = this.getValue();
@@ -4109,7 +3742,7 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
 
 			if (this.default === null) {
 				// no mv-default
-				this._default = this.modes ? this.templateValue : editorValue;
+				this._default = this.modes === "read" ? this.templateValue : this.editor ? this.editorValue : undefined;
 			} else if (this.default === "") {
 				// mv-default exists, no value, default is template value
 				this._default = this.templateValue;
@@ -4120,11 +3753,7 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
 				});
 			}
 
-			var keepTemplateValue = !this.template // not in a collection or first item
-			|| this.template.templateValue != this.templateValue // or different template value than first item
-			|| this.modes == "edit"; // or is always edited
-
-			if (this.default === undefined && keepTemplateValue) {
+			if (this.default === undefined && (!this.template || !this.closestCollection)) {
 				this.initialValue = this.templateValue;
 			} else {
 				this.initialValue = this.default;
@@ -4135,12 +3764,6 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
 			}
 
 			this.setValue(this.initialValue, { silent: true });
-
-			Mavo.setAttributeShy(this.element, "aria-label", this.label);
-
-			if (!this.attribute) {
-				Mavo.setAttributeShy(this.element, "mv-attribute", "none");
-			}
 
 			// Observe future mutations to this property, if possible
 			// Properties like input.checked or input.value cannot be observed that way
@@ -4157,15 +3780,17 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
 		},
 
 		get editorValue() {
-			var editor = this.editor || this.originalEditor;
+			if (this.config.getEditorValue) {
+				return this.config.getEditorValue.call(this);
+			}
 
-			if (editor) {
-				if (editor.matches(Mavo.selectors.formControl)) {
-					return _.getValue(editor, { datatype: this.datatype });
+			if (this.editor) {
+				if (this.editor.matches(Mavo.selectors.formControl)) {
+					return _.getValue(this.editor, { datatype: this.datatype });
 				}
 
 				// if we're here, this.editor is an entire HTML structure
-				var output = $(Mavo.selectors.output + ", " + Mavo.selectors.formControl, editor);
+				var output = $(Mavo.selectors.output + ", " + Mavo.selectors.formControl, this.editor);
 
 				if (output) {
 					return _.getValue(output);
@@ -4174,13 +3799,12 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
 		},
 
 		set editorValue(value) {
-			if (this.config.setEditorValue && this.datatype !== "boolean") {
+			if (this.config.setEditorValue) {
 				return this.config.setEditorValue.call(this, value);
 			}
 
 			if (this.editor) {
 				if (this.editor.matches(Mavo.selectors.formControl)) {
-
 					_.setValue(this.editor, value, { config: this.editorDefaults });
 				} else {
 					// if we're here, this.editor is an entire HTML structure
@@ -4241,18 +3865,10 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
 		initEdit: function initEdit() {
 			var _this2 = this;
 
-			if (!this.editor && this.originalEditor) {
-				this.editor = this.originalEditor.cloneNode(true);
-			}
-
 			if (!this.editor) {
 				// No editor provided, use default for element type
 				// Find default editor for datatype
-				var editor = this.config.editor;
-
-				if (!editor || this.datatype == "boolean") {
-					var editor = Mavo.Elements.defaultConfig[this.datatype || "string"].editor;
-				}
+				var editor = this.config.editor || Mavo.Elements.defaultEditors[this.datatype] || Mavo.Elements.defaultEditors.string;
 
 				this.editor = $.create($.type(editor) === "function" ? editor.call(this) : editor);
 				this.editorValue = this.value;
@@ -4304,19 +3920,22 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
 			}
 
 			// Make element focusable, so it can actually receive focus
-			if (this.element.tabIndex === -1) {
-				Mavo.revocably.setAttribute(this.element, "tabindex", "0");
-			}
+			this.element._.data.prevTabindex = this.element.getAttribute("tabindex");
+			this.element.tabIndex = 0;
 
 			// Prevent default actions while editing
 			// e.g. following links etc
-			if (!this.modes) {
-				this.element.addEventListener("click.mavo:edit", function (evt) {
-					return evt.preventDefault();
-				});
-			}
+			this.element.addEventListener("click.mavo:edit", function (evt) {
+				return evt.preventDefault();
+			});
 
 			this.preEdit = Mavo.defer(function (resolve, reject) {
+				// Empty properties should become editable immediately
+				// otherwise they could be invisible!
+				if (_this3.empty && !_this3.attribute) {
+					return requestAnimationFrame(resolve);
+				}
+
 				var timer;
 
 				var events = "click focus dragover dragenter".split(" ").map(function (e) {
@@ -4352,7 +3971,6 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
 				}
 
 				if (_this3.popup) {
-					_this3.popup.prepare();
 					_this3.popup.show();
 				}
 
@@ -4362,10 +3980,6 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
 						_this3.element.textContent = "";
 
 						_this3.element.appendChild(_this3.editor);
-
-						if (!_this3.collection) {
-							Mavo.revocably.restoreAttribute(_this3.element, "tabindex");
-						}
 					}
 				}
 			});
@@ -4392,25 +4006,20 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
 					_this4.popup.close();
 				} else if (!_this4.attribute && _this4.editor) {
 					$.remove(_this4.editor);
-
-					_.setValue(_this4.element, _this4.editorValue, {
-						config: _this4.config,
-						attribute: _this4.attribute,
-						datatype: _this4.datatype,
-						map: _this4.originalEditor || _this4.editor
-					});
+					_this4.element.textContent = _this4.editorValue;
 				}
 			});
 
-			if (!this.collection) {
-				Mavo.revocably.restoreAttribute(this.element, "tabindex");
+			// Revert tabIndex
+			if (this.element._.data.prevTabindex !== null) {
+				this.element.tabIndex = this.element._.data.prevTabindex;
+			} else {
+				this.element.removeAttribute("tabindex");
 			}
 		},
 
 		clear: function clear() {
-			if (this.modes != "read") {
-				this.value = this.templateValue;
-			}
+			this.value = this.templateValue;
 		},
 
 		dataRender: function dataRender(data) {
@@ -4434,7 +4043,7 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
 
 			if (data === undefined) {
 				// New property has been added to the schema and nobody has saved since
-				if (!this.modes) {
+				if (this.modes != "read") {
 					this.value = this.closestCollection ? this.default : this.templateValue;
 				}
 			} else {
@@ -4486,8 +4095,13 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
 			var o = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
 
 			this.sneak(function () {
+				if ($.type(value) == "object" && "value" in value) {
+					var presentational = value.presentational;
+					value = value.value;
+				}
+
 				// Convert nulls and undefineds to empty string
-				value = value || value === 0 || value === false ? value : "";
+				value = value || value === 0 ? value : "";
 
 				// If there's no datatype, adopt that of the value
 				if (!_this5.datatype && (typeof value == "number" || typeof value == "boolean")) {
@@ -4497,30 +4111,36 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
 				value = _.safeCast(value, _this5.datatype);
 
 				if (value == _this5._value && !o.force) {
-					// Do nothing if value didn't actually change, unless forced to
 					return value;
 				}
 
 				if (_this5.editor && document.activeElement != _this5.editor) {
-					// If external forces are changing the value (i.e. not the editor)
-					// and an editor is present, set its value to match
 					_this5.editorValue = value;
+				}
+
+				if (_this5.config.humanReadable && _this5.attribute) {
+					presentational = _this5.config.humanReadable.call(_this5, value);
 				}
 
 				if (!_this5.editing || _this5.popup || !_this5.editor) {
 					if (_this5.config.setValue) {
 						_this5.config.setValue.call(_this5, _this5.element, value);
-					} else if (!o.dataOnly) {
-						_.setValue(_this5.element, value, {
-							config: _this5.config,
-							attribute: _this5.attribute,
-							datatype: _this5.datatype,
-							map: _this5.originalEditor || _this5.editor
-						});
+					} else {
+						if (_this5.editor && _this5.editor.matches("select") && _this5.editor.selectedOptions[0]) {
+							presentational = _this5.editor.selectedOptions[0].textContent;
+						}
+
+						if (!o.dataOnly) {
+							_.setValue(_this5.element, { value: value, presentational: presentational }, {
+								config: _this5.config,
+								attribute: _this5.attribute,
+								datatype: _this5.datatype
+							});
+						}
 					}
 				}
 
-				_this5.empty = !value && value !== 0;
+				_this5.empty = value === "";
 
 				_this5._value = value;
 
@@ -4555,19 +4175,10 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
 				return this.setValue(_value);
 			},
 
-			datatype: function datatype(value) {
-				if (value !== this._datatype) {
-					if (value == "boolean" && !this.attribute) {
-						this.attribute = Mavo.Elements.defaultConfig.boolean.attribute;
-					}
-
-					$.toggleAttribute(this.element, "datatype", value, value && value !== "string");
-				}
-			},
-
 			empty: function empty(value) {
 				var hide = value && // is empty
 				!this.modes && // and supports both modes
+				this.config.default && // and using the default settings
 				!(this.attribute && $(Mavo.selectors.property, this.element)); // and has no property inside
 
 				this.element.classList.toggle("mv-empty", !!hide);
@@ -4680,9 +4291,7 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
 					attribute = null;
 				}
 
-				if (!datatype) {
-					datatype = element.getAttribute("datatype") || undefined;
-				}
+				datatype = element.getAttribute("datatype") || undefined;
 
 				var config = Mavo.Elements.search(element, attribute, datatype);
 
@@ -4698,51 +4307,62 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
 			},
 
 			setValue: function setValue(element, value) {
-				var o = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : {};
+				var _ref2 = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : {},
+				    config = _ref2.config,
+				    attribute = _ref2.attribute,
+				    datatype = _ref2.datatype;
+
+				if ($.type(value) == "object" && "value" in value) {
+					var presentational = value.presentational;
+					value = value.value;
+				}
 
 				if (element.nodeType === 1) {
-					if (!o.config) {
-						o.config = _.getConfig(element, o.attribute);
+					if (!config) {
+						config = _.getConfig(element, attribute);
 					}
 
-					o.attribute = o.attribute !== undefined ? o.attribute : o.config.attribute;
-					o.datatype = o.datatype !== undefined ? o.datatype : o.config.datatype;
+					attribute = config.attribute;
 
-					if (o.config.setValue && o.attribute == o.config.attribute) {
-						return o.config.setValue(element, value);
+					datatype = datatype !== undefined ? datatype : config.datatype;
+
+					if (config.setValue && attribute == config.attribute) {
+						return config.setValue(element, value);
 					}
 				}
 
-				if (o.attribute) {
-					if (o.attribute in element && _.useProperty(element, o.attribute) && element[o.attribute] !== value) {
+				if (attribute) {
+					if (attribute in element && _.useProperty(element, attribute) && element[attribute] !== value) {
 						// Setting properties (if they exist) instead of attributes
 						// is needed for dynamic elements such as checkboxes, sliders etc
 						try {
-							element[o.attribute] = value;
+							element[attribute] = value;
 						} catch (e) {}
 					}
 
 					// Set attribute anyway, even if we set a property because when
 					// they're not in sync it gets really fucking confusing.
-					if (o.datatype == "boolean") {
-						if (value != element.hasAttribute(o.attribute)) {
-							$.toggleAttribute(element, o.attribute, value, value);
+					if (datatype == "boolean") {
+						if (value != element.hasAttribute(attribute)) {
+							$.toggleAttribute(element, attribute, value, value);
 						}
-					} else if (element.getAttribute(o.attribute) != value) {
+					} else if (element.getAttribute(attribute) != value) {
 						// intentionally non-strict, e.g. "3." !== 3
-						element.setAttribute(o.attribute, value);
+						element.setAttribute(attribute, value);
+
+						if (presentational) {
+							element.textContent = presentational;
+						}
 					}
 				} else {
-					presentational = _.format(value, o);
+					if (datatype === "number" && !presentational) {
+						presentational = _.formatNumber(value);
+					}
 
-					if (presentational !== value) {
-						element.textContent = presentational;
+					element.textContent = presentational || value;
 
-						if (element.setAttribute) {
-							element.setAttribute("content", value);
-						}
-					} else {
-						element.textContent = value;
+					if (presentational && element.setAttribute) {
+						element.setAttribute("content", value);
 					}
 				}
 			},
@@ -4765,29 +4385,9 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
 				return true;
 			},
 
-			format: function format(value) {
-				var o = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
-
-				if (o.map && /^select$/i.test(o.map.nodeName)) {
-					for (var i = 0, option; option = o.map.options[i]; i++) {
-						if (option.value == value) {
-							return option.textContent;
-						}
-					}
-				}
-
-				if ($.type(value) === "number" || o.datatype == "number") {
-					return _.formatNumber(value);
-				} else if (Array.isArray(value)) {
-					return value.join(", ");
-				}
-
-				return value;
-			},
-
 			lazy: {
 				formatNumber: function formatNumber() {
-					var numberFormat = new Intl.NumberFormat(Mavo.locale, { maximumFractionDigits: 2 });
+					var numberFormat = new Intl.NumberFormat("en-US", { maximumFractionDigits: 2 });
 
 					return function (value) {
 						if (value === Infinity || value === -Infinity) {
@@ -4814,23 +4414,23 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
 
 			// Need to be defined here so that this is what expected
 			this.position = function (evt) {
-				var bounds = _this.primitive.element.getBoundingClientRect();
+				var bounds = _this.element.getBoundingClientRect();
 				var x = bounds.left;
 				var y = bounds.bottom;
 
-				if (_this.element.offsetHeight) {
+				if (_this.popup.offsetHeight) {
 					// Is in the DOM, check if it fits
-					var popupBounds = _this.element.getBoundingClientRect();
+					var popupBounds = _this.popup.getBoundingClientRect();
 
 					if (popupBounds.height + y > innerHeight) {
 						y = innerHeight - popupBounds.height - 20;
 					}
 				}
 
-				$.style(_this.element, { top: y + "px", left: x + "px" });
+				$.style(_this.popup, { top: y + "px", left: x + "px" });
 			};
 
-			this.element = $.create("div", {
+			this.popup = $.create("div", {
 				className: "mv-popup",
 				hidden: true,
 				contents: {
@@ -4843,8 +4443,8 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
 				events: {
 					keyup: function keyup(evt) {
 						if (evt.keyCode == 13 || evt.keyCode == 27) {
-							if (_this.element.contains(document.activeElement)) {
-								_this.primitive.element.focus();
+							if (_this.popup.contains(document.activeElement)) {
+								_this.element.focus();
 							}
 
 							evt.stopPropagation();
@@ -4864,22 +4464,22 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
 		show: function show() {
 			var _this2 = this;
 
-			$.unbind([this.primitive.element, this.element], ".mavo:showpopup");
+			$.unbind([this.element, this.popup], ".mavo:showpopup");
 
 			this.shown = true;
 
 			this.hideCallback = function (evt) {
-				if (!_this2.element.contains(evt.target) && !_this2.primitive.element.contains(evt.target)) {
+				if (!_this2.popup.contains(evt.target) && !_this2.element.contains(evt.target)) {
 					_this2.hide();
 				}
 			};
 
 			this.position();
 
-			document.body.appendChild(this.element);
+			document.body.appendChild(this.popup);
 
 			requestAnimationFrame(function (e) {
-				return _this2.element.removeAttribute("hidden");
+				return _this2.popup.removeAttribute("hidden");
 			}); // trigger transition
 
 			$.events(document, "focus click", this.hideCallback, true);
@@ -4891,27 +4491,22 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
 
 			$.unbind(document, "focus click", this.hideCallback, true);
 			window.removeEventListener("scroll", this.position);
-			this.element.setAttribute("hidden", ""); // trigger transition
+			this.popup.setAttribute("hidden", ""); // trigger transition
 			this.shown = false;
 
 			setTimeout(function () {
-				$.remove(_this3.element);
-			}, parseFloat(getComputedStyle(this.element).transitionDuration) * 1000 || 400); // TODO transition-duration could override this
-		},
+				$.remove(_this3.popup);
+			}, parseFloat(getComputedStyle(this.popup).transitionDuration) * 1000 || 400); // TODO transition-duration could override this
 
-		prepare: function prepare() {
-			var _this4 = this;
-
-			$.events(this.primitive.element, {
-				"click.mavo:edit": function clickMavoEdit(evt) {
-					_this4.show();
+			$.events(this.element, {
+				"click.mavo:showpopup": function clickMavoShowpopup(evt) {
+					_this3.show();
 				},
-				"keyup.mavo:edit": function keyupMavoEdit(evt) {
-					console.log(evt.keyCode);
+				"keyup.mavo:showpopup": function keyupMavoShowpopup(evt) {
 					if ([13, 113].indexOf(evt.keyCode) > -1) {
 						// Enter or F2
-						_this4.show();
-						_this4.editor.focus();
+						_this3.show();
+						_this3.editor.focus();
 					}
 				}
 			});
@@ -4919,11 +4514,12 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
 
 		close: function close() {
 			this.hide();
-			$.unbind(this.primitive.element, ".mavo:edit .mavo:preedit .mavo:showpopup");
+			$.unbind(this.element, ".mavo:edit .mavo:preedit .mavo:showpopup");
 		},
 
 		proxy: {
-			"editor": "primitive"
+			"editor": "primitive",
+			"element": "primitive"
 		}
 	});
 })(Bliss, Bliss.$);
@@ -4951,7 +4547,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
 
 	Object.defineProperties(_, {
 		"register": {
-			value: function value(id, config) {
+			value: function value(id, o) {
 				if (_typeof(arguments[0]) === "object") {
 					// Multiple definitions
 					for (var s in arguments[0]) {
@@ -4961,58 +4557,62 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
 					return;
 				}
 
-				if (config.extend) {
-					var base = _[config.extend];
+				var all = Mavo.toArray(arguments[1]);
 
-					config = $.extend($.extend({}, base, function (p) {
-						return p != "selector";
-					}), config);
-				}
+				var _iteratorNormalCompletion = true;
+				var _didIteratorError = false;
+				var _iteratorError = undefined;
 
-				if (id.indexOf("@") > -1) {
-					var parts = id.split("@");
+				try {
+					for (var _iterator = all[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
+						var config = _step.value;
 
-					config.selector = config.selector || parts[0] || "*";
+						config.attribute = Mavo.toArray(config.attribute || null);
 
-					if (config.attribute === undefined) {
-						config.attribute = parts[1];
-					}
-				}
+						var _iteratorNormalCompletion2 = true;
+						var _didIteratorError2 = false;
+						var _iteratorError2 = undefined;
 
-				config.selector = config.selector || id;
-				config.id = id;
-
-				if (Array.isArray(config.attribute)) {
-					var _iteratorNormalCompletion = true;
-					var _didIteratorError = false;
-					var _iteratorError = undefined;
-
-					try {
-						for (var _iterator = config.attribute[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
-							var attribute = _step.value;
-
-							o = $.extend({}, config);
-							o.attribute = attribute;
-
-							_[id + "@" + attribute] = o;
-						}
-					} catch (err) {
-						_didIteratorError = true;
-						_iteratorError = err;
-					} finally {
 						try {
-							if (!_iteratorNormalCompletion && _iterator.return) {
-								_iterator.return();
+							for (var _iterator2 = config.attribute[Symbol.iterator](), _step2; !(_iteratorNormalCompletion2 = (_step2 = _iterator2.next()).done); _iteratorNormalCompletion2 = true) {
+								var attribute = _step2.value;
+
+								var _o = $.extend({}, config);
+								_o.attribute = attribute;
+								_o.selector = _o.selector || id;
+								_o.id = id;
+
+								_[id] = _[id] || [];
+								_[id].push(_o);
 							}
+						} catch (err) {
+							_didIteratorError2 = true;
+							_iteratorError2 = err;
 						} finally {
-							if (_didIteratorError) {
-								throw _iteratorError;
+							try {
+								if (!_iteratorNormalCompletion2 && _iterator2.return) {
+									_iterator2.return();
+								}
+							} finally {
+								if (_didIteratorError2) {
+									throw _iteratorError2;
+								}
 							}
 						}
 					}
-				} else {
-
-					_[id] = config;
+				} catch (err) {
+					_didIteratorError = true;
+					_iteratorError = err;
+				} finally {
+					try {
+						if (!_iteratorNormalCompletion && _iterator.return) {
+							_iterator.return();
+						}
+					} finally {
+						if (_didIteratorError) {
+							throw _iteratorError;
+						}
+					}
 				}
 
 				return _;
@@ -5022,16 +4622,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
 			value: function value(element, attribute, datatype) {
 				var matches = _.matches(element, attribute, datatype);
 
-				var lastMatch = matches[matches.length - 1];
-
-				if (lastMatch) {
-					return lastMatch;
-				}
-
-				var config = $.extend({}, _.defaultConfig[datatype || "string"]);
-				config.attribute = attribute === undefined ? config.attribute : attribute;
-
-				return config;
+				return matches[matches.length - 1] || { attribute: attribute };
 			}
 		},
 		"matches": {
@@ -5039,33 +4630,54 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
 				var matches = [];
 
 				selectorloop: for (var id in _) {
-					var o = _[id];
+					var _iteratorNormalCompletion3 = true;
+					var _didIteratorError3 = false;
+					var _iteratorError3 = undefined;
 
-					// Passes attribute test?
-					var attributeMatches = attribute === undefined && o.default || attribute === o.attribute;
+					try {
+						for (var _iterator3 = _[id][Symbol.iterator](), _step3; !(_iteratorNormalCompletion3 = (_step3 = _iterator3.next()).done); _iteratorNormalCompletion3 = true) {
+							var o = _step3.value;
 
-					if (!attributeMatches) {
-						continue;
+							// Passes attribute test?
+							var attributeMatches = attribute === undefined && o.default || attribute === o.attribute;
+
+							if (!attributeMatches) {
+								continue;
+							}
+
+							// Passes datatype test?
+							if (datatype !== undefined && datatype !== "string" && datatype !== o.datatype) {
+								continue;
+							}
+
+							// Passes selector test?
+							var selector = o.selector || id;
+							if (!element.matches(selector)) {
+								continue;
+							}
+
+							// Passes arbitrary test?
+							if (o.test && !o.test(element, attribute, datatype)) {
+								continue;
+							}
+
+							// All tests have passed
+							matches.push(o);
+						}
+					} catch (err) {
+						_didIteratorError3 = true;
+						_iteratorError3 = err;
+					} finally {
+						try {
+							if (!_iteratorNormalCompletion3 && _iterator3.return) {
+								_iterator3.return();
+							}
+						} finally {
+							if (_didIteratorError3) {
+								throw _iteratorError3;
+							}
+						}
 					}
-
-					// Passes datatype test?
-					if (datatype !== undefined && datatype !== "string" && datatype !== o.datatype) {
-						continue;
-					}
-
-					// Passes selector test?
-					var selector = o.selector || id;
-					if (!element.matches(selector)) {
-						continue;
-					}
-
-					// Passes arbitrary test?
-					if (o.test && !o.test(element, attribute, datatype)) {
-						continue;
-					}
-
-					// All tests have passed
-					matches.push(o);
 				}
 
 				return matches;
@@ -5078,37 +4690,32 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
 			}
 		},
 
-		defaultConfig: {
+		defaultEditors: {
 			value: {
-				"string": {
-					editor: { tag: "input" }
-				},
-				"number": {
-					editor: { tag: "input", type: "number" }
-				},
-				"boolean": {
-					attribute: "content",
-					editor: { tag: "input", type: "checkbox" }
-				}
+				"string": { tag: "input" },
+				"number": { tag: "input", type: "number" },
+				"boolean": { tag: "input", type: "checkbox" }
 			}
 		}
 	});
 
 	_.register({
-		"@hidden": {
+		"*": [{
+			test: function test(e, a) {
+				return a == "hidden";
+			},
+			attribute: "hidden",
 			datatype: "boolean"
-		},
-
-		"@y": {
+		}, {
 			test: _.isSVG,
+			attribute: "y",
 			datatype: "number"
-		},
-
-		"@x": {
+		}, {
 			default: true,
 			test: _.isSVG,
+			attribute: "x",
 			datatype: "number"
-		},
+		}],
 
 		"media": {
 			default: true,
@@ -5218,22 +4825,17 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
 			datatype: "boolean"
 		},
 
-		"formControl": {
-			selector: "select, input",
+		"select, input": {
 			default: true,
 			attribute: "value",
-			modes: "edit",
-			changeEvents: "input change",
-			edit: function edit() {},
-			done: function done() {},
-			init: function init() {
-				this.editor = this.element;
-			}
+			modes: "read",
+			changeEvents: "input change"
 		},
 
 		"textarea": {
-			extend: "formControl",
-			attribute: null,
+			default: true,
+			modes: "read",
+			changeEvents: "input",
 			getValue: function getValue(element) {
 				return element.value;
 			},
@@ -5242,24 +4844,26 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
 			}
 		},
 
-		"formNumber": {
-			extend: "formControl",
-			selector: "input[type=range], input[type=number]",
-			datatype: "number"
+		"input[type=range], input[type=number]": {
+			default: true,
+			attribute: "value",
+			datatype: "number",
+			modes: "read",
+			changeEvents: "input change"
 		},
 
-		"checkbox": {
-			extend: "formControl",
-			selector: "input[type=checkbox]",
+		"input[type=checkbox]": {
+			default: true,
 			attribute: "checked",
 			datatype: "boolean",
+			modes: "read",
 			changeEvents: "click"
 		},
 
 		"input[type=radio]": {
-			extend: "formControl",
+			default: true,
 			attribute: "checked",
-			modes: "edit",
+			modes: "read",
 			getValue: function getValue(element) {
 				if (element.form) {
 					return element.form[element.name].value;
@@ -5288,11 +4892,11 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
 			}
 		},
 
-		"counter": {
-			extend: "formControl",
-			selector: "button, .counter",
+		"button, .counter": {
+			default: true,
 			attribute: "mv-clicked",
 			datatype: "number",
+			modes: "read",
 			init: function init(element) {
 				var _this3 = this;
 
@@ -5354,8 +4958,6 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
 						newValue = Math.max(min, Math.min(newValue, max));
 
 						_this4.element.setAttribute("value", newValue);
-
-						evt.preventDefault();
 					}
 				});
 			},
@@ -5415,61 +5017,55 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
 		"time": {
 			attribute: "datetime",
 			default: true,
-			init: function init() {
-				if (!this.fromTemplate("dateType")) {
-					var dateFormat = Mavo.DOMExpression.search(this.element, null);
-
-					var datetime = this.element.getAttribute("datetime") || "YYYY-MM-DD";
-
-					for (var type in this.config.dateTypes) {
-						if (this.config.dateTypes[type].test(datetime)) {
-							break;
-						}
-					}
-
-					this.dateType = type;
-
-					if (!dateFormat) {
-						// TODO what about mv-expressions?
-						this.element.textContent = this.config.defaultFormats[this.dateType](this.property);
-						this.mavo.expressions.extract(this.element, null);
-					}
-				}
-			},
-			dateTypes: {
-				"date": /^[Y\d]{4}-[M\d]{2}-[D\d]{2}$/i,
-				"month": /^[Y\d]{4}-[M\d]{2}$/i,
-				"time": /^[H\d]{2}:[M\d]{2}/i,
-				"datetime-local": /^[Y\d]{4}-[M\d]{2}-[D\d]{2} [H\d]{2}:[M\d]{2}/i
-			},
-			defaultFormats: {
-				"date": function date(property) {
-					return "[day(" + property + ")] [month(" + property + ").shortname] [year(" + property + ")]";
-				},
-				"month": function month(property) {
-					return "[month(" + property + ").name] [year(" + property + ")]";
-				},
-				"time": function time(property) {
-					return "[hour(" + property + ").twodigit]:[minute(" + property + ").twodigit]";
-				},
-				"datetime-local": function datetimeLocal(property) {
-					return "[day(" + property + ")] [month(" + property + ").shortname] [year(" + property + ")]";
-				}
-			},
 			editor: function editor() {
-				return { tag: "input", type: this.dateType };
+				var types = {
+					"date": /^[Y\d]{4}-[M\d]{2}-[D\d]{2}$/i,
+					"month": /^[Y\d]{4}-[M\d]{2}$/i,
+					"time": /^[H\d]{2}:[M\d]{2}/i,
+					"week": /[Y\d]{4}-W[W\d]{2}$/i,
+					"datetime-local": /^[Y\d]{4}-[M\d]{2}-[D\d]{2} [H\d]{2}:[M\d]{2}/i
+				};
+
+				var datetime = this.element.getAttribute("datetime") || "YYYY-MM-DD";
+
+				for (var type in types) {
+					if (types[type].test(datetime)) {
+						break;
+					}
+				}
+
+				return { tag: "input", type: type };
+			},
+			humanReadable: function humanReadable(value) {
+				var date = new Date(value);
+
+				if (!value || isNaN(date)) {
+					return "(No " + this.label + ")";
+				}
+
+				// TODO do this properly (account for other datetime datatypes and different formats)
+				var options = {
+					"date": { day: "numeric", month: "short", year: "numeric" },
+					"month": { month: "long" },
+					"time": { hour: "numeric", minute: "numeric" },
+					"datetime-local": { day: "numeric", month: "short", year: "numeric", hour: "numeric", minute: "numeric" }
+				};
+
+				var format = options[this.editor && this.editor.type] || options.date;
+				format.timeZone = "UTC";
+
+				return date.toLocaleString("en-GB", format);
 			}
 		},
 
-		"circle@r": {
+		"circle": [{
 			default: true,
+			attribute: "r",
 			datatype: "number"
-		},
-
-		"circle": {
+		}, {
 			attribute: ["cx", "cy"],
 			datatype: "number"
-		},
+		}],
 
 		"text": {
 			default: true,
@@ -5557,7 +5153,7 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
 					if (!item.deleted || env.options.live) {
 						var itemData = item.getData(env.options);
 
-						if (itemData !== null || env.options.live) {
+						if (itemData || env.options.live) {
 							env.data.push(itemData);
 						}
 					}
@@ -5661,10 +5257,6 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
 				add: env.item
 			});
 
-			if (env.item.itembar) {
-				env.item.itembar.reposition();
-			}
-
 			if (this.mavo.expressions.active && !o.silent) {
 				requestAnimationFrame(function () {
 					env.changed.forEach(function (i) {
@@ -5673,8 +5265,6 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
 					});
 
 					_this.unsavedChanges = _this.mavo.unsavedChanges = true;
-
-					_this.mavo.expressions.update(env.item);
 				});
 			}
 
@@ -5839,30 +5429,22 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
 			}
 
 			this.add(item, index);
-
-			if (item instanceof Mavo.Primitive && item.itembar) {
-				item.itembar.reposition();
-			}
 		},
 
 		editItem: function editItem(item) {
-			var _this4 = this;
-
-			Mavo.inView.when(item.element).then(function () {
-				if (_this4.mutable) {
-					if (!item.itembar) {
-						item.itembar = new Mavo.UI.Itembar(item);
-					}
-
-					item.itembar.add();
+			if (this.mutable) {
+				if (!item.itemControls) {
+					item.itemControls = new Mavo.UI.Itembar(item);
 				}
 
-				item.edit();
-			});
+				item.itemControls.add();
+			}
+
+			item.edit();
 		},
 
 		edit: function edit() {
-			var _this5 = this;
+			var _this4 = this;
 
 			if (this.super.edit.call(this) === false) {
 				return false;
@@ -5879,13 +5461,13 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
 
 				// Set up drag & drop
 				_.dragula.then(function () {
-					_this5.getDragula();
+					_this4.getDragula();
 				});
 			}
 
 			// Edit items, maybe insert item bar
 			this.propagate(function (item) {
-				_this5.editItem(item);
+				_this4.editItem(item);
 			});
 		},
 
@@ -5900,8 +5482,8 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
 				}
 
 				this.propagate(function (item) {
-					if (item.itembar) {
-						item.itembar.remove();
+					if (item.itemControls) {
+						item.itemControls.remove();
 					}
 				});
 			}
@@ -5911,10 +5493,6 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
    * Delete all items in the collection. Not undoable.
    */
 		clear: function clear() {
-			if (this.modes == "read") {
-				return;
-			}
-
 			if (this.mutable) {
 				for (var i = 1, item; item = this.children[i]; i++) {
 					item.element.remove();
@@ -5970,8 +5548,6 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
 		propagated: ["save"],
 
 		dataRender: function dataRender(data) {
-			var _this6 = this;
-
 			if (!data) {
 				return;
 			}
@@ -5994,40 +5570,32 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
 				}
 
 				if (data.length > i) {
-					var _loop = function _loop() {
-						previousItem = _this6.children[j - 1];
+					// There are still remaining items
+					// Using document fragments improves performance by 60%
+					var fragment = document.createDocumentFragment();
 
-						var item = _this6.createItem();
+					for (var j = i; j < data.length; j++) {
+						var item = this.createItem();
 
 						item.render(data[j]);
 
-						_this6.children.push(item);
+						this.children.push(item);
 						item.index = j;
 
-						inView = previousItem ? Mavo.inView.when(previousItem.element) : Promise.resolve();
+						fragment.appendChild(item.element);
 
-						inView.then(function () {
-							if (_this6.bottomUp) {
-								$.after(item.element, i > 0 ? _this6.children[i - 1].element : _this6.marker);
-							} else {
-								$.before(item.element, _this6.marker);
-							}
-						});
-
-						env = { context: _this6, item: item };
-
+						var env = { context: this, item: item };
 						Mavo.hooks.run("collection-add-end", env);
+					}
 
-						item.dataChanged("add");
-					};
+					if (this.bottomUp) {
+						$.after(fragment, i > 0 ? this.children[i - 1].element : this.marker);
+					} else {
+						$.before(fragment, this.marker);
+					}
 
-					// There are still remaining items
-					for (var j = i; j < data.length; j++) {
-						var previousItem;
-						var inView;
-						var env;
-
-						_loop();
+					for (var j = i; j < this.children.length; j++) {
+						this.children[j].dataChanged("add");
 					}
 				}
 			}
@@ -6078,7 +5646,7 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
 
 		// Make sure to only call after dragula has loaded
 		getDragula: function getDragula() {
-			var _this7 = this;
+			var _this5 = this;
 
 			if (this.dragula) {
 				return this.dragula;
@@ -6093,9 +5661,9 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
 			this.dragula = dragula({
 				containers: [this.marker.parentNode],
 				isContainer: function isContainer(el) {
-					if (_this7.accepts.length) {
-						return Mavo.flatten(_this7.accepts.map(function (property) {
-							return _this7.mavo.root.find(property, { collections: true });
+					if (_this5.accepts.length) {
+						return Mavo.flatten(_this5.accepts.map(function (property) {
+							return _this5.mavo.root.find(property, { collections: true });
 						})).filter(function (c) {
 							return c && c instanceof _;
 						}).map(function (c) {
@@ -6143,7 +5711,7 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
 					var index = closestItem ? closestItem.index + (closestItem.element === previous) : collection.length;
 					collection.add(item, index);
 				} else {
-					return _this7.dragula.cancel(true);
+					return _this5.dragula.cancel(true);
 				}
 			});
 
@@ -6185,7 +5753,7 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
 			},
 
 			addButton: function addButton() {
-				var _this8 = this;
+				var _this6 = this;
 
 				// Find add button if provided, or generate one
 				var selector = "button.mv-add-" + this.property;
@@ -6193,7 +5761,7 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
 
 				if (group) {
 					var button = $$(selector, group).filter(function (button) {
-						return !_this8.templateElement.contains(button);
+						return !_this6.templateElement.contains(button);
 					})[0];
 				}
 
@@ -6214,7 +5782,7 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
 				button.addEventListener("click", function (evt) {
 					evt.preventDefault();
 
-					_this8.editItem(_this8.add());
+					_this6.editItem(_this6.add());
 				});
 
 				return button;
@@ -6260,93 +5828,69 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
 				return el.closest(Mavo.selectors.multiple) == _this.item.element && !Mavo.data(el, "item");
 			})[0];
 
-			if (!this.element && this.item.template && this.item.template.itembar) {
-				// We can clone the buttons from the template
-				this.element = this.item.template.itembar.element.cloneNode(true);
-				this.dragHandle = $(".mv-drag-handle", this.element) || this.item.element;
-			} else {
-				// First item of this type
-				this.element = this.element || $.create({
-					className: "mv-item-bar mv-ui"
-				});
-
-				var buttons = [{
-					tag: "button",
-					title: "Delete this " + this.item.name,
-					className: "mv-delete"
-				}, {
-					tag: "button",
-					title: "Add new " + this.item.name + " " + (this.collection.bottomUp ? "after" : "before"),
-					className: "mv-add"
-				}];
-
-				if (this.item instanceof Mavo.Group) {
-					this.dragHandle = $.create({
-						tag: "button",
-						title: "Drag to reorder " + this.item.name,
-						className: "mv-drag-handle"
-					});
-
-					buttons.push(this.dragHandle);
-				} else {
-					this.dragHandle = this.item.element;
-				}
-
-				$.set(this.element, {
-					"mv-rel": this.item.property,
-					contents: buttons
-				});
-			}
-
-			$.events(this.element, {
-				mouseenter: function mouseenter(evt) {
-					_this.item.element.classList.add("mv-highlight");
-				},
-				mouseleave: function mouseleave(evt) {
-					_this.item.element.classList.remove("mv-highlight");
-				}
-			});
-
-			this.dragHandle.addEventListener("keydown", function (evt) {
-				if (_this.item.editing && evt.keyCode >= 37 && evt.keyCode <= 40) {
-					// Arrow keys
-					_this.collection.move(_this.item, evt.keyCode <= 38 ? -1 : 1);
-
-					evt.stopPropagation();
-					evt.preventDefault();
-					evt.target.focus();
-				}
-			});
-
-			var selectors = {
-				add: this.buttonSelector("add"),
-				delete: this.buttonSelector("delete"),
-				drag: this.buttonSelector("drag")
-			};
-
-			this.item.element.addEventListener("click", function (evt) {
-				if (_this.item.collection.editing) {
-					if (evt.target.matches(selectors.add)) {
-						var newItem = _this.collection.add(null, _this.item.index);
-
-						if (evt[Mavo.superKey]) {
-							newItem.render(_this.item.data);
-						}
-
-						Mavo.scrollIntoViewIfNeeded(newItem.element);
-
-						return _this.collection.editItem(newItem);
-					} else if (evt.target.matches(selectors.delete)) {
-						_this.item.collection.delete(item);
-					} else if (evt.target.matches(selectors["drag-handle"])) {
-						(function (evt) {
-							return evt.target.focus();
-						});
-					}
-				}
+			this.element = this.element || $.create({
+				className: "mv-item-bar mv-ui"
 			});
 
 			Mavo.data(this.element, "item", this.item);
+
+			$.set(this.element, {
+				"mv-rel": this.item.property,
+				contents: [{
+					tag: "button",
+					title: "Delete this " + this.item.name,
+					className: "mv-delete",
+					events: {
+						"click": function click(evt) {
+							return _this.item.collection.delete(item);
+						}
+					}
+				}, {
+					tag: "button",
+					title: "Add new " + this.item.name.replace(/s$/i, "") + " " + (this.collection.bottomUp ? "after" : "before"),
+					className: "mv-add",
+					events: {
+						"click": function click(evt) {
+							var newItem = _this.collection.add(null, _this.item.index);
+
+							if (evt[Mavo.superKey]) {
+								newItem.render(_this.item.data);
+							}
+
+							Mavo.scrollIntoViewIfNeeded(newItem.element);
+
+							return _this.collection.editItem(newItem);
+						}
+					}
+				}, {
+					tag: "button",
+					title: "Drag to reorder " + this.item.name,
+					className: "mv-drag-handle",
+					events: {
+						click: function click(evt) {
+							return evt.target.focus();
+						},
+						keydown: function keydown(evt) {
+							if (evt.keyCode >= 37 && evt.keyCode <= 40) {
+								// Arrow keys
+								_this.move(_this.item, evt.keyCode <= 38 ? -1 : 1);
+
+								evt.stopPropagation();
+								evt.preventDefault();
+								evt.target.focus();
+							}
+						}
+					}
+				}],
+				events: {
+					mouseenter: function mouseenter(evt) {
+						_this.item.element.classList.add("mv-highlight");
+					},
+					mouseleave: function mouseleave(evt) {
+						_this.item.element.classList.remove("mv-highlight");
+					}
+				}
+			});
 		},
 
 		add: function add() {
@@ -6360,27 +5904,10 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
 					}
 				}
 			}
-
-			if (this.dragHandle == this.item.element) {
-				this.item.element.classList.add("mv-drag-handle");
-			}
 		},
 
 		remove: function remove() {
 			Mavo.revocably.remove(this.element);
-
-			if (this.dragHandle == this.item.element) {
-				this.item.element.classList.remove("mv-drag-handle");
-			}
-		},
-
-		reposition: function reposition() {
-			this.element.remove();
-			this.add();
-		},
-
-		buttonSelector: function buttonSelector(type) {
-			return ".mv-" + type + "[mv-rel=\"" + this.item.property + "\"], [mv-rel=\"" + this.item.property + "\"] > .mv-" + type;
 		},
 
 		proxy: {
@@ -6662,7 +6189,9 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
 
 			if (!this.node) {
 				// No node provided, figure it out from path
-				this.node = Mavo.elementPath(this.item.element, this.path);
+				this.node = this.path.reduce(function (node, index) {
+					return node.childNodes[index];
+				}, this.item.element);
 			}
 
 			this.element = this.node;
@@ -6713,12 +6242,11 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
 				return x instanceof Mavo.Expression ? x.expression : x;
 			});
 
-			this.item = Mavo.Node.get(this.element.closest(Mavo.selectors.item));
-
 			this.mavo.treeBuilt.then(function () {
-				if (!_this.template && !_this.item) {
+				if (!_this.template) {
 					// Only collection items and groups can have their own expressions arrays
 					_this.item = Mavo.Node.get(_this.element.closest(Mavo.selectors.item));
+					_this.item.expressions = [].concat(_toConsumableArray(_this.item.expressions || []), [_this]);
 				}
 
 				Mavo.hooks.run("domexpression-init-treebuilt", _this);
@@ -6741,16 +6269,18 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
 			var data = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : this.data;
 			var event = arguments[1];
 
-			var env = { context: this, event: event };
+			var env = { context: this, ret: {}, event: event };
 			var parentEnv = env;
 
 			this.data = data;
+
+			env.ret = {};
 
 			Mavo.hooks.run("domexpression-update-start", env);
 
 			this.oldValue = this.value;
 
-			env.value = this.value = this.parsed.map(function (expr, i) {
+			env.ret.value = this.value = this.parsed.map(function (expr, i) {
 				if (expr instanceof Mavo.Expression) {
 					if (expr.changedBy(parentEnv.event)) {
 						var env = { context: _this2, expr: expr, parentEnv: parentEnv };
@@ -6778,9 +6308,38 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
 				return expr;
 			});
 
-			env.value = env.value.length === 1 ? env.value[0] : env.value.map(Mavo.Primitive.format).join("");
+			if (!this.attribute) {
+				// Separate presentational & actual values only apply when content is variable
+				env.ret.presentational = this.value.map(function (value) {
+					if (Array.isArray(value)) {
+						return value.join(", ");
+					}
 
-			this.output(env.value);
+					if (typeof value == "number") {
+						return Mavo.Primitive.formatNumber(value);
+					}
+
+					return value;
+				});
+
+				env.ret.presentational = env.ret.presentational.length === 1 ? env.ret.presentational[0] : env.ret.presentational.join("");
+			}
+
+			env.ret.value = env.ret.value.length === 1 ? env.ret.value[0] : env.ret.value.join("");
+
+			if (this.primitive && this.parsed.length === 1) {
+				if (typeof env.ret.value === "number") {
+					this.primitive.datatype = "number";
+				} else if (typeof env.ret.value === "boolean") {
+					this.primitive.datatype = "boolean";
+				}
+			}
+
+			if (env.ret.presentational === env.ret.value) {
+				env.ret = env.ret.value;
+			}
+
+			this.output(env.ret);
 
 			Mavo.hooks.run("domexpression-update-end", env);
 		},
@@ -6789,21 +6348,8 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
 			if (this.primitive) {
 				this.primitive.value = value;
 			} else {
+				value = value.presentational || value;
 				Mavo.Primitive.setValue(this.node, value, { attribute: this.attribute });
-			}
-		},
-
-		live: {
-			item: function item(_item) {
-				if (_item && this._item != _item) {
-					if (this._item) {
-						// Previous item, delete from its expressions
-						Mavo.delete(this._item.expressions, this);
-					}
-
-					_item.expressions = _item.expressions || [];
-					_item.expressions.push(this);
-				}
 			}
 		},
 
@@ -6857,7 +6403,7 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
 			var syntax = Mavo.Expression.Syntax.create(this.mavo.element.closest("[mv-expressions]")) || Mavo.Expression.Syntax.default;
 			this.traverse(this.mavo.element, undefined, syntax);
 
-			this.scheduled = {};
+			this.scheduled = new Set();
 
 			this.mavo.treeBuilt.then(function () {
 				_this.expressions = [];
@@ -6868,17 +6414,15 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
 						return;
 					}
 
-					var scheduled = _this.scheduled[evt.action] = _this.scheduled[evt.action] || new Set();
-
-					if (evt.node.closestCollection || evt.mavo != _this.mavo) {
-						// Throttle events in collections and events from other Mavos
-						if (!scheduled.has(evt.property)) {
+					if (evt.action == "propertychange" && evt.node.closestCollection) {
+						// Throttle propertychange events in collections and events from other Mavos
+						if (!_this.scheduled.has(evt.property)) {
 							setTimeout(function () {
-								scheduled.delete(evt.property);
+								_this.scheduled.delete(evt.property);
 								_this.update(evt);
-							}, _.THROTTLE);
+							}, _.PROPERTYCHANGE_THROTTLE);
 
-							scheduled.add(evt.property);
+							_this.scheduled.add(evt.property);
 						}
 					} else {
 						requestAnimationFrame(function () {
@@ -6912,9 +6456,9 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
 			var allData = rootObject.getData({ live: true });
 
 			rootObject.walk(function (obj, path) {
-				if (obj.expressions && obj.expressions.length && !obj.isDeleted()) {
-					var data = $.value.apply($, [allData].concat(_toConsumableArray(path)));
+				var data = $.value.apply($, [allData].concat(_toConsumableArray(path)));
 
+				if (obj.expressions && obj.expressions.length && !obj.isDeleted()) {
 					if ((typeof data === "undefined" ? "undefined" : _typeof(data)) != "object" || data === null) {
 						var _data;
 
@@ -6961,26 +6505,17 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
 			});
 		},
 
-		extract: function extract(node, attribute, path) {
-			var syntax = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : Mavo.Expression.Syntax.default;
-
+		extract: function extract(node, attribute, path, syntax) {
 			if (attribute && attribute.name == "mv-expressions") {
 				return;
 			}
 
-			if (path === undefined) {
-				path = Mavo.elementPath(node.closest(Mavo.selectors.item), node);
-			} else if (path && typeof path === "string") {
-				path = path.slice(1).split("/").map(function (i) {
-					return +i;
-				});
-			} else {
-				path = [];
-			}
-
 			if (attribute && _.directives.indexOf(attribute.name) > -1 || syntax.test(attribute ? attribute.value : node.textContent)) {
 				this.expressions.push(new Mavo.DOMExpression({
-					node: node, syntax: syntax, path: path,
+					node: node, syntax: syntax,
+					path: path ? path.slice(1).split("/").map(function (i) {
+						return +i;
+					}) : [],
 					attribute: attribute && attribute.name,
 					mavo: this.mavo
 				}));
@@ -7029,7 +6564,7 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
 		static: {
 			directives: [],
 
-			THROTTLE: 50,
+			PROPERTYCHANGE_THROTTLE: 50,
 
 			directive: function directive(name, o) {
 				_.directives.push(name);
@@ -7273,6 +6808,11 @@ Mavo.Expressions.directive("mv-value", {
 			this.changedBy = function (evt) {
 				return true;
 			};
+		},
+		"domexpression-update-start": function domexpressionUpdateStart() {
+			if (this.originalAttribute != "mv-value" || this.mavoNode != this.item) {
+				return;
+			}
 		}
 	}
 });
@@ -7426,20 +6966,6 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
 			});
 		},
 
-		th: function th(num) {
-			if (num === null || num === "") {
-				return "";
-			}
-
-			if (ord < 10 || ord > 20) {
-				var ord = ["th", "st", "nd", "th"][num % 10];
-			}
-
-			ord = ord || "th";
-
-			return num + ord;
-		},
-
 		iff: function iff(condition, iftrue) {
 			var iffalse = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : "";
 
@@ -7540,20 +7066,12 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
 			return (str + "").toLowerCase();
 		},
 
-		json: function json(data) {
-			return Mavo.safeToJSON(data);
-		},
-
 		/*********************
    * Date functions
    *********************/
 
 		get $now() {
 			return new Date();
-		},
-
-		get $today() {
-			return _.date(new Date());
 		},
 
 		year: getDateComponent("year"),
@@ -7956,8 +7474,7 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
 		divide: "div",
 		lt: "lessThan smaller",
 		gt: "moreThan greater greaterThan bigger",
-		eq: "equal equality",
-		th: "ordinal"
+		eq: "equal equality"
 	};
 
 	var _loop2 = function _loop2(_name) {
@@ -8036,13 +7553,7 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
 		}
 
 		if ($.type(date) === "string") {
-			date = date.trim();
-
 			// Fix up time format
-			if (!/^\d{4}-\d{2}-\d{2}/.test(date)) {
-				// No date, add today’s
-				date = _.$today + " " + date;
-			}
 
 			if (date.indexOf(":") === -1) {
 				// Add a time if one doesn't exist
@@ -8080,6 +7591,8 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
 		var option = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : "numeric";
 		var o = arguments[2];
 
+		var locale = document.documentElement.lang || "en-GB";
+
 		return function (date) {
 			var _$$extend;
 
@@ -8096,26 +7609,23 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
 			if (component == "weekday" && format == "numeric") {
 				ret = date.getDay() || 7;
 			} else {
-				var ret = date.toLocaleString(Mavo.locale, options);
+				var ret = date.toLocaleString(locale, options);
 			}
 
 			if (format == "numeric" && !isNaN(ret)) {
-				if (component != "year") {
-					// We don't want years to be formatted like 2,017!
-					ret = new Number(ret);
-				}
+				ret = new Number(ret);
 
 				if (component == "month" || component == "weekday") {
 					options[component] = "long";
-					ret.name = date.toLocaleString(Mavo.locale, options);
+					ret.name = date.toLocaleString(locale, options);
 
 					options[component] = "short";
-					ret.shortname = date.toLocaleString(Mavo.locale, options);
+					ret.shortname = date.toLocaleString(locale, options);
 				}
 
 				if (component != "weekday") {
 					options[component] = "2-digit";
-					ret.twodigit = date.toLocaleString(Mavo.locale, options);
+					ret.twodigit = date.toLocaleString(locale, options);
 				}
 			}
 
