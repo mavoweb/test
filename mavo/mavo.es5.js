@@ -217,7 +217,7 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
 			this.element = element;
 
 			// Index among other mavos in the page, 1 is first
-			this.index = _.length + 1;
+			this.index = Object.keys(_.all).length + 1;
 			Object.defineProperty(_.all, this.index - 1, { value: this });
 
 			// Convert any data-mv-* attributes to mv-*
@@ -923,10 +923,6 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
 		static: {
 			all: {},
 
-			get length() {
-				return Object.keys(_.all).length;
-			},
-
 			get: function get(id) {
 				if (id instanceof Element) {
 					// Get by element
@@ -1139,7 +1135,7 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
 		},
 
 		/**
-   * Array utlities
+   * Array & set utlities
    */
 
 		// If the passed value is not an array, convert to an array
@@ -1171,6 +1167,10 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
 			if (arr.indexOf(item) === -1) {
 				arr.push(item);
 			}
+		},
+
+		union: function union(set1, set2) {
+			return new Set([].concat(_toConsumableArray(set1 || []), _toConsumableArray(set2 || [])));
 		},
 
 		/**
@@ -1244,11 +1244,12 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
 			if (Array.isArray(element)) {
 				// Get element by path
 				var path = element;
+
 				return path.reduce(function (acc, cur) {
 					if (elementsOnly) {
 						var children = acc.children;
 					} else {
-						var children = [].concat(_toConsumableArray(acc.childNodes)).filter(function (node) {
+						var children = $$(acc.childNodes).filter(function (node) {
 							return types.indexOf(node.nodeType) > -1;
 						});
 					}
@@ -1260,10 +1261,10 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
 
 				for (var parent = element; parent && parent != ancestor; parent = parent.parentNode) {
 					var index = 0;
-					var element = parent;
+					var sibling = parent;
 
-					while (element = element["previous" + (elementsOnly ? "Element" : "") + "Sibling"]) {
-						if (types.indexOf(element.nodeType) > -1) {
+					while (sibling = sibling["previous" + (elementsOnly ? "Element" : "") + "Sibling"]) {
+						if (types.indexOf(sibling.nodeType) > -1) {
 							index++;
 						}
 					}
@@ -2190,7 +2191,7 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
 			this.closed = Mavo.defer();
 
 			this.element = $.create({
-				className: "mv-ui mv-message" + (o.type ? " mv-" + type : ""),
+				className: "mv-ui mv-message" + (o.type ? " mv-" + o.type : ""),
 				innerHTML: this.message,
 				events: {
 					click: function click(e) {
@@ -3534,6 +3535,24 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
 				}
 
 				return [];
+			},
+
+			properties: function properties() {
+				if (this.template) {
+					return this.template.properties;
+				}
+
+				var ret = new Set(this.property && [this.property]);
+
+				if (this.nodeType == "Group") {
+					for (var property in this.children) {
+						ret = Mavo.union(ret, this.children[property].properties);
+					}
+				} else if (this.nodeType == "Collection") {
+					ret = Mavo.union(ret, this.itemTemplate.properties);
+				}
+
+				return ret;
 			}
 		},
 
@@ -3868,27 +3887,27 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
 				return this;
 			}
 
-			if (property in this.children) {
-				return this.children[property].find(property, o);
+			if (!this.properties.has(property)) {
+				return;
 			}
 
-			var all = [];
+			var results = [],
+			    returnArray;
 
 			for (var prop in this.children) {
-				var ret = this.children[prop].find(property, o);
+				ret = this.children[prop].find(property, o);
 
 				if (ret !== undefined) {
 					if (Array.isArray(ret)) {
-						all.push.apply(all, _toConsumableArray(ret));
+						results.push.apply(results, _toConsumableArray(ret));
+						returnArray = Array.isArray(ret);
 					} else {
-						return ret;
+						results.push(ret);
 					}
 				}
 			}
 
-			if (all.length) {
-				return all;
-			}
+			return returnArray || results.length > 1 ? results : results[0];
 		},
 
 		edit: function edit() {
@@ -5514,8 +5533,7 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
 			this.children = [];
 
 			// ALL descendant property names as an array
-			if (!this.fromTemplate("properties", "mutable", "templateElement", "accepts")) {
-				this.properties = $$(Mavo.selectors.property, this.templateElement).map(Mavo.Node.getProperty);
+			if (!this.fromTemplate("mutable", "templateElement", "accepts")) {
 				this.mutable = this.templateElement.matches(Mavo.selectors.multiple);
 				this.accepts = (this.templateElement.getAttribute("mv-accepts") || "").split(/\s+/);
 
@@ -5970,8 +5988,6 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
 		propagated: ["save"],
 
 		dataRender: function dataRender(data) {
-			var _this6 = this;
-
 			if (!data) {
 				return;
 			}
@@ -5994,40 +6010,32 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
 				}
 
 				if (data.length > i) {
-					var _loop = function _loop() {
-						previousItem = _this6.children[j - 1];
+					// There are still remaining items
+					// Using document fragments improves performance by 60%
+					var fragment = document.createDocumentFragment();
 
-						var item = _this6.createItem();
+					for (var j = i; j < data.length; j++) {
+						var item = this.createItem();
 
 						item.render(data[j]);
 
-						_this6.children.push(item);
+						this.children.push(item);
 						item.index = j;
 
-						inView = previousItem ? Mavo.inView.when(previousItem.element) : Promise.resolve();
+						fragment.appendChild(item.element);
 
-						inView.then(function () {
-							if (_this6.bottomUp) {
-								$.after(item.element, i > 0 ? _this6.children[i - 1].element : _this6.marker);
-							} else {
-								$.before(item.element, _this6.marker);
-							}
-						});
-
-						env = { context: _this6, item: item };
-
+						var env = { context: this, item: item };
 						Mavo.hooks.run("collection-add-end", env);
+					}
 
-						item.dataChanged("add");
-					};
+					if (this.bottomUp) {
+						$.after(fragment, i > 0 ? this.children[i - 1].element : this.marker);
+					} else {
+						$.before(fragment, this.marker);
+					}
 
-					// There are still remaining items
-					for (var j = i; j < data.length; j++) {
-						var previousItem;
-						var inView;
-						var env;
-
-						_loop();
+					for (var j = i; j < this.children.length; j++) {
+						this.children[j].dataChanged("add");
 					}
 				}
 			}
@@ -6044,7 +6052,7 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
 				return o.collections ? this : items;
 			}
 
-			if (this.properties.indexOf(property) > -1) {
+			if (this.properties.has(property)) {
 				var ret = items.map(function (item) {
 					return item.find(property, o);
 				});
@@ -6078,7 +6086,7 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
 
 		// Make sure to only call after dragula has loaded
 		getDragula: function getDragula() {
-			var _this7 = this;
+			var _this6 = this;
 
 			if (this.dragula) {
 				return this.dragula;
@@ -6093,9 +6101,9 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
 			this.dragula = dragula({
 				containers: [this.marker.parentNode],
 				isContainer: function isContainer(el) {
-					if (_this7.accepts.length) {
-						return Mavo.flatten(_this7.accepts.map(function (property) {
-							return _this7.mavo.root.find(property, { collections: true });
+					if (_this6.accepts.length) {
+						return Mavo.flatten(_this6.accepts.map(function (property) {
+							return _this6.mavo.root.find(property, { collections: true });
 						})).filter(function (c) {
 							return c && c instanceof _;
 						}).map(function (c) {
@@ -6143,7 +6151,7 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
 					var index = closestItem ? closestItem.index + (closestItem.element === previous) : collection.length;
 					collection.add(item, index);
 				} else {
-					return _this7.dragula.cancel(true);
+					return _this6.dragula.cancel(true);
 				}
 			});
 
@@ -6185,7 +6193,7 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
 			},
 
 			addButton: function addButton() {
-				var _this8 = this;
+				var _this7 = this;
 
 				// Find add button if provided, or generate one
 				var selector = "button.mv-add-" + this.property;
@@ -6193,7 +6201,7 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
 
 				if (group) {
 					var button = $$(selector, group).filter(function (button) {
-						return !_this8.templateElement.contains(button);
+						return !_this7.templateElement.contains(button);
 					})[0];
 				}
 
@@ -6214,7 +6222,7 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
 				button.addEventListener("click", function (evt) {
 					evt.preventDefault();
 
-					_this8.editItem(_this8.add());
+					_this7.editItem(_this7.add());
 				});
 
 				return button;
@@ -6324,7 +6332,7 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
 				drag: this.buttonSelector("drag")
 			};
 
-			this.item.element.addEventListener("click", function (evt) {
+			this.element.addEventListener("click", function (evt) {
 				if (_this.item.collection.editing) {
 					if (evt.target.matches(selectors.add)) {
 						var newItem = _this.collection.add(null, _this.item.index);
@@ -7020,8 +7028,14 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
 				$$(node.attributes).forEach(function (attribute) {
 					return _this2.extract(node, attribute, path, syntax);
 				});
-				$$(node.childNodes).forEach(function (child, i) {
-					return _this2.traverse(child, path + "/" + i, syntax);
+
+				var index = 0;
+
+				$$(node.childNodes).forEach(function (child) {
+					if (child.nodeType == 1 || child.nodeType == 3) {
+						_this2.traverse(child, path + "/" + index, syntax);
+						index++;
+					}
 				});
 			}
 		},
@@ -7070,10 +7084,6 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
 				lazy: {
 					"childProperties": function childProperties() {
 						var _this = this;
-
-						if (this.attribute != "mv-if") {
-							return;
-						}
 
 						var properties = $$(Mavo.selectors.property, this.element).filter(function (el) {
 							return el.closest("[mv-if]") == _this.element;
@@ -7368,9 +7378,13 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
    * @return {Boolean}
    */
 		intersects: function intersects(arr1, arr2) {
-			return arr1 && arr2 && !arr1.every(function (el) {
-				return arr2.indexOf(el) == -1;
-			});
+			if (arr1 && arr2) {
+				arr2 = new Set(arr2);
+
+				return !arr1.every(function (el) {
+					return arr2.has(el);
+				});
+			}
 		},
 
 		/*********************
@@ -7561,7 +7575,6 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
 		day: getDateComponent("day"),
 		weekday: getDateComponent("weekday"),
 		hour: getDateComponent("hour"),
-		hour12: getDateComponent("hour", "numeric", { hour12: true }),
 		minute: getDateComponent("minute"),
 		second: getDateComponent("second"),
 
@@ -8076,47 +8089,58 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
 		return date;
 	}
 
+	function toLocaleString(date, options) {
+		var ret = date.toLocaleString(Mavo.locale, options);
+
+		ret = ret.replace(/\u200e/g, ""); // Stupid Edge bug
+
+		return ret;
+	}
+
+	var numeric = {
+		year: function year(d) {
+			return d.getFullYear();
+		},
+		month: function month(d) {
+			return d.getMonth() + 1;
+		},
+		day: function day(d) {
+			return d.getDate();
+		},
+		weekday: function weekday(d) {
+			return d.getDay() || 7;
+		},
+		hour: function hour(d) {
+			return d.getHours();
+		},
+		minute: function minute(d) {
+			return d.getMinutes();
+		},
+		second: function second(d) {
+			return d.getSeconds();
+		}
+	};
+
 	function getDateComponent(component) {
-		var option = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : "numeric";
-		var o = arguments[2];
-
 		return function (date) {
-			var _$$extend;
-
-			var format = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : option;
-
 			date = toDate(date);
 
 			if (!date) {
 				return "";
 			}
 
-			var options = $.extend((_$$extend = {}, _defineProperty(_$$extend, component, format), _defineProperty(_$$extend, "hour12", false), _$$extend), o);
+			ret = numeric[component](date);
 
-			if (component == "weekday" && format == "numeric") {
-				ret = date.getDay() || 7;
-			} else {
-				var ret = date.toLocaleString(Mavo.locale, options);
+			// We don't want years to be formatted like 2,017!
+			ret = new self[component == "year" ? "String" : "Number"](ret);
+
+			if (component == "month" || component == "weekday") {
+				ret.name = toLocaleString(date, _defineProperty({}, component, "long"));
+				ret.shortname = toLocaleString(date, _defineProperty({}, component, "short"));
 			}
 
-			if (format == "numeric" && !isNaN(ret)) {
-				if (component != "year") {
-					// We don't want years to be formatted like 2,017!
-					ret = new Number(ret);
-				}
-
-				if (component == "month" || component == "weekday") {
-					options[component] = "long";
-					ret.name = date.toLocaleString(Mavo.locale, options);
-
-					options[component] = "short";
-					ret.shortname = date.toLocaleString(Mavo.locale, options);
-				}
-
-				if (component != "weekday") {
-					options[component] = "2-digit";
-					ret.twodigit = date.toLocaleString(Mavo.locale, options);
-				}
+			if (component != "weekday") {
+				ret.twodigit = (ret < 10 ? "0" : "") + (ret < 1 ? "0" : "") + ret % 100;
 			}
 
 			return ret;

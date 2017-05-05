@@ -211,7 +211,7 @@ var _ = self.Mavo = $.Class({
 		this.element = element;
 
 		// Index among other mavos in the page, 1 is first
-		this.index = _.length + 1;
+		this.index = Object.keys(_.all).length + 1;
 		Object.defineProperty(_.all, this.index - 1, {value: this});
 
 		// Convert any data-mv-* attributes to mv-*
@@ -777,10 +777,6 @@ var _ = self.Mavo = $.Class({
 	static: {
 		all: {},
 
-		get length() {
-			return Object.keys(_.all).length;
-		},
-
 		get: function(id) {
 			if (id instanceof Element) {
 				// Get by element
@@ -968,7 +964,7 @@ var _ = $.extend(Mavo, {
 	},
 
 	/**
-	 * Array utlities
+	 * Array & set utlities
 	 */
 
 	// If the passed value is not an array, convert to an array
@@ -998,6 +994,10 @@ var _ = $.extend(Mavo, {
 		if (arr.indexOf(item) === -1) {
 			arr.push(item);
 		}
+	},
+
+	union: (set1, set2) => {
+		return new Set([...(set1 || []), ...(set2 || [])]);
 	},
 
 	/**
@@ -1044,12 +1044,13 @@ var _ = $.extend(Mavo, {
 		if (Array.isArray(element)) {
 			// Get element by path
 			var path = element;
+
 			return path.reduce((acc, cur) => {
 				if (elementsOnly) {
 					var children = acc.children;
 				}
 				else {
-					var children = [...acc.childNodes].filter(node => types.indexOf(node.nodeType) > -1);
+					var children = $$(acc.childNodes).filter(node => types.indexOf(node.nodeType) > -1);
 				}
 				return children[cur];
 			}, ancestor);
@@ -1060,10 +1061,10 @@ var _ = $.extend(Mavo, {
 
 			for (var parent = element; parent && parent != ancestor; parent = parent.parentNode) {
 				var index = 0;
-				var element = parent;
+				var sibling = parent;
 
-				while (element = element[`previous${elementsOnly? "Element" : ""}Sibling`]) {
-					if (types.indexOf(element.nodeType) > -1) {
+				while (sibling = sibling[`previous${elementsOnly? "Element" : ""}Sibling`]) {
+					if (types.indexOf(sibling.nodeType) > -1) {
 						index++;
 					}
 				}
@@ -1851,7 +1852,7 @@ var _ = Mavo.UI.Message = $.Class({
 		this.closed = Mavo.defer();
 
 		this.element = $.create({
-			className: "mv-ui mv-message" + (o.type? " mv-" + type : ""),
+			className: "mv-ui mv-message" + (o.type? " mv-" + o.type : ""),
 			innerHTML: this.message,
 			events: {
 				click: e => Mavo.scrollIntoViewIfNeeded(this.mavo.element)
@@ -2958,6 +2959,25 @@ var _ = Mavo.Node = $.Class({
 			}
 
 			return [];
+		},
+
+		properties: function() {
+			if (this.template) {
+				return this.template.properties;
+			}
+
+			var ret = new Set(this.property && [this.property]);
+
+			if (this.nodeType == "Group") {
+				for (var property in this.children) {
+					ret = Mavo.union(ret, this.children[property].properties);
+				}
+			}
+			else if (this.nodeType == "Collection") {
+				ret = Mavo.union(ret, this.itemTemplate.properties);
+			}
+
+			return ret;
 		}
 	},
 
@@ -3264,28 +3284,27 @@ var _ = Mavo.Group = $.Class({
 			return this;
 		}
 
-		if (property in this.children) {
-			return this.children[property].find(property, o);
+		if (!this.properties.has(property)) {
+			return;
 		}
 
-		var all = [];
+		var results = [], returnArray;
 
 		for (var prop in this.children) {
-			var ret = this.children[prop].find(property, o);
+			ret = this.children[prop].find(property, o);
 
 			if (ret !== undefined) {
 				if (Array.isArray(ret)) {
-					all.push(...ret);
+					results.push(...ret);
+					returnArray = Array.isArray(ret);
 				}
 				else {
-					return ret;
+					results.push(ret);
 				}
 			}
 		}
 
-		if (all.length) {
-			return all;
-		}
+		return returnArray || results.length > 1? results : results[0];
 	},
 
 	edit: function() {
@@ -4794,8 +4813,7 @@ var _ = Mavo.Collection = $.Class({
 		this.children = [];
 
 		// ALL descendant property names as an array
-		if (!this.fromTemplate("properties", "mutable", "templateElement", "accepts")) {
-			this.properties = $$(Mavo.selectors.property, this.templateElement).map(Mavo.Node.getProperty);
+		if (!this.fromTemplate("mutable", "templateElement", "accepts")) {
 			this.mutable = this.templateElement.matches(Mavo.selectors.multiple);
 			this.accepts = (this.templateElement.getAttribute("mv-accepts") || "").split(/\s+/);
 
@@ -5167,29 +5185,32 @@ var _ = Mavo.Collection = $.Class({
 
 			if (data.length > i) {
 				// There are still remaining items
+				// Using document fragments improves performance by 60%
+				var fragment = document.createDocumentFragment();
+
 				for (var j = i; j < data.length; j++) {
-					var previousItem = this.children[j-1];
-					let item = this.createItem();
+					var item = this.createItem();
 
 					item.render(data[j]);
 
 					this.children.push(item);
 					item.index = j;
 
-					var inView = previousItem? Mavo.inView.when(previousItem.element) : Promise.resolve();
-					inView.then(() => {
-						if (this.bottomUp) {
-							$.after(item.element, i > 0? this.children[i-1].element : this.marker);
-						}
-						else {
-							$.before(item.element, this.marker);
-						}
-					});
+					fragment.appendChild(item.element);
 
 					var env = {context: this, item};
 					Mavo.hooks.run("collection-add-end", env);
+				}
 
-					item.dataChanged("add");
+				if (this.bottomUp) {
+					$.after(fragment, i > 0? this.children[i-1].element : this.marker);
+				}
+				else {
+					$.before(fragment, this.marker);
+				}
+
+				for (var j = i; j < this.children.length; j++) {
+					this.children[j].dataChanged("add");
 				}
 			}
 		}
@@ -5202,7 +5223,7 @@ var _ = Mavo.Collection = $.Class({
 			return o.collections? this : items;
 		}
 
-		if (this.properties.indexOf(property) > -1) {
+		if (this.properties.has(property)) {
 			var ret = items.map(item => item.find(property, o));
 
 			return Mavo.flatten(ret);
@@ -5475,7 +5496,7 @@ var _ = Mavo.UI.Itembar = $.Class({
 			drag: this.buttonSelector("drag")
 		};
 
-		this.item.element.addEventListener("click", evt => {
+		this.element.addEventListener("click", evt => {
 			if (this.item.collection.editing) {
 				if (evt.target.matches(selectors.add)) {
 					var newItem = this.collection.add(null, this.item.index);
@@ -6099,7 +6120,15 @@ var _ = Mavo.Expressions = $.Class({
 			}
 
 			$$(node.attributes).forEach(attribute => this.extract(node, attribute, path, syntax));
-			$$(node.childNodes).forEach((child, i) => this.traverse(child, `${path}/${i}`, syntax));
+
+			var index = 0;
+
+			$$(node.childNodes).forEach(child => {
+				if (child.nodeType == 1 || child.nodeType == 3) {
+					this.traverse(child, `${path}/${index}`, syntax);
+					index++;
+				}
+			});
 		}
 	},
 
@@ -6146,10 +6175,6 @@ Mavo.Expressions.directive("mv-if", {
 		"DOMExpression": {
 			lazy: {
 				"childProperties": function() {
-					if (this.attribute != "mv-if") {
-						return;
-					}
-
 					var properties = $$(Mavo.selectors.property, this.element)
 									.filter(el => el.closest("[mv-if]") == this.element)
 									.map(el => Mavo.Node.get(el));
@@ -6359,7 +6384,13 @@ var _ = Mavo.Functions = {
 	 * Do two arrays have a non-empty intersection?
 	 * @return {Boolean}
 	 */
-	intersects: (arr1, arr2) => arr1 && arr2 && !arr1.every(el => arr2.indexOf(el) == -1),
+	intersects: (arr1, arr2) => {
+		if (arr1 && arr2) {
+			arr2 = new Set(arr2);
+
+			return !arr1.every(el => arr2.has(el));
+		}
+	},
 
 	/*********************
 	 * Number functions
@@ -6523,7 +6554,6 @@ var _ = Mavo.Functions = {
 	day: getDateComponent("day"),
 	weekday: getDateComponent("weekday"),
 	hour: getDateComponent("hour"),
-	hour12: getDateComponent("hour", "numeric", {hour12:true}),
 	minute: getDateComponent("minute"),
 	second: getDateComponent("second"),
 
@@ -6907,44 +6937,44 @@ function toDate(date) {
 	return date;
 }
 
-function getDateComponent(component, option = "numeric", o) {
-	return function(date, format = option) {
+function toLocaleString(date, options) {
+	var ret = date.toLocaleString(Mavo.locale, options);
+
+	ret = ret.replace(/\u200e/g, ""); // Stupid Edge bug
+
+	return ret;
+}
+
+var numeric = {
+	year: d => d.getFullYear(),
+	month: d => d.getMonth() + 1,
+	day: d => d.getDate(),
+	weekday: d => d.getDay() || 7,
+	hour: d => d.getHours(),
+	minute: d => d.getMinutes(),
+	second: d => d.getSeconds()
+};
+
+function getDateComponent(component) {
+	return function(date) {
 		date = toDate(date);
 
 		if (!date) {
 			return "";
 		}
 
-		var options = $.extend({
-			[component]: format,
-			hour12: false
-		}, o);
+		ret = numeric[component](date);
 
-		if (component == "weekday" && format == "numeric") {
-			ret = date.getDay() || 7;
-		}
-		else {
-			var ret = date.toLocaleString(Mavo.locale, options);
+		// We don't want years to be formatted like 2,017!
+		ret = new self[component == "year"? "String" : "Number"](ret);
+
+		if (component == "month" || component == "weekday") {
+			ret.name = toLocaleString(date, {[component]: "long"});
+			ret.shortname = toLocaleString(date, {[component]: "short"});
 		}
 
-		if (format == "numeric" && !isNaN(ret)) {
-			if (component != "year") {
-				// We don't want years to be formatted like 2,017!
-				ret = new Number(ret);
-			}
-
-			if (component == "month" || component == "weekday") {
-				options[component] = "long";
-				ret.name = date.toLocaleString(Mavo.locale, options);
-
-				options[component] = "short";
-				ret.shortname = date.toLocaleString(Mavo.locale, options);
-			}
-
-			if (component != "weekday") {
-				options[component] = "2-digit";
-				ret.twodigit = date.toLocaleString(Mavo.locale, options);
-			}
+		if (component != "weekday") {
+			ret.twodigit = (ret < 10? "0" : "") + (ret < 1? "0" : "") + ret % 100;
 		}
 
 		return ret;

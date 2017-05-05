@@ -17,7 +17,7 @@ self.Test = {
 		if (content == "none") {
 			return "";
 		}
-		
+
 		return content.replace(/^["']|["']$/g, "");
 	},
 
@@ -73,7 +73,7 @@ self.Test = {
 			return true;
 		}
 
-		if ($.type(a) == "number" && $.type(b) == "number") {
+		if ($.type(a) == $.type(b)) {
 			return isNaN(a) && isNaN(b) || a == b;
 		}
 
