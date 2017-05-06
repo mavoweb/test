@@ -1,3 +1,33 @@
+(function($){
+
+if (!self.document) {
+	// We're in a service worker! Oh man, we’re living in the future! 🌈🦄
+	if (location.hostname == "localhost") {
+		// We're testing locally, use local URLs for Mavo
+		self.addEventListener('fetch', function(evt) {
+			var url = evt.request.url;
+
+			if (/\/dev\.mavo\.io\/dist\/mavo/.test(url)) {
+				var response = fetch(new Request(url.replace(/^.+?dev\.mavo\.io/gi, "../mavo")), evt.request)
+				.then(r => r.status < 400? r : Promise.reject())
+				.catch(err => fetch(evt.request)); // if that fails, return original request
+
+				evt.respondWith(response);
+			}
+		});
+	}
+
+	return;
+}
+
+var src = document.currentScript ? document.currentScript.src : "test.js";
+
+if ('serviceWorker' in navigator) {
+	window.addEventListener('load', function() {
+		navigator.serviceWorker.register(src);
+	});
+}
+
 self.print = function print(text) {
 	if (document.readyState == "loading") {
 		document.write(text);
@@ -394,3 +424,6 @@ Mavo.dependencies.push($.ready().then(function(){
 		$$("table.reftest").forEach(table => table.reftest = new RefTest(table));
 	});
 }));
+
+
+})(self.Bliss)
