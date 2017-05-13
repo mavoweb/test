@@ -185,5 +185,13 @@
 	</table>
 </section>
 
+<section>
+	<h1>Progress indicator styling</h1>
+	<p>Click on each div to toggle a progress indicator with that text.</p>
+	<div onclick="$.toggleAttribute(this, 'mv-progress', this.textContent, !this.hasAttribute('mv-progress'))">Loading</div>
+	<div onclick="$.toggleAttribute(this, 'mv-progress', this.textContent, !this.hasAttribute('mv-progress'))">Uploading</div>
+	<div onclick="$.toggleAttribute(this, 'mv-progress', this.textContent, !this.hasAttribute('mv-progress'))">Saving</div>
+</section>
+
 </body>
 </html>

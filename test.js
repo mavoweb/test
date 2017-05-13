@@ -4,7 +4,7 @@ if (!self.document) {
 	// We're in a service worker! Oh man, we’re living in the future! 🌈🦄
 	if (location.hostname == "localhost") {
 		// We're testing locally, use local URLs for Mavo
-		self.addEventListener('fetch', function(evt) {
+		self.addEventListener("fetch", function(evt) {
 			var url = evt.request.url;
 
 			if (/\/dev\.mavo\.io\/dist\/mavo/.test(url)) {
@@ -22,7 +22,7 @@ if (!self.document) {
 
 var src = document.currentScript ? document.currentScript.src : "test.js";
 
-if ('serviceWorker' in navigator) {
+if ("serviceWorker" in navigator) {
 	window.addEventListener('load', function() {
 		navigator.serviceWorker.register(src);
 	});
