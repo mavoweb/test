@@ -22,7 +22,7 @@ if (!self.document) {
 
 var src = document.currentScript ? document.currentScript.src : "test.js";
 
-if ("serviceWorker" in navigator) {
+if ("serviceWorker" in navigator && new URL(src, location).origin === location.origin) {
 	window.addEventListener('load', function() {
 		navigator.serviceWorker.register(src);
 	});
