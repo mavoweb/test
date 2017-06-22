@@ -44,7 +44,7 @@
 		</tr>
 		<tr title="Syntax error">
 			<td>[40 +]</td>
-			<td>40 +</td>
+			<td mv-expressions="none">[40 +]</td>
 		</tr>
 		<tr title="Multiline expression">
 			<td>[
@@ -378,6 +378,10 @@
 		<tr>
 			<td mv-expressions="{{ }}">{{1 + 2}}</td>
 			<td>3</td>
+		</tr>
+		<tr title="Invalid expression">
+			<td mv-expressions="{{ }}">{{1 + }}</td>
+			<td>{{1 + }}</td>
 		</tr>
 		<tr>
 			<td mv-expressions="{{ }}">[1 + 2]</td>

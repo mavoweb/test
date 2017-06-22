@@ -90,6 +90,55 @@
 				<script>document.write($$("td pre").pop().outerHTML)</script>
 			</td>
 		</tr>
+		<tr title="Negative mv-bar values">
+			<td mv-app mv-storage="#data" mv-bar="no-clear">
+				<span property="prop1">yolo</span>
+			</td>
+			<td>
+				<ul>
+					<li>.mv-bar .mv-edit</li>
+					<li class="not">.mv-bar .mv-clear</li>
+				</ul>
+			</td>
+		</tr>
+		<tr title="Negative and positive mv-bar values, no conflict">
+			<td mv-app mv-storage="#data" mv-bar="no-clear save edit">
+				<span property="prop1">yolo</span>
+			</td>
+			<td>
+				<ul>
+					<li>.mv-bar .mv-save + .mv-edit</li>
+					<li class="not">.mv-bar .mv-clear</li>
+				</ul>
+			</td>
+		</tr>
+		<tr title="Negative and positive mv-bar values, conflicts">
+			<td mv-app mv-storage="#data" mv-bar="clear no-clear save edit">
+				<span property="prop1">yolo</span>
+			</td>
+			<td>
+				<ul>
+					<li>.mv-bar .mv-save + .mv-edit</li>
+					<li class="not">.mv-bar .mv-clear</li>
+				</ul>
+			</td>
+		</tr>
+		<tr title="Custom Clear button">
+			<td mv-app mv-storage="#data">
+				<div class="mv-bar mv-ui">
+					<button class="custom">Custom</button>
+					<button class="mv-clear foo">Delete All</button>
+				</div>
+				<span property="prop1">yolo</span>
+			</td>
+			<td>
+				<ul>
+					<li>.mv-bar .custom</li>
+					<li>.mv-bar .mv-clear.foo</li>
+					<li>.mv-bar .mv-edit + .mv-save + .mv-clear</li>
+				</ul>
+			</td>
+		</tr>
 	</table>
 </section>
 
