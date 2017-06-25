@@ -143,6 +143,21 @@ td {
 			<td>[pow]</td>
 			<td>pow</td>
 		</tr>
+		<tr title="Property name with same name as function">
+			<td>
+				<span property="year">2000</span>
+				[year($today)]
+			</td>
+			<td>2000 <script>document.write(new Date().getFullYear())</script></td>
+		</tr>
+		<tr title="Member expressions should still work">
+			<td>[Math.pow(2,2)]</td>
+			<td>4</td>
+		</tr>
+		<tr title="Member expressions should still work">
+			<td><meta property="array" mv-value="[1, 2, 3]" /> [array.reverse()]</td>
+			<td>3, 2, 1</td>
+		</tr>
 	</table>
 	<script>
 	for (let test of $$("#traptests tr")) {
@@ -154,8 +169,6 @@ td {
 	}
 	</script>
 </section>
-
-
 
 <script src="mavotest.js"></script>
 <script>
