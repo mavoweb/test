@@ -341,27 +341,6 @@ var _ = self.RefTest = $.Class({
 				});
 			}
 		}
-
-		// Add div for counter at the end of body
-		$.create({
-			className: "results",
-			inside: document.body,
-			contents: [
-				{
-					className: "count-fail",
-					onclick: function(evt) {
-						Mavo.scrollIntoViewIfNeeded($(".fail"));
-					}
-				},
-				{
-					className: "count-pass",
-					onclick: function(evt) {
-						Mavo.scrollIntoViewIfNeeded($(".interactive"));
-					}
-				}
-			],
-
-		});
 	}
 
 	// Add ids to section headers and make them links
@@ -416,11 +395,33 @@ var _ = self.RefTest = $.Class({
 	onhashchange = hashchanged;
 })();
 
-Mavo.dependencies.push($.ready().then(function(){
+$.ready().then(function(){
+	// Add div for counter at the end of body
+	$.create({
+		className: "results",
+		inside: document.body,
+		contents: [
+			{
+				className: "count-fail",
+				onclick: function(evt) {
+					Mavo.scrollIntoViewIfNeeded($(".fail"));
+				}
+			},
+			{
+				className: "count-pass",
+				onclick: function(evt) {
+					Mavo.scrollIntoViewIfNeeded($(".interactive"));
+				}
+			}
+		],
+
+	});
+
+	// WHY????
 	requestAnimationFrame(() => {
 		$$("table.reftest").forEach(table => table.reftest = new RefTest(table));
 	});
-}));
+});
 
 
 })(self.Bliss)
