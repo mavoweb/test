@@ -313,13 +313,8 @@ var _ = self.RefTest = $.Class({
 	}
 });
 
-Mavo.dependencies.push($.ready().then(function(){
+(function(){
 	var page = location.pathname.match(/\/([a-z]+)(?:\.html|\/$)/)[1];
-
-	// Legacy
-	if (typeof self["test_" + page] == "function") {
-		self["test_" + page]();
-	}
 
 	if (page !== "index") {
 		// Create link to home and to remote version
@@ -419,7 +414,9 @@ Mavo.dependencies.push($.ready().then(function(){
 
 	hashchanged();
 	onhashchange = hashchanged;
+})();
 
+Mavo.dependencies.push($.ready().then(function(){
 	requestAnimationFrame(() => {
 		$$("table.reftest").forEach(table => table.reftest = new RefTest(table));
 	});
