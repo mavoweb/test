@@ -365,6 +365,65 @@
 	</table>
 </section>
 
+<section>
+	<h1>Turning part of a group into a child group</h1>
+
+	<p>Click Save. Does not currently pass, will pass if <a href="https://github.com/mavoweb/mavo/issues/228">#228</a> is implemented.</p>
+
+	<table class="reftest">
+		<tr class="interactive">
+			<td>
+				<pre id="data-child-group">{
+	"prop1": 1,
+	"prop2": 2,
+	"prop3": 3,
+	"prop4": 4,
+	"prop5": 5
+}</pre>
+			</td>
+			<td>
+				<pre>{
+	"prop1": 1,
+	"prop2": 2,
+	"prop3": 3,
+	"prop4": 4,
+	"prop5": 5,
+	"group": {
+		"prop1": "1",
+		"prop2": "2",
+		"prop3": "3"
+	},
+	"collection": [
+		{
+			"prop3": "3",
+			"prop4": "4"
+		}
+	]
+}</pre>
+			</td>
+		</tr>
+		<tr>
+			<td mv-app="childgroup" mv-storage="#data-child-group">
+				<span property="prop1"></span>
+				<div property="group">
+					<span property="prop1"></span>
+					<span property="prop2"></span>
+					<span property="prop3"></span>
+				</div>
+				<div property="collection" mv-multiple>
+					<span property="prop3"></span>
+					<span property="prop4"></span>
+				</div>
+			</td>
+			<td>
+				1<br>
+				1 2 3<br>
+				3 4
+			</td>
+		</tr>
+	</table>
+</section>
+
 <script src="mavotest.js"></script>
 
 </body>
