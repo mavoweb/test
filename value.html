@@ -169,6 +169,43 @@
 	</table>
 </section>
 
+<section>
+	<h1>mv-value inside collection</h1>
+
+	<table class="reftest">
+		<tr mv-app mv-storage="#countries">
+			<td>
+				<ul>
+					<li property="country" mv-multiple>
+						<span property="code"></span>
+						<span property="name"></span>
+						<span mv-value="code"></span>
+						<span mv-value="[1, 2, 3]"></span>
+					</li>
+				</ul>
+			</td>
+			<td>
+				<ul>
+					<li>
+						Online
+						1, 2, 3
+					</li><li>
+						us
+						United States
+						us
+						1, 2, 3
+					</li><li>
+						gb
+						United Kingdom
+						gb
+						1, 2, 3
+					</li>
+				</ul>
+			</td>
+		</tr>
+	</table>
+</section>
+
 <script src="mavotest.js"></script>
 
 </body>
