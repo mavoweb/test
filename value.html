@@ -88,6 +88,13 @@
 			</td>
 			<td>1 <div>2</div></td>
 		</tr>
+	</table>
+</section>
+
+<section mv-app="collections">
+	<h1>Collections</h1>
+
+	<table class="reftest">
 		<tr title="Collection">
 			<td>
 				<div property="collection1" mv-multiple mv-group mv-value='[
@@ -118,11 +125,24 @@
 				<span property="collection4" mv-multiple mv-value="collection3"></span>
 			</td>
 		</tr>
+		<tr class="interactive" title="Collection of groups, interactive">
+			<td>
+				<div property="collection5" mv-multiple mv-mode="edit">
+					<span property="prop" mv-default="Foo"></span>
+					<span property="prop1" mv-default="[$index]"></span>
+				</div>
+			</td>
+			<td>
+				<div property="collection6" mv-multiple mv-group mv-value="collection5">
+					[prop] [prop1]
+				</div>
+			</td>
+		</tr>
 	</table>
 </section>
 
 <section>
-	<h1>With array of primitives on group collection</h1>
+	<h1>Render array of primitives on collection of groups</h1>
 
 	<table class="reftest">
 		<tr>
