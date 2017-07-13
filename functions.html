@@ -171,6 +171,10 @@ table.reftest td:first-child {
 			<td>get(null, "bar")</td>
 			<td>null</td>
 		</tr>
+		<tr title="Case insensitive lookup">
+			<td>get({foo: 1, foO: 2}, "FOO")</td>
+			<td>1</td>
+		</tr>
 		<tr title="Get collection item by id">
 			<td>get([{id: "foo", name: "fooname"}, {id: "bar", name: "barname"}], "bar").name</td>
 			<td>"barname"</td>
