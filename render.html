@@ -366,6 +366,74 @@
 </section>
 
 <section>
+	<h1>Rendering on collections</h1>
+
+	<table class="reftest">
+		<tr title="undefined">
+			<td>
+				<pre id="collection-data1">{
+}</pre>
+			</td>
+			<td mv-app mv-storage="#collection-data1">
+				<div mv-multiple>
+					<span property="prop">Text</span>
+				</div>
+			</td>
+			<td>
+				Text
+			</td>
+		</tr>
+		<tr title="null">
+			<td>
+				<pre id="collection-data2">{
+	"collection": null
+}</pre>
+			</td>
+			<td mv-app mv-storage="#collection-data2">
+				<div mv-multiple>
+					<span property="prop">Text</span>
+				</div>
+			</td>
+			<td>
+
+			</td>
+		</tr>
+		<tr title="Empty array">
+			<td>
+				<pre id="collection-data3">{
+	"collection": []
+}</pre>
+			</td>
+			<td mv-app mv-storage="#collection-data3">
+				<div mv-multiple>
+					<span property="prop">Text</span>
+				</div>
+			</td>
+			<td>
+
+			</td>
+		</tr>
+		<tr title="Array with null">
+			<td>
+				<pre id="collection-data4">{
+	"collection": [
+		null
+	]
+}</pre>
+			</td>
+			<td mv-app mv-storage="#collection-data4">
+				<div mv-multiple>
+					<span property="prop">Text</span>
+				</div>
+			</td>
+			<td>
+
+			</td>
+		</tr>
+	</table>
+</section>
+
+<section>
 	<h1>Turning part of a group into a child group</h1>
 
 	<p>Click Save. Does not currently pass, will pass if <a href="https://github.com/mavoweb/mavo/issues/228">#228</a> is implemented.</p>
