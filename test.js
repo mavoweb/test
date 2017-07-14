@@ -292,12 +292,13 @@ var _ = self.RefTest = $.Class({
 	}
 });
 
-(function(){
+$.ready().then(function(){
 	var page = location.pathname.match(/\/([a-z]+)(?:\.html|\/$)/)[1];
 
 	if (page !== "index") {
 		// Create link to home and to remote version
 		let h1 = $("body > h1");
+
 		if (h1) {
 			$.create("a", {
 				className: "home",
@@ -372,9 +373,7 @@ var _ = self.RefTest = $.Class({
 
 	hashchanged();
 	onhashchange = hashchanged;
-})();
 
-$.ready().then(function(){
 	// Add div for counter at the end of body
 	$.create({
 		className: "results",
