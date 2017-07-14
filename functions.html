@@ -175,6 +175,18 @@ table.reftest td:first-child {
 			<td>get({foo: 1, foO: 2}, "FOO")</td>
 			<td>1</td>
 		</tr>
+		<tr title="Case insensitive lookup, priority to correct case">
+			<td>get({foo: 1, foO: 2}, "foO")</td>
+			<td>2</td>
+		</tr>
+		<tr title="undefined">
+			<td>get({foo: undefined}, "foo")</td>
+			<td>undefined</td>
+		</tr>
+		<tr title="undefined and case insensitive">
+			<td>get({foo: undefined, foO: 1}, "foo")</td>
+			<td>undefined</td>
+		</tr>
 		<tr title="Get collection item by id">
 			<td>get([{id: "foo", name: "fooname"}, {id: "bar", name: "barname"}], "bar").name</td>
 			<td>"barname"</td>
