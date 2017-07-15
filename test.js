@@ -292,7 +292,7 @@ var _ = self.RefTest = $.Class({
 	}
 });
 
-$.ready().then(function(){
+document.addEventListener("DOMContentLoaded", function(){
 	var page = location.pathname.match(/\/([a-z]+)(?:\.html|\/$)/)[1];
 
 	if (page !== "index") {
@@ -400,7 +400,7 @@ $.ready().then(function(){
 	requestAnimationFrame(() => {
 		$$("table.reftest").forEach(table => table.reftest = new RefTest(table));
 	});
-});
+}, true);
 
 
 })(self.Bliss)
