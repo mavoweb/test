@@ -195,6 +195,49 @@ table.reftest td:first-child {
 </section>
 
 <section>
+	<h1>String slicing</h1>
+
+	<table class="reftest" data-test="expressionEvaluation" data-columns="3">
+		<tr>
+			<td>from("foo", ".")</td>
+			<td>"foo"</td>
+		</tr>
+		<tr>
+			<td>from("foo.bar", ".")</td>
+			<td>"bar"</td>
+		</tr>
+		<tr>
+			<td>from("foo.bar.baz", ".")</td>
+			<td>"bar.baz"</td>
+		</tr>
+		<tr>
+			<td>fromlast("foo.bar.baz", ".")</td>
+			<td>"baz"</td>
+		</tr>
+		<tr>
+			<td>to("foo", ".")</td>
+			<td>"foo"</td>
+		</tr>
+		<tr>
+			<td>to("foo.bar", ".")</td>
+			<td>"foo"</td>
+		</tr>
+		<tr>
+			<td>to("foo.bar.baz", ".")</td>
+			<td>"foo.bar"</td>
+		</tr>
+		<tr>
+			<td>tofirst("foo.bar.baz", ".")</td>
+			<td>"foo"</td>
+		</tr>
+		<tr>
+			<td>between("foo.bar.baz", ".", ".")</td>
+			<td>"bar"</td>
+		</tr>
+	</table>
+</section>
+
+<section>
 	<h1>filter()</h1>
 
 	<table class="reftest" data-test="expressionEvaluation" data-columns="3">

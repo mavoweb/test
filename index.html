@@ -17,7 +17,7 @@
 	<section>
 		<ul>
 			<li property="file" mv-multiple mv-if="ends(name, '.html') and name != 'index.html'">
-				<a target="test" property="name">[replace(name, '.html')]</a>
+				<a target="test" property="name">[to(name, '.html')]</a>
 			</li>
 		</ul>
 	</section>

@@ -6,6 +6,7 @@
 	<link rel="stylesheet" href="https://dev.mavo.io/dist/mavo.css" />
 	<link rel="stylesheet" href="style.css" />
 	<script src="https://dev.mavo.io/dist/mavo.js"></script>
+	<script src="http://localhost:8002/mavo-plugins/locale-el/mavo-locale-el.js"></script>
 	<script src="mavotest.js"></script>
 	<style>
 		[data-test="selector"] th:last-child,
@@ -234,12 +235,12 @@
 	</table>
 </section>
 
-<section>
+<section mv-app="progress">
 	<h1>Progress indicator styling</h1>
 	<p>Click on each div to toggle a progress indicator with that text.</p>
-	<div onclick="$.toggleAttribute(this, 'mv-progress', this.textContent, !this.hasAttribute('mv-progress'))">Loading</div>
-	<div onclick="$.toggleAttribute(this, 'mv-progress', this.textContent, !this.hasAttribute('mv-progress'))">Uploading</div>
-	<div onclick="$.toggleAttribute(this, 'mv-progress', this.textContent, !this.hasAttribute('mv-progress'))">Saving</div>
+	<div onclick="var m = Mavo.get(this.parentNode); m.inProgress = m.inProgress? false : this.textContent;">Loading</div>
+	<div onclick="var m = Mavo.get(this.parentNode); m.inProgress = m.inProgress? false : this.textContent;">Uploading</div>
+	<div onclick="var m = Mavo.get(this.parentNode); m.inProgress = m.inProgress? false : this.textContent;">Saving</div>
 </section>
 
 </body>
