@@ -105,8 +105,8 @@ self.Test = {
 			return true;
 		}
 
-		if ($.type(a) == $.type(b)) {
-			return isNaN(a) && isNaN(b) || a == b;
+		if ($.type(a) == $.type(b) && a == b) {
+			return true;
 		}
 
 		if (Array.isArray(a) && Array.isArray(b)) {
