@@ -11,7 +11,9 @@
 			background: #efc;
 		}
 	</style>
+
 	<script src="https://dev.mavo.io/dist/mavo.js"></script>
+	<script src="mavotest.js"></script>
 </head>
 <body>
 
@@ -84,7 +86,7 @@
 				a<span property="prop4">
 					[4 - 3]
 				</span>b
-				[typeof prop4]
+				[Bliss.type(prop4)]
 			</td>
 			<td>
 				a
@@ -701,7 +703,6 @@
 	</table>
 </section>
 
-<script src="mavotest.js"></script>
 <script>
 	var compareChecked = RefTest.compare.attribute.bind(null, "checked");
 	var compareDisabled = RefTest.compare.attribute.bind(null, "disabled");

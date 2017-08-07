@@ -12,6 +12,7 @@ td {
 }
 </style>
 <script src="https://dev.mavo.io/dist/mavo.js"></script>
+<script src="mavotest.js"></script>
 </head>
 <body>
 
@@ -30,6 +31,10 @@ td {
 		<tr>
 			<td>1 + 2 + 3</td>
 			<td>add(1, 2, 3)</td>
+		</tr>
+		<tr>
+			<td>!foo</td>
+			<td>not(foo)</td>
 		</tr>
 		<tr>
 			<td>if(2, 3, 4)</td>
@@ -174,7 +179,6 @@ td {
 	</script>
 </section>
 
-<script src="mavotest.js"></script>
 <script>
 function expressionRewrite(test, result, expected) {
 	var r = result.textContent = Mavo.Expression.rewrite(test.textContent);
