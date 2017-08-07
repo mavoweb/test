@@ -100,6 +100,7 @@ var _ = self.RefTest = $.Class({
 		this.columns = +this.table.getAttribute("data-columns") || Math.max.apply(Math, $$(this.table.rows).map(row => row.cells.length));
 		this.compare = _.getTest(table.getAttribute("data-test"));
 		this.setup();
+		this.startup = performance.now();
 		this.test();
 	},
 
@@ -190,7 +191,27 @@ var _ = self.RefTest = $.Class({
 			}
 
 			tr.classList.remove("pass", "fail");
-			tr.classList.add(tr.compare(...cells)? "pass" : "fail");
+			var className = tr.compare(...cells)? "pass" : "fail";
+			tr.classList.add(className);
+
+			if (className == "pass" && !tr.classList.contains("interactive")) {
+				// Display how long it took
+				var time = performance.now() - this.startup;
+				var unit = "ms";
+
+				time = +time.toFixed(2);
+
+				if (time > 100) {
+					time = Math.round(time);
+				}
+
+				if (time > 1000) {
+					time /= 1000;
+					unit = "s";
+				}
+
+				tr.setAttribute("data-time", time + unit);
+			}
 		}
 	},
 
@@ -400,7 +421,7 @@ document.addEventListener("DOMContentLoaded", function(){
 	requestAnimationFrame(() => {
 		$$("table.reftest").forEach(table => table.reftest = new RefTest(table));
 	});
-}, true);
+});
 
 
 })(self.Bliss)

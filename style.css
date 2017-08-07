@@ -143,23 +143,32 @@ table.reftest {
   table.reftest td:not(:last-child) {
     border-right: 1px solid rgba(0, 0, 0, 0.1); }
   table.reftest tr {
+    position: relative;
     margin: .4em 0;
     background: var(--color); }
-  table.reftest tr[title] {
-    position: relative; }
-    table.reftest tr[title] td {
-      padding-top: 1.5em; }
-    table.reftest tr[title]::before {
-      content: attr(title);
+    table.reftest tr[data-time]::after {
+      content: attr(data-time);
       position: absolute;
       top: 0;
-      left: 0;
       right: 0;
+      z-index: 1;
       padding: .4em;
-      background: linear-gradient(to right, var(--dark-color), transparent);
-      color: white;
+      color: var(--dark-color);
       font: bold 75%/1 sans-serif;
-      text-shadow: 0 0 1px rgba(0, 0, 0, 0.5); }
+      text-shadow: 0 0 1px white; }
+  table.reftest tr[title] td {
+    padding-top: 1.5em; }
+  table.reftest tr[title]::before {
+    content: attr(title);
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    padding: .4em;
+    background: linear-gradient(to right, var(--dark-color), transparent);
+    color: white;
+    font: bold 75%/1 sans-serif;
+    text-shadow: 0 0 1px rgba(0, 0, 0, 0.5); }
   table.reftest[data-test="selector"] .not::before,
   table.reftest[data-test="selector"] .not::after, table.reftest [data-test="selector"] .not::before,
   table.reftest [data-test="selector"] .not::after {
