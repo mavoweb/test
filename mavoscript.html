@@ -96,6 +96,10 @@ td {
 			<td>get(foo, "bar")</td>
 		</tr>
 		<tr>
+			<td>foo[bar]</td>
+			<td>get(foo, bar)</td>
+		</tr>
+		<tr>
 			<td>foo["bar"]</td>
 			<td>get(foo, "bar")</td>
 		</tr>
@@ -181,7 +185,7 @@ td {
 
 <script>
 function expressionRewrite(test, result, expected) {
-	var r = result.textContent = Mavo.Expression.rewrite(test.textContent);
+	var r = result.textContent = Mavo.Script.rewrite(test.textContent);
 
 	return Test.equals(r, expected.textContent);
 }
