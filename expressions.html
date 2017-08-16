@@ -131,12 +131,20 @@
 			<td>NaN</td>
 		</tr>
 		<tr title="Object printing">
-			<td property="obj">[{foo: 5}]</td>
-			<td>{ "foo": 5 }</td>
+			<td property="obj">[{foo: 1}]</td>
+			<td>{ "foo": 1 }</td>
 		</tr>
 		<tr title="Object value">
 			<td>[obj.foo]</td>
-			<td>5</td>
+			<td>1</td>
+		</tr>
+		<tr title="Recursive Object printing">
+			<td property="obj2" mv-expressions="( )">([{foo: 1}, {bar: {baz: 2}}])</td>
+			<td>{ "foo": 1 }, { "bar": { "baz": 2 } }</td>
+		</tr>
+		<tr title="Recursive object value">
+			<td mv-expressions="( )">(obj2[1].bar.baz)</td>
+			<td>2</td>
 		</tr>
 		<tr title="Number formatting">
 			<td>[1000.12345]</td>
@@ -224,7 +232,7 @@
 		</tr>
 		<tr>
 			<td>[country]</td>
-			<td mv-expressions="none">[object Object], [object Object], [object Object]</td>
+			<td mv-expressions="none">{ "code": null, "name": "Online" }, { "code": "us", "name": "United States" }, { "code": "gb", "name": "United Kingdom" }</td>
 		</tr>
 		<tr>
 			<td>[count(code == us)]</td>
@@ -401,7 +409,7 @@
 		</tr>
 		<tr>
 			<td>[country]</td>
-			<td mv-expressions="none">[object Object]</td>
+			<td mv-expressions="none">{ "code": "Code", "name": "Name" }</td>
 		</tr>
 		<tr>
 			<td>[count(code)]</td>
