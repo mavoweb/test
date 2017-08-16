@@ -103,16 +103,46 @@
 				<a href="mailto:lea@verou.me">lea@verou.me</a>
 			</td>
 		</tr>
-        <tr>
-            <td>
-                <button>[prop4]</button><button>[email]</button>
-            </td>
-            <td>
-                <button>1</button><button>lea@verou.me</button>
-            </td>
-        </tr>
+		<tr>
+			<td>
+				<button>[prop4]</button><button>[email]</button>
+			</td>
+			<td>
+				<button>1</button><button>lea@verou.me</button>
+			</td>
+		</tr>
 	</table>
+</section>
 
+<section mv-app>
+	<h1>Formatting</h1>
+
+	<table class="reftest">
+		<tr title="null">
+			<td>[null]</td>
+			<td></td>
+		</tr>
+		<tr title="undefined">
+			<td>[undefined]</td>
+			<td></td>
+		</tr>
+		<tr title="NaN">
+			<td>[NaN]</td>
+			<td>NaN</td>
+		</tr>
+		<tr title="Object printing">
+			<td>[{foo: 5}]</td>
+			<td>{ "foo": 5 }</td>
+		</tr>
+		<tr title="Number formatting">
+			<td>[1000.12345]</td>
+			<td>1,000.12</td>
+		</tr>
+		<tr title="Infinity">
+			<td>[1/0]</td>
+			<td>∞</td>
+		</tr>
+	</table>
 </section>
 
 <section>
@@ -671,20 +701,20 @@
 				<input type="checkbox" disabled>
 			</td>
 		</tr>
-        <tr data-test="compareDisabled">
-            <td>
+		<tr data-test="compareDisabled">
+			<td>
 				<input type="checkbox" disabled="[0 < 1]">
-            </td>
-            <td>
+			</td>
+			<td>
 				<input type="checkbox" disabled>
-            </td>
-        </tr>
-        <tr data-test='var i = $$("input", td); return i[1].disabled == i[0].value > 1' mv-expressions="{ }">
-            <td>
+			</td>
+		</tr>
+		<tr data-test='var i = $$("input", td); return i[1].disabled == i[0].value > 1' mv-expressions="{ }">
+			<td>
 				<input type="number" property="prop4" value="1">
 				<input type="text" disabled="{prop4 > 1}">
-            </td>
-        </tr>
+			</td>
+		</tr>
 	</table>
 </section>
 
