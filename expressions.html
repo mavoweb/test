@@ -10,6 +10,11 @@
 			content: "[data-foo=" attr(data-foo) "]";
 			background: #efc;
 		}
+
+		[mv-app="collections"] pre {
+			border: 1px solid rgba(0,0,0,.1);
+			padding: 1em;
+		}
 	</style>
 
 	<script src="https://dev.mavo.io/dist/mavo.js"></script>
@@ -217,6 +222,7 @@
 			<td>
 				<ul>
 					<li property="country" mv-multiple>
+						[country]
 						<span property="code"></span> [code]
 						<span property="name"></span> [name]
 					</li>
@@ -224,9 +230,9 @@
 			</td>
 			<td>
 				<ul>
-					<li>Online Online</li>
-					<li>us us United States United States</li>
-					<li>gb gb United Kingdom United Kingdom</li>
+					<li>{ "code": null, "name": "Online" } Online Online</li>
+					<li>{ "code": "us", "name": "United States" } us us United States United States</li>
+					<li>{ "code": "gb", "name": "United Kingdom" } gb gb United Kingdom United Kingdom</li>
 				</ul>
 			</td>
 		</tr>
@@ -237,6 +243,85 @@
 		<tr>
 			<td>[count(code == us)]</td>
 			<td>1</td>
+		</tr>
+	</table>
+</section>
+
+<script type="application/json" id="collection-data">{
+	"outer": [
+		{
+			"inner": [
+				{
+					"prop": 1
+				},
+				{
+					"prop": 2
+				}
+			]
+		},
+		{
+			"inner": [
+				{
+					"prop": 3
+				},
+				{
+					"prop": 4
+				}
+			]
+		}
+	]
+}</script>
+
+<section mv-app="collections" mv-storage="#collection-data">
+	<h1>References in collections</h1>
+
+	<table class="reftest">
+		<tr>
+			<td>
+				<ul>
+					<li property="outer" mv-multiple="">
+						<ul>
+							<li property="inner" mv-multiple="">
+								<span property="prop"></span>
+								<pre>[inner]</pre>
+								<pre>[outer]</pre>
+							</li>
+						</ul>
+					</li>
+				</ul>
+			</td>
+			<td mv-expressions="{ }">
+				<ul>
+					<li>
+						<ul>
+							<li>
+								1
+								<pre>{inner[0]}</pre>
+								<pre>{outer[0]}</pre>
+							</li>
+							<li>
+								2
+								<pre>{inner[1]}</pre>
+								<pre>{outer[0]}</pre>
+							</li>
+						</ul>
+					</li>
+					<li>
+						<ul>
+							<li>
+								3
+								<pre>{inner[2]}</pre>
+								<pre>{outer[1]}</pre>
+							</li>
+							<li>
+								4
+								<pre>{inner[3]}</pre>
+								<pre>{outer[1]}</pre>
+							</li>
+						</ul>
+					</li>
+				</ul>
+			</td>
 		</tr>
 	</table>
 </section>

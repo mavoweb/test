@@ -140,6 +140,20 @@
 				</div>
 			</td>
 		</tr>
+		<tr class="interactive" title="Collection of groups, interactive">
+			<td>
+				<div property="collection7" mv-multiple mv-mode="edit">
+					<span property="prop2" mv-default="Foo[$index]"></span>
+					<span property="prop3" mv-default="[$index]"></span>
+				</div>
+			</td>
+			<td>
+				<div property="collection8" mv-multiple mv-group mv-value="collection7">
+					[prop2]
+					<span property="prop3"></span>
+				</div>
+			</td>
+		</tr>
 	</table>
 </section>
 
