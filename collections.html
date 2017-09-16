@@ -3,10 +3,10 @@
 <head>
 	<meta charset="UTF-8">
 	<title>Collection tests</title>
-	<link rel="stylesheet" href="mavo/mavo.css" />
+	<link rel="stylesheet" href="https://dev.mavo.io/dist/mavo.css" />
 	<link rel="stylesheet" href="style.css" />
 	<style>
-		[mv-app="customitemcontrols"] .mv-item-controls {
+		[mv-app="customitemcontrols"] .mv-item-bar {
 			position: static;
 			opacity: 1;
 			border: 0;
@@ -58,7 +58,7 @@
 			margin-left: auto;
 		}
 	</style>
-	<script src="mavo/mavo.js"></script>
+	<script src="https://dev.mavo.io/dist/mavo.js"></script>
 </head>
 <body>
 
@@ -71,7 +71,8 @@
 <section mv-app="nested" mv-storage="#people" class="mv-autoedit">
 	<h1>Nested collections</h1>
 	<p>Use this to test dragging, both within a collection and to different collections.
-	You should be able to drag across hobby lists or cats to people and vice versa, but not hobbies to people or people to hobbies.</p>
+	You should be able to drag across hobby lists or cats to people and vice versa, but not hobbies to people or people to hobbies.
+	For the last reftest, click Save without making any changes.</p>
 
 	<div property="person" mv-multiple mv-accepts="cat">
 		<strong property="name">John Doe</strong>
@@ -85,31 +86,65 @@
 			<li property="hobby" mv-multiple mv-related="hobby">Fishing</li>
 		</ul>
 	</div>
-	<div>There are [count(person)] people and [count(cat)] cats, which have a total of [count(hobby)] hobbies.</div>
+
 	<div>Another random div</div>
 
-	<script type="application/json" id="people" mv-expressions="none">{
+	<table class="reftest">
+		<tr title="count(person)">
+			<td>[count(person)]</td>
+			<td>2</td>
+		</tr>
+		<tr title="count(cat)">
+			<td>[count(cat)]</td>
+			<td>2</td>
+		</tr>
+		<tr title="count(hobby)">
+			<td>[count(hobby)]</td>
+			<td>8</td>
+		</tr>
+		<tr mv-expressions="none" class="interactive">
+			<td>
+				<pre id="people">{
 	"person": [
 		{
 			"name": "Lea Verou",
-			"hobby": ["Coding", "Design", "Cooking"]
+			"hobby": [
+				"Coding",
+				"Design",
+				"Cooking"
+			]
 		},
 		{
 			"name": "David Karger",
-			"hobby": ["Dancing", "Theory"]
+			"hobby": [
+				"Dancing",
+				"Theory"
+			]
 		}
 	],
 	"cat": [
 		{
 			"name": "Vector",
-			"hobby": ["Eating", "Purring"]
+			"hobby": [
+				"Eating",
+				"Purring"
+			]
 		},
 		{
-			"name": "Chiki",
-			"hobby": "Playing"
+			"name": "Çiki",
+			"hobby": [
+				"Playing"
+			]
 		}
 	]
-}</script>
+}</pre>
+			</td>
+			<td>
+				<script>document.write($$("td pre").pop().outerHTML)</script>
+			</td>
+		</tr>
+	</table>
+
 </section>
 
 <section mv-app="primitives" mv-storage="#numbers">
@@ -319,6 +354,17 @@
 	</table>
 </section>
 
+<section mv-storage="local" mv-app id="collector" class="mv-autoedit">
+	<h1>
+		Collection with expressions and HTML comments
+	</h1>
+
+	<div property="book" mv-multiple>
+		<!-- input a number of properties - use input type="range" to create a slider for the property "condition" - use expressions to translate this to the representation on a scale of 0 to 10 by single decimals
+		--><p>Condition: [20/10]</p>
+	</div>
+</section>
+
 <script type="application/json" id="indexes" mv-expressions="none">
 {
 	"number": [
@@ -373,13 +419,13 @@
 		<tr>
 			<td>
 				<div property="country" mv-multiple>
-					<div class="mv-item-controls mv-ui">A</div>
+					<div class="mv-item-bar mv-ui">A</div>
 					<span property="code"></span>
 					<span property="name"></span>
 				</div>
 			</td>
 			<td>
-				<div mv-multiple><div class="mv-item-bar mv-ui">A</div> Online</div>
+				<div mv-multiple><div class="mv-item-bar mv-ui">A</div> (Code) Online</div>
 				<div mv-multiple><div class="mv-item-bar mv-ui">A</div> us United States</div>
 				<div mv-multiple><div class="mv-item-bar mv-ui">A</div> gb United Kingdom </div>
 			</td>
@@ -486,7 +532,49 @@
 	</table>
 </section>
 
-<script src="test.js"></script>
+<section mv-app="shopping" mv-storage="#empty-data">
+	<h1>Empty list</h1>
+
+	<table class="reftest">
+		<tr title="Count all items">
+			<td>[count(product)]</td>
+			<td>0</td>
+		</tr>
+		<tr title="Inside items">
+			<td>Items: [bought]</td>
+			<td>Items: </td>
+		</tr>
+		<tr title="Count inside items">
+			<td>[count(bought)]</td>
+			<td>0</td>
+		</tr>
+		<tr mv-expressions="none">
+			<td>
+				<pre id="empty-data">{
+	"product": []
+}</pre>
+			</td>
+			<td>
+				<script>document.write($$("td pre").pop().outerHTML)</script>
+			</td>
+		</tr>
+		<tr>
+			<td>
+				<ul>
+					<li property="product" mv-multiple>
+						<label>
+							<input property="bought" type="checkbox" />
+							<span property="name">Garlic</span>
+						</label>
+					</li>
+				</ul>
+			</td>
+			<td></td>
+		</tr>
+	</table>
+</section>
+
+<script src="mavotest.js"></script>
 
 </body>
 </html>

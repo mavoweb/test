@@ -3,7 +3,7 @@
 <head>
 	<meta charset="UTF-8">
 	<title>Syntax tests</title>
-	<link rel="stylesheet" href="mavo/mavo.css" />
+	<link rel="stylesheet" href="https://dev.mavo.io/dist/mavo.css" />
 	<link rel="stylesheet" href="style.css" />
 </head>
 <body>
@@ -26,12 +26,28 @@
 		}
 	]
 }</script>
+<script type="application/json" id="countries2">{
+	"collection": [
+		{
+			"code": "",
+			"name": "Online"
+		},
+		{
+			"code": "us",
+			"name": "United States"
+		},
+		{
+			"code": "gb",
+			"name": "United Kingdom"
+		}
+	]
+}</script>
 
-<section mv-app mv-storage="#countries">
+<section>
 	<h1>Different ways to specify property name</h1>
 	<table class="reftest">
 		<tr>
-			<td>
+			<td mv-app mv-storage="#countries">
 				<div property="country" mv-multiple>
 					<span itemprop="code"></span>
 					<span property class="name"></span>
@@ -43,8 +59,33 @@
 				<div>gb United Kingdom</div>
 			</td>
 		</tr>
+		<tr title='mv-multiple="property"'>
+			<td mv-app mv-storage="#countries">
+				<div mv-multiple="country">
+					<span itemprop="code"></span>
+					<span property class="name"></span>
+				</div>
+			</td>
+			<td>
+				<div>Online</div>
+				<div>us United States</div>
+				<div>gb United Kingdom</div>
+			</td>
+		</tr>
+		<tr title='mv-multiple with no property'>
+			<td mv-app mv-storage="#countries2">
+				<div mv-multiple>
+					<span itemprop="code"></span>
+					<span property class="name"></span>
+				</div>
+			</td>
+			<td>
+				<div>Online</div>
+				<div>us United States</div>
+				<div>gb United Kingdom</div>
+			</td>
+		</tr>
 	</table>
-
 </section>
 
 <section data-mv-app data-mv-storage="#countries">
@@ -66,8 +107,8 @@
 	</table>
 </section>
 
-<script src="mavo/mavo.js"></script>
-<script src="test.js"></script>
+<script src="https://dev.mavo.io/dist/mavo.js"></script>
+<script src="mavotest.js"></script>
 
 </body>
 </html>

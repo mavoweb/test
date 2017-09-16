@@ -3,15 +3,22 @@
 <head>
 	<meta charset="UTF-8">
 	<title>Expression tests</title>
-	<link rel="stylesheet" href="mavo/mavo.css" />
+	<link rel="stylesheet" href="https://dev.mavo.io/dist/mavo.css" />
 	<link rel="stylesheet" href="style.css" />
 	<style>
 		[data-foo]::before {
 			content: "[data-foo=" attr(data-foo) "]";
 			background: #efc;
 		}
+
+		[mv-app="collections"] pre {
+			border: 1px solid rgba(0,0,0,.1);
+			padding: 1em;
+		}
 	</style>
-	<script src="mavo/mavo.js"></script>
+
+	<script src="https://dev.mavo.io/dist/mavo.js"></script>
+	<script src="mavotest.js"></script>
 </head>
 <body>
 
@@ -44,7 +51,7 @@
 		</tr>
 		<tr title="Syntax error">
 			<td>[40 +]</td>
-			<td>40 +</td>
+			<td mv-expressions="none">[40 +]</td>
 		</tr>
 		<tr title="Multiline expression">
 			<td>[
@@ -92,7 +99,7 @@
 				a<span property="prop4">
 					[4 - 3]
 				</span>b
-				[typeof prop4]
+				[Bliss.type(prop4)]
 			</td>
 			<td>
 				a
@@ -109,16 +116,58 @@
 				<a href="mailto:lea@verou.me">lea@verou.me</a>
 			</td>
 		</tr>
-        <tr>
-            <td>
-                <button>[prop4]</button><button>[email]</button>
-            </td>
-            <td>
-                <button>1</button><button>lea@verou.me</button>
-            </td>
-        </tr>
+		<tr>
+			<td>
+				<button>[prop4]</button><button>[email]</button>
+			</td>
+			<td>
+				<button>1</button><button>lea@verou.me</button>
+			</td>
+		</tr>
 	</table>
+</section>
 
+<section mv-app>
+	<h1>Formatting</h1>
+
+	<table class="reftest">
+		<tr title="null">
+			<td>[null]</td>
+			<td></td>
+		</tr>
+		<tr title="undefined">
+			<td>[undefined]</td>
+			<td></td>
+		</tr>
+		<tr title="NaN">
+			<td>[NaN]</td>
+			<td>NaN</td>
+		</tr>
+		<tr title="Object printing">
+			<td property="obj">[{foo: 1}]</td>
+			<td>{ "foo": 1 }</td>
+		</tr>
+		<tr title="Object value">
+			<td>[obj.foo]</td>
+			<td>1</td>
+		</tr>
+		<tr title="Recursive Object printing">
+			<td property="obj2" mv-expressions="( )">([{foo: 1}, {bar: {baz: 2}}])</td>
+			<td>{ "foo": 1 }, { "bar": { "baz": 2 } }</td>
+		</tr>
+		<tr title="Recursive object value">
+			<td mv-expressions="( )">(obj2[1].bar.baz)</td>
+			<td>2</td>
+		</tr>
+		<tr title="Number formatting">
+			<td>[1000.12345]</td>
+			<td>1,000.12</td>
+		</tr>
+		<tr title="Infinity">
+			<td>[1/0]</td>
+			<td>∞</td>
+		</tr>
+	</table>
 </section>
 
 <section>
@@ -181,6 +230,7 @@
 			<td>
 				<ul>
 					<li property="country" mv-multiple>
+						[country]
 						<span property="code"></span> [code]
 						<span property="name"></span> [name]
 					</li>
@@ -188,19 +238,98 @@
 			</td>
 			<td>
 				<ul>
-					<li>Online Online</li>
-					<li>us us United States United States</li>
-					<li>gb gb United Kingdom United Kingdom</li>
+					<li>{ "code": null, "name": "Online" } Online Online</li>
+					<li>{ "code": "us", "name": "United States" } us us United States United States</li>
+					<li>{ "code": "gb", "name": "United Kingdom" } gb gb United Kingdom United Kingdom</li>
 				</ul>
 			</td>
 		</tr>
 		<tr>
 			<td>[country]</td>
-			<td mv-expressions="none">[object Object], [object Object], [object Object]</td>
+			<td mv-expressions="none">{ "code": null, "name": "Online" }, { "code": "us", "name": "United States" }, { "code": "gb", "name": "United Kingdom" }</td>
 		</tr>
 		<tr>
 			<td>[count(code == us)]</td>
 			<td>1</td>
+		</tr>
+	</table>
+</section>
+
+<script type="application/json" id="collection-data">{
+	"outer": [
+		{
+			"inner": [
+				{
+					"prop": 1
+				},
+				{
+					"prop": 2
+				}
+			]
+		},
+		{
+			"inner": [
+				{
+					"prop": 3
+				},
+				{
+					"prop": 4
+				}
+			]
+		}
+	]
+}</script>
+
+<section mv-app="collections" mv-storage="#collection-data">
+	<h1>References in collections</h1>
+
+	<table class="reftest">
+		<tr>
+			<td>
+				<ul>
+					<li property="outer" mv-multiple="">
+						<ul>
+							<li property="inner" mv-multiple="">
+								<span property="prop"></span>
+								<pre>[inner]</pre>
+								<pre>[outer]</pre>
+							</li>
+						</ul>
+					</li>
+				</ul>
+			</td>
+			<td mv-expressions="{ }">
+				<ul>
+					<li>
+						<ul>
+							<li>
+								1
+								<pre>{inner[0]}</pre>
+								<pre>{outer[0]}</pre>
+							</li>
+							<li>
+								2
+								<pre>{inner[1]}</pre>
+								<pre>{outer[0]}</pre>
+							</li>
+						</ul>
+					</li>
+					<li>
+						<ul>
+							<li>
+								3
+								<pre>{inner[2]}</pre>
+								<pre>{outer[1]}</pre>
+							</li>
+							<li>
+								4
+								<pre>{inner[3]}</pre>
+								<pre>{outer[1]}</pre>
+							</li>
+						</ul>
+					</li>
+				</ul>
+			</td>
 		</tr>
 	</table>
 </section>
@@ -228,6 +357,44 @@
 				<div>3 6</div>
 			</td>
 		</tr>
+		<tr>
+			<td>
+				[firstname] [lastname]
+			</td>
+			<td>
+				Lea Verou
+			</td>
+		</tr>
+		<tr>
+			<td>
+				<div property="person">
+					<span property="firstname">Lea</span>
+					<span property="lastname">Verou</span>
+					[firstname] [lastname]
+
+					<div property="mother">
+						<span property="firstname">Maria</span>
+						[firstname] [lastname]
+
+						<div property="mother">
+							<span property="firstname">Areti</span>
+							[firstname] [lastname]
+						</div>
+					</div>
+				</div>
+			</td>
+			<td>
+				Lea Verou
+				Lea Verou
+				<br>
+				Maria
+				Maria Verou
+				<br>
+				Areti
+				Areti Verou
+			</td>
+		</tr>
+
 	</table>
 </section>
 
@@ -335,7 +502,7 @@
 		</tr>
 		<tr>
 			<td>[country]</td>
-			<td mv-expressions="none">[object Object]</td>
+			<td mv-expressions="none">{ "code": "Code", "name": "Name" }</td>
 		</tr>
 		<tr>
 			<td>[count(code)]</td>
@@ -387,6 +554,10 @@
 			<td mv-expressions="{{ }}">{{1 + 2}}</td>
 			<td>3</td>
 		</tr>
+		<tr title="Invalid expression">
+			<td mv-expressions="{{ }}">{{1 + }}</td>
+			<td>{{1 + }}</td>
+		</tr>
 		<tr>
 			<td mv-expressions="{{ }}">[1 + 2]</td>
 			<td></td>
@@ -426,118 +597,6 @@
 	</table>
 </section>
 
-<section mv-app="mvvalue">
-	<h1>mv-value</h1>
-
-	<table class="reftest">
-		<tr>
-			<td><div mv-value="39 + 3">Without expression syntax</div></td>
-			<td>42</td>
-		</tr>
-		<tr>
-			<td><div mv-value="(39 + 3">With bug</div></td>
-			<td>With bug</td>
-		</tr>
-		<tr>
-			<td><input mv-value="39 + 3" value="In attribute"></td>
-			<td><input value="42"></td>
-		</tr>
-		<tr title="Object">
-			<td>
-				<div property="group1" typeof mv-value="{foo: 1, bar: 2}">
-					[foo] + [bar] = [foo + bar]
-				</div>
-			</td>
-			<td>1 + 2 = 3</td>
-		</tr>
-		<tr title="Object with property">
-			<td>
-				<div property="group2" typeof mv-value="{foo: 1, bar: 2}">
-					<span property="bar">10</span>
-					<span property="prop1">3</span>
-					[foo + bar + prop1]
-				</div>
-			</td>
-			<td>2 3 6</td>
-		</tr>
-		<tr title="Nested groups">
-			<td>
-				<div property="group3" mv-value="{prop2: 1, group4: {prop3: 2}}">
-					<span property="prop2"></span>
-					<div property="group4">
-						<span property="prop3"></span>
-					</div>
-				</div>
-			</td>
-			<td>1 <br>2</td>
-		</tr>
-		<tr title="Reference collision">
-			<td>
-				<span property="prop4">1</span>
-				<div property="group4" mv-group mv-value="{prop4: 2}">
-					[prop4]
-				</div>
-			</td>
-			<td>1 <div>2</div></td>
-		</tr>
-		<tr title="Collection">
-			<td>
-				<div property="collection1" mv-multiple mv-group mv-value='[
-					{"number": 1},
-					{"number": 2},
-					{"number": 3}
-				]'>
-					#<span property=number></span>
-				</div>
-			</td>
-			<td>
-				#1<br>
-				#2<br>
-				#3
-			</td>
-		</tr>
-		<tr title="Collection of primitives">
-			<td>
-				<span property="collection2" mv-multiple mv-value='[1, 2, 3]'></span>
-			</td>
-			<td>123</td>
-		</tr>
-		<tr class="interactive" title="Collection of primitives, interactive">
-			<td>
-				<span property="collection3" mv-multiple mv-mode="edit" mv-default="[$index]"></span>
-			</td>
-			<td>
-				<span property="collection4" mv-multiple mv-value="collection3"></span>
-			</td>
-		</tr>
-	</table>
-</section>
-
-<section>
-	<h1>mv-value with array of primitives on group collection</h1>
-
-	<table class="reftest">
-		<tr>
-			<td>
-				<div mv-app="statuses">
-					[count(status)]
-					<dl property="status" mv-multiple mv-value="[1, 2, 3, 4]">
-						<dt property="prop1">[prop2]</dt>
-						<dd property="prop2">1</dd>
-					</dl>
-				</div>
-			</td>
-			<td>
-				4
-				1 1
-				2 2
-				3 3
-				4 4
-			</td>
-		</tr>
-	</table>
-</section>
-
 <section mv-app id="mvIf">
 	<h1>mv-if</h1>
 
@@ -558,19 +617,19 @@
 			<td>A<span mv-if="true">B<span mv-if="false">C</span></span>D</td>
 			<td>ABD</td>
 		</tr>
-		<tr>
+		<tr title="Nested mv-if false > true">
 			<td>A<span mv-if="false">B<span mv-if="true">C</span></span>D</td>
 			<td>AD</td>
 		</tr>
-		<tr>
+		<tr title="Property (prop1) in false mv-if">
 			<td>A<span mv-if="false"><span property="prop1">C</span></span>[prop1]</td>
 			<td>A</td>
 		</tr>
-		<tr>
+		<tr title="false > true > prop2">
 			<td>A<span mv-if="false">B<span mv-if="true"><span property="prop2">C</span></span></span>[prop2]</td>
 			<td>A</td>
-		</tr>
-		<tr title="Property with same name across multiple mv-ifs">
+		</t>
+		<tr title="Property with same name (prop3) across multiple mv-ifs, one false, one true">
 			<td>
 				<span mv-if="false">
 					<span property="prop3">A</span>
@@ -630,79 +689,9 @@
 	</table>
 </section>
 
-<section mv-app="mvifgroup">
-	<h1>mv-if inside collection items</h1>
-	<div property="segment" data-segtype="[type]" class="[if(absolute, 'absolute')]" mv-multiple mv-mode="edit">
-			<h1>
-				<select property="type">
-					<option value="m">Move</option>
-					<option value="l">Line</option>
-					<option value="h">Horizontal Line</option>
-					<option value="v">Vertical Line</option>
-					<option value="a">Arc</option>
-					<option value="s">Smooth Bézier curve</option>
-					<option value="c">Bézier curve</option>
-					<option value="t">Smooth Quadratic Bézier</option>
-					<option value="q">Quadratic Bézier</option>
-					<option value="z">Close path</option>
-				</select>
-[type]
-				<label mv-if="type != v and type != z">
-					X <input type="number" property="x" value="0" />
-				</label>
-
-				<label mv-if="type != h and type != z">
-					Y <input type="number" property="y" value="0" />
-				</label>
-
-				<label>
-					<input type="checkbox" property="absolute">
-					Absolute
-				</label>
-
-				<div class="mv-item-bar mv-ui"></div>
-			</h1>
-
-			<div mv-if="type = a">
-				<label>
-					rx: <input type="number" property="rx" value="0" />
-				</label>
-				<label>
-					ry: <input type="number" property="ry" mv-default="[rx]" />
-				</label>
-				<label>
-					X Axis rotation: <input type="number" property="axisRotation" value="0" />
-				</label>
-				<label>
-					<input type="checkbox" property="largeArc">
-					Large Arc
-				</label>
-				<label>
-					<input type="checkbox" property="sweep">
-					Other side
-				</label>
-				<meta property="arcFlags" content="[rx] [ry] [axisRotation] [largeArc + 0] [sweep + 0]">
-			</div>
-
-			<div mv-if="type = c or type = s or type = q">
-				<label mv-if="type = c or type = q">
-					<span mv-if="type = c">First</span> Control Point:
-					<input type="number" property="x1" value="0" />
-					<input type="number" property="y1" value="0" />
-				</label>
-				<label mv-if="type = c">
-					Second Control Point:
-					<input type="number" property="x2" value="0" />
-					<input type="number" property="y2" value="0" />
-				</label>
-			</div>
-
-			<meta property="pathsummary" content="[if(absolute, uppercase(type), type)] [arcFlags] [x] [y]">
-		</div>
-</section>
-
 <section mv-app="mvdefault">
 	<h1>Dyamic mv-default</h1>
+	<p>For collection test: Add one item.</p>
 	<table class="reftest">
 		<tr>
 			<td>
@@ -717,6 +706,22 @@
 				<input property="prop4" mv-default="[prop3 + 1]">
 			</td>
 			<td>[prop3 + 0] [prop3 + 1]</td>
+		</tr>
+		<tr title="In Collection" class="interactive">
+			<td>
+				<div mv-multiple mv-mode="edit">
+					<span property="prop_multiple" mv-default="[$index]"></span>
+					[prop_multiple]
+				</div>
+			</td>
+			<td>
+				<div>0 0</div>
+				<div>1 1</div>
+			</td>
+		</tr>
+		<tr>
+			<td>[prop_multiple]</td>
+			<td>0, 1</td>
 		</tr>
 	</table>
 </section>
@@ -755,20 +760,20 @@
 				<input type="checkbox" disabled>
 			</td>
 		</tr>
-        <tr data-test="compareDisabled">
-            <td>
+		<tr data-test="compareDisabled">
+			<td>
 				<input type="checkbox" disabled="[0 < 1]">
-            </td>
-            <td>
+			</td>
+			<td>
 				<input type="checkbox" disabled>
-            </td>
-        </tr>
-        <tr data-test='var i = $$("input", td); return i[1].disabled == i[0].value > 1' mv-expressions="{ }">
-            <td>
+			</td>
+		</tr>
+		<tr data-test='var i = $$("input", td); return i[1].disabled == i[0].value > 1' mv-expressions="{ }">
+			<td>
 				<input type="number" property="prop4" value="1">
 				<input type="text" disabled="{prop4 > 1}">
-            </td>
-        </tr>
+			</td>
+		</tr>
 	</table>
 </section>
 
@@ -787,7 +792,6 @@
 	</table>
 </section>
 
-<script src="test.js"></script>
 <script>
 	var compareChecked = RefTest.compare.attribute.bind(null, "checked");
 	var compareDisabled = RefTest.compare.attribute.bind(null, "disabled");

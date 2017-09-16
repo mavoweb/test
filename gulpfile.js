@@ -8,6 +8,7 @@ var rename = require("gulp-rename");
 var sass = require("gulp-sass");
 var autoprefixer = require("gulp-autoprefixer");
 var sourcemaps = require("gulp-sourcemaps");
+var concat = require("gulp-concat");
 var notify = require("gulp-notify");
 
 gulp.task("sass", function() {
@@ -38,18 +39,15 @@ gulp.task("sass", function() {
 		}));
 });
 
-gulp.task("update", function() {
-	gulp.src(["../mavo/dist/**/*"])
-		.pipe(gulp.dest("mavo"))
-		.pipe(notify({
-			message: "Test Mavo updated!",
-			onLast: true
-		}));
+gulp.task("concat", function () {
+	return gulp.src(["sw.js", "test.js"])
+		.pipe(concat("mavotest.js"))
+		.pipe(gulp.dest("."));
 });
 
 gulp.task("watch", function() {
-	gulp.watch(["../mavo/dist/*"], ["update"]);
 	gulp.watch(["**/*.scss"], ["sass"]);
+	gulp.watch(["sw.js", "test.js"], ["concat"]);
 });
 
-gulp.task("default", ["sass", "update"]);
+gulp.task("default", ["sass"]);

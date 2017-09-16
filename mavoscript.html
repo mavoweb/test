@@ -4,14 +4,15 @@
 
 <meta charset="UTF-8">
 <title>MavoScript Tests</title>
-<link rel="stylesheet" href="mavo/mavo.css" />
+<link rel="stylesheet" href="https://dev.mavo.io/dist/mavo.css" />
 <link rel="stylesheet" href="style.css" />
 <style>
 td {
 	font: bold 100%/1.5 Consolas, Monaco, monospace;
 }
 </style>
-<script src="mavo/mavo.js"></script>
+<script src="https://dev.mavo.io/dist/mavo.js"></script>
+<script src="mavotest.js"></script>
 </head>
 <body>
 
@@ -32,8 +33,12 @@ td {
 			<td>add(1, 2, 3)</td>
 		</tr>
 		<tr>
+			<td>!foo</td>
+			<td>not(foo)</td>
+		</tr>
+		<tr>
 			<td>if(2, 3, 4)</td>
-			<td>iff(2, 3, 4)</td>
+			<td>Mavo.Functions._Trap.iff(2, 3, 4)</td>
 		</tr>
 		<tr>
 			<td>foo and 5 or baz</td>
@@ -44,7 +49,7 @@ td {
 		</tr>
 		<tr>
 			<td>if(foo >= 5, 1, 2)</td>
-			<td>iff(gte(foo, 5), 1, 2)</td>
+			<td>Mavo.Functions._Trap.iff(gte(foo, 5), 1, 2)</td>
 		</tr>
 		<tr>
 			<td>foo == "bar"</td>
@@ -89,6 +94,10 @@ td {
 		<tr>
 			<td>foo.bar</td>
 			<td>get(foo, "bar")</td>
+		</tr>
+		<tr>
+			<td>foo[bar]</td>
+			<td>get(foo, bar)</td>
 		</tr>
 		<tr>
 			<td>foo["bar"]</td>
@@ -139,9 +148,28 @@ td {
 			<td>[pow(2, 2)]</td>
 			<td>4</td>
 		</tr>
+		<tr title="Math function case insensitive">
+			<td>[POW(2, 2)]</td>
+			<td>4</td>
+		</tr>
 		<tr title="Unquoted strings that are Math function names">
 			<td>[pow]</td>
 			<td>pow</td>
+		</tr>
+		<tr title="Property name with same name as function">
+			<td>
+				<span property="year">2000</span>
+				[year($today)]
+			</td>
+			<td>2000 <script>document.write(new Date().getFullYear())</script></td>
+		</tr>
+		<tr title="Member expressions should still work">
+			<td>[Math.pow(2,2)]</td>
+			<td>4</td>
+		</tr>
+		<tr title="Member expressions should still work">
+			<td><meta property="array" mv-value="[1, 2, 3]" /> [array.pop()]</td>
+			<td>3</td>
 		</tr>
 	</table>
 	<script>
@@ -155,12 +183,9 @@ td {
 	</script>
 </section>
 
-
-
-<script src="test.js"></script>
 <script>
 function expressionRewrite(test, result, expected) {
-	var r = result.textContent = Mavo.Expression.rewrite(test.textContent);
+	var r = result.textContent = Mavo.Script.rewrite(test.textContent);
 
 	return Test.equals(r, expected.textContent);
 }

@@ -3,9 +3,10 @@
 <head>
 	<meta charset="UTF-8">
 	<title>Render tests</title>
-	<link rel="stylesheet" href="mavo/mavo.css" />
+	<link rel="stylesheet" href="https://dev.mavo.io/dist/mavo.css" />
 	<link rel="stylesheet" href="style.css" />
-	<script src="mavo/mavo.js"></script>
+	<script src="https://dev.mavo.io/dist/mavo.js"></script>
+	<script src="mavotest.js"></script>
 </head>
 <body>
 
@@ -323,6 +324,8 @@
 <section>
 	<h1>Rendering primitives on groups</h1>
 
+	<p>Click Save</p>
+
 	<table class="reftest">
 		<tr class="interactive">
 			<td>
@@ -363,7 +366,132 @@
 	</table>
 </section>
 
-<script src="test.js"></script>
+<section>
+	<h1>Rendering on collections</h1>
+
+	<table class="reftest">
+		<tr title="undefined">
+			<td>
+				<pre id="collection-data1">{
+}</pre>
+			</td>
+			<td mv-app mv-storage="#collection-data1">
+				<div mv-multiple>
+					<span property="prop">Text</span>
+				</div>
+			</td>
+			<td>
+				Text
+			</td>
+		</tr>
+		<tr title="null">
+			<td>
+				<pre id="collection-data2">{
+	"collection": null
+}</pre>
+			</td>
+			<td mv-app mv-storage="#collection-data2">
+				<div mv-multiple>
+					<span property="prop">Text</span>
+				</div>
+			</td>
+			<td>
+
+			</td>
+		</tr>
+		<tr title="Empty array">
+			<td>
+				<pre id="collection-data3">{
+	"collection": []
+}</pre>
+			</td>
+			<td mv-app mv-storage="#collection-data3">
+				<div mv-multiple>
+					<span property="prop">Text</span>
+				</div>
+			</td>
+			<td>
+
+			</td>
+		</tr>
+		<tr title="Array with null">
+			<td>
+				<pre id="collection-data4">{
+	"collection": [
+		null
+	]
+}</pre>
+			</td>
+			<td mv-app mv-storage="#collection-data4">
+				<div mv-multiple>
+					<span property="prop">Text</span>
+				</div>
+			</td>
+			<td>
+
+			</td>
+		</tr>
+	</table>
+</section>
+
+<section>
+	<h1>Turning part of a group into a child group</h1>
+
+	<p>Click Save. Does not currently pass, will pass if <a href="https://github.com/mavoweb/mavo/issues/228">#228</a> is implemented.</p>
+
+	<table class="reftest">
+		<tr class="interactive">
+			<td>
+				<pre id="data-child-group">{
+	"prop1": 1,
+	"prop2": 2,
+	"prop3": 3,
+	"prop4": 4,
+	"prop5": 5
+}</pre>
+			</td>
+			<td>
+				<pre>{
+	"prop1": 1,
+	"prop2": 2,
+	"prop3": 3,
+	"prop4": 4,
+	"prop5": 5,
+	"group": {
+		"prop1": "1",
+		"prop2": "2",
+		"prop3": "3"
+	},
+	"collection": [
+		{
+			"prop3": "3",
+			"prop4": "4"
+		}
+	]
+}</pre>
+			</td>
+		</tr>
+		<tr>
+			<td mv-app="childgroup" mv-storage="#data-child-group">
+				<span property="prop1"></span>
+				<div property="group">
+					<span property="prop1"></span>
+					<span property="prop2"></span>
+					<span property="prop3"></span>
+				</div>
+				<div property="collection" mv-multiple>
+					<span property="prop3"></span>
+					<span property="prop4"></span>
+				</div>
+			</td>
+			<td>
+				1<br>
+				1 2 3<br>
+				3 4
+			</td>
+		</tr>
+	</table>
+</section>
 
 </body>
 </html>

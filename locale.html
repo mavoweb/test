@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Localization tests</title>
+	<link rel="stylesheet" href="https://dev.mavo.io/dist/mavo.css" />
+	<link rel="stylesheet" href="style.css" />
+	<script src="https://dev.mavo.io/dist/mavo.js"></script>
+	<script src="mavotest.js"></script>
+</head>
+<body>
+
+<h1>Localization tests</h1>
+
+<section>
+	<h1>Basic</h1>
+
+	<table class="reftest">
+		<tr>
+			<td mv-app lang="el">
+				<div class="mv-bar"></div>
+			</td>
+			<td>
+				<button>Καθαρισμός</button>
+			</td>
+		</tr>
+		<tr title="Via &lt;datalist>">
+			<td mv-app lang="de">
+				<div class="mv-bar"></div>
+			</td>
+			<td>
+				<button>Löschen</button>
+			</td>
+		</tr>
+		<tr title="&lt;datalist> overrides existing locale">
+			<td mv-app mv-storage="local">
+				<div class="mv-bar"></div>
+			</td>
+			<td>
+				<button>Save All</button><button>Clear</button>
+			</td>
+		</tr>
+	</table>
+</section>
+
+<script>
+Mavo.Locale.register("el", {
+	"clear": "Καθαρισμός"
+});
+</script>
+<datalist lang="de" class="mv-phrases">
+	<option value="clear">Löschen</option>
+</datalist>
+<datalist lang="en" class="mv-phrases">
+	<option value="save">Save All</option>
+</datalist>
+</body>
+</html>

@@ -3,10 +3,11 @@
 <head>
 	<meta charset="UTF-8">
 	<title>Stress tests</title>
-	<link rel="stylesheet" href="mavo/mavo.css" />
+	<link rel="stylesheet" href="https://dev.mavo.io/dist/mavo.css" />
 	<link rel="stylesheet" href="style.css" />
 
-	<script src="mavo/mavo.js"></script>
+	<script src="https://dev.mavo.io/dist/mavo.js"></script>
+	<script src="mavotest.js"></script>
 </head>
 <body>
 
@@ -17,9 +18,23 @@
 <section mv-app mv-storage="#data">
 	<h1>Long collection</h1>
 
-	<div>[count(collection)] items, [count(prop1)] inner items</div>
-
-	<div>All prop2 values: [prop2]</div>
+	<table class="reftest">
+		<tr title="Number of items">
+			<td>[count(collection)]</td>
+			<td>1,000</td>
+		</tr>
+		<tr title="Inner items">
+			<td>[count(prop1)]</td>
+			<td>2,000</td>
+		</tr>
+		<tr title="All prop2 values">
+			<td>[prop2]</td>
+			<td>
+				<script>print(Array(1001).join(", 2").slice(2))</script>
+			</td>
+		</tr>
+		<!-- tr>td*2 -->
+	</table>
 
 	<div property="collection" mv-multiple>
 		[$index]
@@ -45,8 +60,6 @@
 		document.write("<pre id=data>" + JSON.stringify(o, null, "\t") + "</pre>");
 	</script>
 </details>
-
-<script src="test.js"></script>
 
 </body>
 </html>

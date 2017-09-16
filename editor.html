@@ -4,7 +4,7 @@
 	<meta charset="UTF-8">
 	<title>Editor</title>
 	<link rel="stylesheet" href="style.css" />
-	<link rel="stylesheet" href="mavo/mavo.css" />
+	<link rel="stylesheet" href="https://dev.mavo.io/dist/mavo.css" />
 </head>
 <body>
 
@@ -285,7 +285,7 @@ function checkAttribute(td) {
 				[property][mv-mode^="edit"] textarea
 			</td>
 		</tr>
-		<tr title='Inherited mv-mode="read"'>
+		<tr title='Inherited mv-mode="read" (currently failing, see #166)'>
 			<td>
 				<div mv-mode="read">
 					<div property="inheritRead">Never edited</div>
@@ -328,7 +328,7 @@ function checkAttribute(td) {
 		<tr title="Editing the first item of a collection but not the collection (testcase for #131)">
 			<td>
 				<div property="collection1" mv-multiple mv-mode="{if($index = 0, edit, read)}">
-					<span property="firstItemEdit">Edited when it’s the first item</span>
+					<span property="firstItemEdit" mv-default>Edited when it’s the first item</span>
 				</div>
 			</td>
 			<td>
@@ -433,9 +433,9 @@ function checkAttribute(td) {
 	</details>
 </section>
 
-<script src="mavo/mavo.js"></script>
+<script src="https://dev.mavo.io/dist/mavo.js"></script>
 
-<script src="test.js"></script>
+<script src="mavotest.js"></script>
 
 </body>
 </html>

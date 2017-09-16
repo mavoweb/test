@@ -193,13 +193,24 @@ table.reftest {
 	}
 
 	tr {
+		position: relative;
 		margin: .4em 0;
 		background: var(--color);
+
+		&[data-time]::after {
+			content: attr(data-time);
+			position: absolute;
+			top: 0;
+			right: 0;
+			z-index: 1;
+			padding: .4em;
+			color: var(--dark-color);
+			font: bold 75%/1 sans-serif;
+			text-shadow: 0 0 1px white, 0 0 2px white;
+		}
 	}
 
 	tr[title] {
-		position: relative;
-
 		td {
 			padding-top: 1.5em;
 		}

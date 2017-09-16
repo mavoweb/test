@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>mv-value tests</title>
+	<link rel="stylesheet" href="https://dev.mavo.io/dist/mavo.css" />
+	<link rel="stylesheet" href="style.css" />
+	<style>
+		[data-foo]::before {
+			content: "[data-foo=" attr(data-foo) "]";
+			background: #efc;
+		}
+	</style>
+	<script src="https://dev.mavo.io/dist/mavo.js"></script>
+	<script src="mavotest.js"></script>
+</head>
+<body>
+
+<h1>mv-value tests</h1>
+
+<script type="application/json" id="countries">{
+	"country": [
+		{
+			"code": "",
+			"name": "Online"
+		},
+		{
+			"code": "us",
+			"name": "United States"
+		},
+		{
+			"code": "gb",
+			"name": "United Kingdom"
+		}
+	]
+}</script>
+
+<section mv-app="mvvalue">
+	<h1>Basic</h1>
+
+	<table class="reftest">
+		<tr>
+			<td><div mv-value="39 + 3">Without expression syntax</div></td>
+			<td>42</td>
+		</tr>
+		<tr>
+			<td><div mv-value="(39 + 3">With bug</div></td>
+			<td>With bug</td>
+		</tr>
+		<tr>
+			<td><input mv-value="39 + 3" value="In attribute"></td>
+			<td><input value="42"></td>
+		</tr>
+		<tr title="Object">
+			<td>
+				<div property="group1" typeof mv-value="{foo: 1, bar: 2}">
+					[foo] + [bar] = [foo + bar]
+				</div>
+			</td>
+			<td>1 + 2 = 3</td>
+		</tr>
+		<tr title="Object with property">
+			<td>
+				<div property="group2" typeof mv-value="{foo: 1, bar: 2}">
+					<span property="bar">10</span>
+					<span property="prop1">3</span>
+					[foo + bar + prop1]
+				</div>
+			</td>
+			<td>2 3 6</td>
+		</tr>
+		<tr title="Nested groups">
+			<td>
+				<div property="group3" mv-value="{prop2: 1, group4: {prop3: 2}}">
+					<span property="prop2"></span>
+					<div property="group4">
+						<span property="prop3"></span>
+					</div>
+				</div>
+			</td>
+			<td>1 <br>2</td>
+		</tr>
+		<tr title="Reference collision">
+			<td>
+				<span property="prop4">1</span>
+				<div property="group4" mv-group mv-value="{prop4: 2}">
+					[prop4]
+				</div>
+			</td>
+			<td>1 <div>2</div></td>
+		</tr>
+	</table>
+</section>
+
+<section mv-app="collections">
+	<h1>Collections</h1>
+
+	<table class="reftest">
+		<tr title="Collection">
+			<td>
+				<div property="collection1" mv-multiple mv-group mv-value='[
+					{"number": 1},
+					{"number": 2},
+					{"number": 3}
+				]'>
+					#<span property=number></span>
+				</div>
+			</td>
+			<td>
+				#1<br>
+				#2<br>
+				#3
+			</td>
+		</tr>
+		<tr title="Collection of primitives">
+			<td>
+				<span property="collection2" mv-multiple mv-value='[1, 2, 3]'></span>
+			</td>
+			<td>123</td>
+		</tr>
+		<tr class="interactive" title="Collection of primitives, interactive">
+			<td>
+				<span property="collection3" mv-multiple mv-mode="edit" mv-default="[$index]"></span>
+			</td>
+			<td>
+				<span property="collection4" mv-multiple mv-value="collection3"></span>
+			</td>
+		</tr>
+		<tr class="interactive" title="Collection of groups, interactive">
+			<td>
+				<div property="collection5" mv-multiple mv-mode="edit">
+					<span property="prop" mv-default="Foo"></span>
+					<span property="prop1" mv-default="[$index]"></span>
+				</div>
+			</td>
+			<td>
+				<div property="collection6" mv-multiple mv-group mv-value="collection5">
+					[prop]
+					<span property="prop1"></span>
+				</div>
+			</td>
+		</tr>
+		<tr class="interactive" title="Collection of groups, interactive">
+			<td>
+				<div property="collection7" mv-multiple mv-mode="edit">
+					<span property="prop2" mv-default="Foo[$index]"></span>
+					<span property="prop3" mv-default="[$index]"></span>
+				</div>
+			</td>
+			<td>
+				<div property="collection8" mv-multiple mv-group mv-value="collection7">
+					[prop2]
+					<span property="prop3"></span>
+				</div>
+			</td>
+		</tr>
+	</table>
+</section>
+
+<section>
+	<h1>Render array of primitives on collection of groups</h1>
+
+	<table class="reftest">
+		<tr>
+			<td>
+				<div mv-app="statuses">
+					[count(status)]
+					<dl property="status" mv-multiple mv-value="[1, 2, 3, 4]">
+						<dt property="prop1">[prop2]</dt>
+						<dd property="prop2">1</dd>
+					</dl>
+				</div>
+			</td>
+			<td>
+				4
+				1 1
+				2 2
+				3 3
+				4 4
+			</td>
+		</tr>
+	</table>
+</section>
+
+<section>
+	<h1>Render inner property</h1>
+
+	<table class="reftest">
+		<tr mv-app mv-storage="#countries">
+			<td>
+				<ul>
+					<li property="country" mv-multiple>
+						<span property="code"></span> [code]
+						<span property="name"></span> [name]
+					</li>
+				</ul>
+			</td>
+			<td>
+				<span property="person" mv-multiple mv-value="name"></span>
+			</td>
+			<td>
+				OnlineUnited StatesUnited Kingdom
+			</td>
+		</tr>
+	</table>
+</section>
+
+<section>
+	<h1>mv-value inside collection</h1>
+
+	<table class="reftest">
+		<tr mv-app mv-storage="#countries">
+			<td>
+				<ul>
+					<li property="country" mv-multiple>
+						<span property="code"></span>
+						<span property="name"></span>
+						<span mv-value="code"></span>
+						<meta mv-value="5 + 5">
+						<span mv-value="[1, 2, 3]"></span>
+					</li>
+				</ul>
+			</td>
+			<td>
+				<ul>
+					<li>
+						Online
+						1, 2, 3
+					</li><li>
+						us
+						United States
+						us
+						1, 2, 3
+					</li><li>
+						gb
+						United Kingdom
+						gb
+						1, 2, 3
+					</li>
+				</ul>
+			</td>
+		</tr>
+	</table>
+</section>
+
+</body>
+</html>
