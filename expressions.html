@@ -79,6 +79,14 @@
 			<td>[false]</td>
 			<td>false</td>
 		</tr>
+		<tr title="Arrays">
+			<td>[ [1, 2, 3] ]</td>
+			<td>[1, 2, 3]</td>
+		</tr>
+		<tr>
+			<td>[ [-1, 2, -3] ]</td>
+			<td>[-1, 2, -3]</td>
+		</tr>
 		<tr title="Type inference, prop4">
 			<td>
 				a<span property="prop4">
@@ -406,6 +414,14 @@
 		<tr title="Invalid delimiter (only space)">
 			<td mv-expressions=" ">[1 + 2]</td>
 			<td></td>
+		</tr>
+		<tr title="Arrays with custom syntax">
+			<td mv-expressions="{{ }}">{{ [1, 2, 3, 4] }}</td>
+			<td>[1, 2, 3, 4]</td>
+		</tr>
+		<tr>
+			<td mv-expressions="{{ }}">{{ [-1, 2, -3] }}</td>
+			<td>[-1, 2, -3]</td>
 		</tr>
 	</table>
 </section>
