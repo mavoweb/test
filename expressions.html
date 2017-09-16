@@ -86,14 +86,6 @@
 			<td>[false]</td>
 			<td>false</td>
 		</tr>
-		<tr title="Arrays">
-			<td>[ [1, 2, 3] ]</td>
-			<td>[1, 2, 3]</td>
-		</tr>
-		<tr>
-			<td>[ [-1, 2, -3] ]</td>
-			<td>[-1, 2, -3]</td>
-		</tr>
 		<tr title="Type inference, prop4">
 			<td>
 				a<span property="prop4">
@@ -587,11 +579,17 @@
 			<td></td>
 		</tr>
 		<tr title="Arrays with custom syntax">
-			<td mv-expressions="{{ }}">{{ [1, 2, 3, 4] }}</td>
+			<td mv-expressions="{{ }}">
+				<span mv-expressions="{{ }}">
+					{{ [1, 2, 3, 4] }}
+				</span>
+			</td>
 			<td>[1, 2, 3, 4]</td>
 		</tr>
 		<tr>
-			<td mv-expressions="{{ }}">{{ [-1, 2, -3] }}</td>
+			<td mv-expressions="{{ }}">
+				<span mv-expressions="{{ }}">{{ [-1, 2, -3] }}</span>
+			</td>
 			<td>[-1, 2, -3]</td>
 		</tr>
 	</table>
