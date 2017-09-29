@@ -58,6 +58,16 @@
 				40 + 2]</td>
 			<td>42</td>
 		</tr>
+		<tr title="Arrays" mv-expressions="{{ }}">
+			<td>{{ [1, 2, 3, 4] }}</td>
+			<td>1, 2, 3, 4</td>
+		</tr>
+		<tr mv-expressions="{{ }}">
+			<td>
+				{{ [-1, 2, -3] }}
+			</td>
+			<td>-1, 2, -3</td>
+		</tr>
 		<tr title="Expression in attribute, prop5">
 			<td><input property="prop5" value="[39 + 3]"></td>
 			<td><input value="42"></td>
@@ -577,20 +587,6 @@
 		<tr title="Invalid delimiter (only space)">
 			<td mv-expressions=" ">[1 + 2]</td>
 			<td></td>
-		</tr>
-		<tr title="Arrays with custom syntax">
-			<td mv-expressions="{{ }}">
-				<span mv-expressions="{{ }}">
-					{{ [1, 2, 3, 4] }}
-				</span>
-			</td>
-			<td>[1, 2, 3, 4]</td>
-		</tr>
-		<tr>
-			<td mv-expressions="{{ }}">
-				<span mv-expressions="{{ }}">{{ [-1, 2, -3] }}</span>
-			</td>
-			<td>[-1, 2, -3]</td>
 		</tr>
 	</table>
 </section>
