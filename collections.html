@@ -65,7 +65,7 @@
 <h1>Collection tests</h1>
 
 <script type="application/json" id="numbers">{
-	"numbers": [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
+	"numbers": [-1, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
 }</script>
 
 <section mv-app="nested" mv-storage="#people" class="mv-autoedit">
@@ -155,21 +155,23 @@
 				<div property="numbers" mv-multiple style="--prepend: '[numbers]'; --append: '[$index]';"></div>
 			</td>
 			<td>
-				<div mv-multiple="" style="--prepend: '1'; --append: '0'">1</div><!--
-				--><div mv-multiple="" style="--prepend: '2'; --append: '1'">2</div><!--
-				--><div mv-multiple="" style="--prepend: '3'; --append: '2'">3</div><!--
-				--><div mv-multiple="" style="--prepend: '4'; --append: '3'">4</div><!--
-				--><div mv-multiple="" style="--prepend: '5'; --append: '4'">5</div><!--
-				--><div mv-multiple="" style="--prepend: '6'; --append: '5'">6</div><!--
-				--><div mv-multiple="" style="--prepend: '7'; --append: '6'">7</div><!--
-				--><div mv-multiple="" style="--prepend: '8'; --append: '7'">8</div><!--
-				--><div mv-multiple="" style="--prepend: '9'; --append: '8'">9</div><!--
-				--><div mv-multiple="" style="--prepend: '10'; --append: '9'">10</div>
+				<div mv-multiple="" style="--prepend: '-1'; --append: '0'">-1</div><!--
+				--><div mv-multiple="" style="--prepend: '0'; --append: '1'">0</div><!--
+				--><div mv-multiple="" style="--prepend: '1'; --append: '2'">1</div><!--
+				--><div mv-multiple="" style="--prepend: '2'; --append: '3'">2</div><!--
+				--><div mv-multiple="" style="--prepend: '3'; --append: '4'">3</div><!--
+				--><div mv-multiple="" style="--prepend: '4'; --append: '5'">4</div><!--
+				--><div mv-multiple="" style="--prepend: '5'; --append: '6'">5</div><!--
+				--><div mv-multiple="" style="--prepend: '6'; --append: '7'">6</div><!--
+				--><div mv-multiple="" style="--prepend: '7'; --append: '8'">7</div><!--
+				--><div mv-multiple="" style="--prepend: '8'; --append: '9'">8</div><!--
+				--><div mv-multiple="" style="--prepend: '9'; --append: '10'">9</div><!--
+				--><div mv-multiple="" style="--prepend: '10'; --append: '11'">10</div>
 			</td>
 		</tr>
 		<tr>
 			<td>[numbers]</td>
-			<td>1, 2, 3, 4, 5, 6, 7, 8, 9, 10</td>
+			<td>-1, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10</td>
 		</tr>
 	</table>
 </section>
