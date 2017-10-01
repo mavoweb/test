@@ -37,12 +37,32 @@ td {
 			<td>not(foo)</td>
 		</tr>
 		<tr>
+			<td>not foo</td>
+			<td>not(foo)</td>
+		</tr>
+		<tr title="Do not parse as not operator">
+			<td>notes</td>
+			<td>notes</td>
+		</tr>
+		<tr>
+			<td>-1</td>
+			<td>minus(1)</td>
+		</tr>
+		<tr>
+			<td>+1</td>
+			<td>plus(1)</td>
+		</tr>
+		<tr>
 			<td>if(2, 3, 4)</td>
 			<td>Mavo.Functions._Trap.iff(2, 3, 4)</td>
 		</tr>
 		<tr>
 			<td>foo and 5 or baz</td>
 			<td>or(and(foo, 5), baz)</td>
+		</tr>
+		<tr title="Do not parse as and operator">
+			<td>bands</td>
+			<td>bands</td>
 		</tr>
 		<tr>
 			<td>"foo"</td>
