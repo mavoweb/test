@@ -25,6 +25,63 @@
 <h1>Bar Tests</h1>
 
 <section>
+	<h1>mv-bar</h1>
+
+	<table class="reftest" data-test="getControls" data-columns="3">
+		<tr title="Default">
+			<td></td>
+			<td>status,edit,save,login,logout</td>
+		</tr>
+		<tr title="Negative">
+			<td>no-edit</td>
+			<td>status,save,login,logout</td>
+		</tr>
+		<tr title="Positive">
+			<td>yes-clear</td>
+			<td>status,edit,save,login,logout,clear</td>
+		</tr>
+		<tr title="Both positive and negative">
+			<td>yes-clear no-edit</td>
+			<td>status,save,login,logout,clear</td>
+		</tr>
+		<tr title="Absolute">
+			<td>edit save</td>
+			<td>edit,save</td>
+		</tr>
+		<tr title="Absolute and relative">
+			<td>no-login edit save yes-clear</td>
+			<td>edit,save,clear</td>
+		</tr>
+		<tr title="Order of positive ids should matter">
+			<td>no-login yes-clear edit save</td>
+			<td>clear,edit,save</td>
+		</tr>
+		<tr title="Conflicts, last one wins">
+			<td>no-save yes-edit clear no-clear save edit</td>
+			<td>save,edit</td>
+		</tr>
+		<tr title="Conflicted absolute does not get mv-bar into absolute mode">
+			<td>save no-save yes-clear</td>
+			<td>status,edit,login,logout,clear</td>
+		</tr>
+	</table>
+	<script>
+	function getControls(test, result, expected) {
+		try {
+			var r = Mavo.UI.Bar.getControls(test.textContent);
+			result.textContent = r;
+			return Test.equals(r + "", expected.textContent.trim());
+		}
+		catch(e) {
+			console.error(e);
+			result.textContent = "ERROR";
+			return false;
+		}
+	}
+	</script>
+</section>
+
+<section>
 	<h1>No storage</h1>
 
 	<p>Click Edit</p>
@@ -38,7 +95,7 @@
 				<ul>
 					<li>.mv-bar</li>
 					<li>.mv-bar .mv-edit</li>
-					<li>.mv-bar .mv-clear</li>
+					<li class="not">.mv-bar .mv-clear</li>
 					<li class="not">.mv-bar .mv-status</li>
 					<li class="not">.mv-bar .mv-save</li>
 					<li class="not">.mv-bar .mv-login</li>
@@ -71,7 +128,7 @@
 				<ul>
 					<li>.mv-bar</li>
 					<li>.mv-bar .mv-edit</li>
-					<li>.mv-bar .mv-clear</li>
+					<li class="not">.mv-bar .mv-clear</li>
 					<li>.mv-bar .mv-save</li>
 					<li class="not">.mv-bar .mv-status</li>
 					<li class="not">.mv-bar .mv-login</li>
@@ -91,39 +148,39 @@
 			</td>
 		</tr>
 		<tr title="Negative mv-bar values">
-			<td mv-app mv-storage="#data" mv-bar="no-clear">
+			<td mv-app mv-storage="#data" mv-bar="no-save">
 				<span property="prop1">yolo</span>
 			</td>
 			<td>
 				<ul>
 					<li>.mv-bar .mv-edit</li>
-					<li class="not">.mv-bar .mv-clear</li>
+					<li class="not">.mv-bar .mv-save</li>
 				</ul>
 			</td>
 		</tr>
-		<tr title="Negative and positive mv-bar values, no conflict">
-			<td mv-app mv-storage="#data" mv-bar="no-clear save edit">
+		<tr title="Negative and absolute mv-bar values, no conflict">
+			<td mv-app mv-storage="#data" mv-bar="edit no-save">
 				<span property="prop1">yolo</span>
 			</td>
 			<td>
 				<ul>
-					<li>.mv-bar .mv-save + .mv-edit</li>
-					<li class="not">.mv-bar .mv-clear</li>
+					<li class="not">.mv-bar .mv-save</li>
+					<li>.mv-bar .mv-edit</li>
 				</ul>
 			</td>
 		</tr>
-		<tr title="Negative and positive mv-bar values, conflicts">
-			<td mv-app mv-storage="#data" mv-bar="clear no-clear save edit">
+		<tr title="Optional mv-bar values">
+			<td mv-app mv-storage="#data" mv-bar="yes-clear">
 				<span property="prop1">yolo</span>
 			</td>
 			<td>
 				<ul>
-					<li>.mv-bar .mv-save + .mv-edit</li>
-					<li class="not">.mv-bar .mv-clear</li>
+					<li>.mv-bar .mv-edit + .mv-save</li>
+					<li>.mv-bar .mv-clear</li>
 				</ul>
 			</td>
 		</tr>
-		<tr title="Custom Clear button">
+		<tr title="Custom buttons">
 			<td mv-app mv-storage="#data">
 				<div class="mv-bar mv-ui">
 					<button class="custom">Custom</button>
@@ -135,7 +192,7 @@
 				<ul>
 					<li>.mv-bar .custom</li>
 					<li>.mv-bar .mv-clear.foo</li>
-					<li>.mv-bar .mv-edit + .mv-save + .mv-clear</li>
+					<li>.mv-bar .custom + .mv-clear + .mv-edit + .mv-save</li>
 				</ul>
 			</td>
 		</tr>
@@ -156,7 +213,6 @@
 				<ul>
 					<li>.mv-bar</li>
 					<li>.mv-bar .mv-edit</li>
-					<li>.mv-bar .mv-clear</li>
 					<li>.mv-bar .mv-status</li>
 					<li>.mv-bar .mv-save</li>
 					<li class="not">.mv-bar .mv-login</li>
@@ -169,7 +225,7 @@
 				<span property="country"><span property="name">yolo</span></span>
 			</td>
 			<td>
-				.mv-bar .mv-clear + .mv-save + .mv-edit + .mv-logout + .mv-status
+				.mv-bar .mv-save + .mv-edit + .mv-logout + .mv-status
 			</td>
 		</tr>
 		<tr title="Custom button order, no login, no status">
@@ -177,7 +233,7 @@
 				<span property="country"><span property="name">yolo</span></span>
 			</td>
 			<td>
-				.mv-bar .mv-clear + .mv-save + .mv-edit + .mv-logout:last-child
+				.mv-bar .mv-save + .mv-edit + .mv-logout:last-child
 			</td>
 		</tr>
 	</table>
@@ -220,7 +276,7 @@
 			<td>.mv-bar:not(.mv-compact):not(.mv-tiny)</td>
 		</tr>
 		<tr>
-			<td mv-app mv-storage="local" style="width: 300px; flex: none">
+			<td mv-app mv-storage="local" style="width: 200px; flex: none">
 				<div property="prop1"></div>
 			</td>
 			<td>.mv-bar.mv-compact:not(.mv-tiny)</td>
