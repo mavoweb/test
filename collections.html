@@ -6,6 +6,10 @@
 	<link rel="stylesheet" href="https://dev.mavo.io/dist/mavo.css" />
 	<link rel="stylesheet" href="style.css" />
 	<style>
+		::after {
+			content: " " var(--append);
+		}
+
 		[mv-app="customitemcontrols"] .mv-item-bar {
 			position: static;
 			opacity: 1;
