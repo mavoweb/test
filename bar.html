@@ -7,6 +7,16 @@
 	<link rel="stylesheet" href="style.css" />
 	<script src="https://dev.mavo.io/dist/mavo.js"></script>
 	<script src="mavotest.js"></script>
+	<script>
+		// Stub for optional control
+		Mavo.UI.Bar.controls.clear = {
+			action: function() {
+				alert("Clear pressed!");
+			},
+			permission: "delete",
+			optional: true
+		};
+	</script>
 	<style>
 		[data-test="selector"] th:last-child,
 		[data-test="selector"] td:last-child {
