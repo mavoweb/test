@@ -151,6 +151,10 @@ body > section > p {
 		font-style: normal;
 		text-transform: uppercase;
 	}
+
+	&.note::before {
+		content: "Note: ";
+	}
 }
 
 table.reftest {
