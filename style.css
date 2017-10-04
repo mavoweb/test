@@ -1,9 +1,6 @@
 ::before {
   content: var(--prepend) " "; }
 
-::after {
-  content: " " var(--append); }
-
 :root {
   --ciel: #cceeff;
   --dark: #337799; }
@@ -117,6 +114,9 @@ body > section > p::before {
   font-weight: bold;
   font-style: normal;
   text-transform: uppercase; }
+
+body > section > p.note::before {
+  content: "Note: "; }
 
 table.reftest {
   width: 100%;
