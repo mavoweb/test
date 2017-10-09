@@ -118,6 +118,22 @@
 			<td>[country]</td>
 			<td>us</td>
 		</tr>
+		<tr title="Dynamic select">
+			<td>
+				<select property="select" id="select">
+
+				</select>
+				<script>
+				$.ready().then(function(){
+					for (var i = 1; i<5; i++) {
+						$("#select").appendChild($.create("option", {contents: i}))
+					}
+				})
+				</script>
+			</td>
+			<td>[select]</td>
+			<td>1</td>
+		</tr>
 		<tr>
 			<td><input type="checkbox" property="checktrue" checked></td>
 			<td>[checktrue]</td>
