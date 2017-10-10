@@ -118,6 +118,22 @@
 			<td>[country]</td>
 			<td>us</td>
 		</tr>
+		<tr title="Dynamic select">
+			<td>
+				<select property="select" id="select">
+
+				</select>
+				<script>
+				$.ready().then(function(){
+					for (var i = 1; i<5; i++) {
+						$("#select").appendChild($.create("option", {contents: i}))
+					}
+				})
+				</script>
+			</td>
+			<td>[select]</td>
+			<td>1</td>
+		</tr>
 		<tr>
 			<td><input type="checkbox" property="checktrue" checked></td>
 			<td>[checktrue]</td>
@@ -166,13 +182,19 @@
 </section>
 
 <section>
-	<h1>Filter</h1>
-	<div mv-app="">
-		<label property="statusFilter" mv-multiple mv-value='[{id: "new", name: "New"}, {id: "accepted", name: "Accepted"}, {id: "deferred", name: "Deferred"}]'>
-			<input type="checkbox" property="show" checked>
-			<span property="name"></span>
-		</label>
-	</div>
+	<h1>Numbers</h1>
+	<table class="reftest">
+		<tr>
+			<td mv-app>
+				<span property="prop1" datatype="number">0</span>
+				<span property="prop2" datatype="number">1</span>
+				<span property="prop3" datatype="number">-1</span>
+			</td>
+			<td>
+				0 1 -1
+			</td>
+		</tr>
+	</table>
 </section>
 
 <section mv-app="buttons">

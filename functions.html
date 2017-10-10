@@ -47,6 +47,22 @@ table.reftest td:first-child {
 			<td>[5, 7, 3]</td>
 		</tr>
 		<tr>
+			<td>subtract(1, 2)</td>
+			<td>-1</td>
+		</tr>
+		<tr>
+			<td>subtract(1, -2)</td>
+			<td>3</td>
+		</tr>
+		<tr>
+			<td>subtract(1, 0)</td>
+			<td>1</td>
+		</tr>
+		<tr>
+			<td>minus(1)</td>
+			<td>-1</td>
+		</tr>
+		<tr>
 			<td>and(0, true)</td>
 			<td>false</td>
 		</tr>
@@ -372,12 +388,24 @@ table.reftest td:first-child {
 			<td>"1986"</td>
 		</tr>
 		<tr>
+			<td>year("1986-06-13").twodigit</td>
+			<td>"86"</td>
+		</tr>
+		<tr>
+			<td>year("1900-06-13").twodigit</td>
+			<td>"00"</td>
+		</tr>
+		<tr>
 			<td>date("1986-06-03 23:15:20")</td>
 			<td>"1986-06-03"</td>
 		</tr>
 		<tr>
 			<td>time("1986-06-03 23:15:20")</td>
 			<td>"23:15:20"</td>
+		</tr>
+		<tr>
+			<td>time("1986-06-03 00:00:00")</td>
+			<td>"00:00:00"</td>
 		</tr>
 		<tr>
 			<td>hour("1986-06-13 23:15:20")</td>

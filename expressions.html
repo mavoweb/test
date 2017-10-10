@@ -175,6 +175,18 @@
 			<td>[1/0]</td>
 			<td>∞</td>
 		</tr>
+		<tr style="background: hsl([80 + 3600], 80%, 80%)" title="No number formatting in attributes" property="row" mv-attribute="style">
+			<td>[row]</td>
+			<td>background: hsl(3680, 80%, 80%)</td>
+		</tr>
+		<tr title="No number formatting in style element" id="styleelement">
+			<td>
+				<style style="display: block;">#styleelement {display: hsl([3600], 100%, 80%)}</style>
+			</td>
+			<td>
+				#styleelement {display: hsl(3600, 100%, 80%)}
+			</td>
+		</tr>
 	</table>
 </section>
 
@@ -790,6 +802,19 @@
 			<td mv-app="crossmavosource2"><input property="prop2" value="[crossmavosource1.prop1]" /></td>
 		</tr>
 	</table>
+</section>
+
+<section mv-app="special">
+	<h1>Special variables</h1>
+
+	<p>Verify that they are updated when they should be.</p>
+
+	<div title="$now">[$now]</div>
+	<div title="time($now)">[time($now)]</div>
+	<div title="$mouse">[$mouse]</div>
+	<div title="$mouse.x">[$mouse.x]</div>
+	<div title="$mouse.y">[$mouse.y]</div>
+	<div title="$hash">[$hash]</div>
 </section>
 
 <script>

@@ -26,6 +26,8 @@
 }
 </script>
 
+<button id="saveall" style="font-size: 200%">Save All Mavos</button>
+
 <section>
 	<h1>mv-path</h1>
 
@@ -137,11 +139,93 @@
 				<script>document.write($$("td pre").pop().outerHTML)</script>
 			</td>
 		</tr>
-		<tr title="mv-path on collection and on collection item">
+		<tr title="mv-path on collection item">
 			<td mv-app="mvpath5" mv-storage="#data-mvpath-4" mv-path="prop1">
 				<span property="prop2" mv-multiple mv-path="prop3"></span>
 			</td>
 			<td>23</td>
+		</tr>
+	</table>
+</section>
+
+<section>
+	<h1>mv-multiple-path</h1>
+	<p>Click Save. The tests should still pass.</p>
+	<table class="reftest">
+		<tr>
+			<td>
+				<pre id="data-mvmultiplepath">{
+	"prop1": [
+		{
+			"id": "foo",
+			"prop2": 2
+		},
+		{
+			"id": "bar",
+			"prop2": 3
+		},
+		{
+			"id": "baz",
+			"prop2": 4
+		}
+	],
+	"prop3": 1
+}</pre>
+			</td>
+			<td>
+				<script>document.write($$("td pre").pop().outerHTML)</script>
+			</td>
+		</tr>
+		<tr title="mv-multiple-path on collection (by id)">
+			<td mv-app="mvmultiplepath" mv-storage="#data-mvmultiplepath">
+				<span property="prop1" mv-multiple mv-multiple-path="bar">
+					<span property="prop2"></span>
+				</span>
+			</td>
+			<td>3</td>
+		</tr>
+		<tr>
+			<td>
+				<pre id="data-mvmultiplepath2">{
+	"prop1": [
+		{
+			"id": "foo",
+			"prop2": 2
+		},
+		{
+			"id": "bar",
+			"prop2": 3
+		}
+	],
+	"prop3": 1
+}</pre>
+			</td>
+			<td>
+				<pre>{
+	"prop1": [
+		{
+			"id": "foo",
+			"prop2": 2
+		},
+		{
+			"id": "bar",
+			"prop2": 3
+		},
+		{
+			"id": "yolo"
+		}
+	],
+	"prop3": 1
+}</pre>
+			</td>
+		</tr>
+		<tr title="mv-multiple-path on collection (by id that doesn’t exist)">
+			<td mv-app="mvmultiplepath" mv-storage="#data-mvmultiplepath2">
+				<span property="prop1" mv-multiple mv-multiple-path="yolo">
+					<span property="prop2"></span>
+				</span>
+			</td>
+			<td></td>
 		</tr>
 	</table>
 </section>
@@ -493,5 +577,12 @@
 	</table>
 </section>
 
+<script>
+document.getElementById("saveall").addEventListener("click", function(evt) {
+	$$(".mv-bar .mv-save").forEach(function(save) {
+		save.click();
+	});
+});
+</script>
 </body>
 </html>

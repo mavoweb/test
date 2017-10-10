@@ -2,10 +2,6 @@
 	content: var(--prepend) " ";
 }
 
-::after {
-	content: " " var(--append);
-}
-
 :root {
 	--ciel: hsl(200, 100%, 90%);
 	--dark: hsl(200, 50%, 40%);
@@ -154,6 +150,10 @@ body > section > p {
 		font-weight: bold;
 		font-style: normal;
 		text-transform: uppercase;
+	}
+
+	&.note::before {
+		content: "Note: ";
 	}
 }
 
