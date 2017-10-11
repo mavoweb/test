@@ -242,28 +242,6 @@ table.reftest {
 	}
 }
 
-td[data-script] {
-	position: relative;
-	background-image: linear-gradient(225deg, rgba(0,0,0,.5) .6em, transparent 0);
-	cursor: help;
-
-	&:hover::after,
-	&:focus::after {
-		content: attr(data-script);
-		position: absolute;
-		z-index: 1;
-		white-space: pre-wrap;
-		min-width: 50ch;
-		max-width: 30vw;
-		padding: .8em 1.2em;
-		margin: 1em;
-		border-radius: .5em;
-		background: hsla(20, 100%, 97%, .9);
-		box-shadow: 0 1px .5em rgba(0,0,0,.5);
-		font: 100%/1.5 Consolas, Monaco, monospace;
-	}
-}
-
 body > section > div {
 	border: 1px solid rgba(0,0,0,.15);
 	background: rgba(0,0,0,.06);

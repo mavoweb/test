@@ -138,11 +138,6 @@ var _ = self.RefTest = $.Class({
 		// Remove any <script> elements to prevent them messing up the contents. They've already been processed anyway.
 		// Keep them in an attribute though, as they may be useful to display
 		for (var script of $$("script", this.table)) {
-			var attr = script.parentNode.getAttribute("data-script") || "";
-
-			var code = _.presentCode(script.textContent);
-
-			script.parentNode.setAttribute("data-script", attr + code);
 			$.remove(script);
 		}
 
@@ -448,10 +443,50 @@ document.addEventListener("DOMContentLoaded", function(){
 
 	});
 
+	// HTML tooltips
+	var cells = $$("table.reftest td");
+	cells.forEach(td => {
+		td._.html = td.innerHTML;
+	});
+
+	Promise.all([
+		$.include(self.Prism, "https://cdnjs.cloudflare.com/ajax/libs/prism/1.8.1/prism.min.js"),
+		$.include(self.tippy, "https://unpkg.com/tippy.js@1.3.0/dist/tippy.js")
+	])
+	.then(() => $.include(Prism.plugins.NormalizeWhitespace, "https://cdnjs.cloudflare.com/ajax/libs/prism/1.8.1/plugins/normalize-whitespace/prism-normalize-whitespace.min.js"))
+	.then(() => {
+		tippy(cells, {
+			html: td => {
+				var pre = $.create("pre")
+				var code = $.create("code", {
+					textContent: td._.html,
+					className: "language-markup",
+					inside: pre
+				});
+				Prism.highlightElement(code);
+
+				return pre;
+			},
+			arrow: true,
+			theme: "light"
+		});
+	});
+
+	loadCSS("https://cdnjs.cloudflare.com/ajax/libs/prism/1.8.1/themes/prism.css");
+	loadCSS("https://unpkg.com/tippy.js@1.3.0/dist/tippy.css");
+
 	requestAnimationFrame(() => {
 		$$("table.reftest").forEach(table => table.reftest = new RefTest(table));
 	});
 });
+
+function loadCSS(url) {
+	return $.fetch(url).then(() => $.create("link", {
+		"href": url,
+		"rel": "stylesheet",
+		"inside": document.head
+	}));
+}
 
 
 })(self.Bliss)
