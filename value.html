@@ -254,5 +254,39 @@
 	</table>
 </section>
 
+<section mv-app class="mv-autoedit">
+	<h1>Property edited with dynamic select</h1>
+
+	<table class="reftest">
+		<tr>
+			<td>
+				<div property="event" mv-multiple>
+					<span property="name">Event name</span>
+					<meta property="id" mv-default="[idify(name)]">
+				</div>
+			</td>
+			<td>
+				Event name id
+			</td>
+		</tr>
+		<tr>
+			<td>
+				<select id="events">
+					<option mv-multiple="eventOption" value="[id]" mv-value="event" mv-group>[name]</option>
+				</select>
+			</td>
+			<td>Event name</td>
+		</tr>
+		<tr>
+			<td>
+				<span property="eventId" mv-edit="#events"></span>
+			</td>
+			<td>
+				event-name
+			</td>
+		</tr>
+	</table>
+</section>
+
 </body>
 </html>
