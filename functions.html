@@ -15,6 +15,7 @@ table.reftest td:first-child {
 }
 </style>
 <script src="https://dev.mavo.io/dist/mavo.js"></script>
+<script src="mavotest.js"></script>
 </head>
 <body>
 
@@ -204,12 +205,127 @@ table.reftest td:first-child {
 			<td>undefined</td>
 		</tr>
 		<tr title="Get collection item by id">
-			<td>get([{id: "foo", name: "fooname"}, {id: "bar", name: "barname"}], "foo").name</td>
+			<td>get([{id: "foo", name: "fooname"}, {id: "bar", name: "barname"}], "id=foo").name</td>
 			<td>"fooname"</td>
 		</tr>
 		<tr title="Get collection item by id">
-			<td>get([{id: "foo", name: "fooname"}, {id: "bar", name: "barname"}], "bar").name</td>
+			<td>get([{id: "foo", name: "fooname"}, {id: "bar", name: "barname"}], "id=bar").name</td>
 			<td>"barname"</td>
+		</tr>
+		<tr title="Get collection item by name">
+			<td>get([{id: "foo", name: "fooname"}, {id: "bar", name: "barname"}], "name=fooname")</td>
+			<td>[{"id":"foo","name":"fooname"}]</td>
+		</tr>
+		<tr title="Get collection item property">
+			<td>get([{id: "foo", name: "fooname"}, {id: "bar", name: "barname"}], "name")</td>
+			<td>["fooname", "barname"]</td>
+		</tr>
+		<tr title="Get collection item by name and then by property">
+			<td>get(get([{id: "foo", name: "fooname"}, {id: "bar", name: "barname"}], "name=barname"), "id")</td>
+			<td>["bar"]</td>
+		</tr>
+	</table>
+</section>
+
+<section>
+	<h1>get() meta</h1>
+
+	<table class="reftest">
+		<tr title="Normal">
+			<td>
+				<script>
+					var meta = {};
+					Mavo.Functions.get({id: "foo", name: "fooname"}, "id", meta);
+					print(JSON.stringify(meta.property));
+				</script>
+			</td>
+			<td>
+				"id"
+			</td>
+		</tr>
+		<tr title="Not found">
+			<td>
+				<script>
+					var meta = {};
+					Mavo.Functions.get({id: "foo", name: "fooname"}, "yolo", meta);
+					print(JSON.stringify(meta.property));
+				</script>
+			</td>
+			<td>
+				"yolo"
+			</td>
+		</tr>
+		<tr title="Case insensitive">
+			<td>
+				<script>
+					var meta = {};
+					Mavo.Functions.get({id: "foo", name: "fooname"}, "ID", meta);
+					print(JSON.stringify(meta.property));
+				</script>
+			</td>
+			<td>
+				"id"
+			</td>
+		</tr>
+		<tr title="Array, Get by id">
+			<td>
+				<script>
+					var meta = {};
+					Mavo.Functions.get([{id: "foo", name: "fooname"}, {id: "bar", name: "barname"}], "id=bar", meta);
+					print(JSON.stringify(meta.property));
+				</script>
+			</td>
+			<td>
+				1
+			</td>
+		</tr>
+		<tr title="Array, Get by id (nonexistent)">
+			<td>
+				<script>
+					var meta = {};
+					Mavo.Functions.get([{id: "foo", name: "fooname"}, {id: "bar", name: "barname"}], "id=yolo", meta);
+					print(JSON.stringify(meta.property));
+				</script>
+			</td>
+			<td>
+				2
+			</td>
+		</tr>
+		<tr title="Array, Get by name">
+			<td>
+				<script>
+					var meta = {};
+					Mavo.Functions.get([{id: "foo", name: "fooname"}, {id: "bar", name: "barname"}], "name=barname", meta);
+					print(JSON.stringify(meta.property));
+				</script>
+			</td>
+			<td>
+				[1]
+			</td>
+		</tr>
+		<tr title="Array, Get by name (nonexistent)">
+			<td>
+				<script>
+					var meta = {};
+					Mavo.Functions.get([{id: "foo", name: "fooname"}, {id: "bar", name: "barname"}], "name=yolo", meta);
+					print(JSON.stringify(meta.property));
+				</script>
+			</td>
+			<td>
+				[2]
+			</td>
+		</tr>
+		<tr title="Array, Get by name (multiple)">
+			<td>
+				<script>
+					var meta = {};
+					Mavo.Functions.get([{id: "foo", name: "fooname"}, {id: "bar", name: "barname"}, {id: "foo2", name: "fooname"}], "name=fooname", meta);
+					print(JSON.stringify(meta.property));
+				</script>
+			</td>
+			<td>
+				[0,2]
+			</td>
 		</tr>
 	</table>
 </section>
@@ -330,7 +446,7 @@ table.reftest td:first-child {
 
 <section>
 	<h1>reverse()</h1>
-	
+
 	<table class="reftest" data-test="expressionEvaluation" data-columns="3">
 		<tr>
 			<td>reverse([1, 2, 3, 4, 5])</td>
@@ -419,6 +535,14 @@ table.reftest td:first-child {
 			<td>second("1986-06-13 23:15:20")</td>
 			<td>20</td>
 		</tr>
+		<tr title="No argument">
+			<td>date()</td>
+			<td>""</td>
+		</tr>
+		<tr title="Empty argument">
+			<td>date("")</td>
+			<td>""</td>
+		</tr>
 		<tr title="Subtract dates">
 			<td>subtract("1986-06-13", "1986-06-10")</td>
 			<td>259200</td>
@@ -434,19 +558,12 @@ table.reftest td:first-child {
 	</table>
 </section>
 
-<script src="mavotest.js"></script>
 <script>
 function expressionEvaluation(test, result, expected) {
-	try {
-		var r = (new Mavo.Expression(test.textContent)).eval({});
-		result.textContent = r;
-		return Test.equals(r, eval(expected.textContent));
-	}
-	catch(e) {
-		console.error(e);
-		result.textContent = "ERROR";
-		return false;
-	}
+	var r = (new Mavo.Expression(test.textContent)).eval({});
+	var json = JSON.stringify(r);
+	result.textContent = json;
+	return Test.equals(r, eval(expected.textContent)) || json == JSON.stringify(JSON.parse(expected.textContent));
 }
 </script>
 

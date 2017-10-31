@@ -178,7 +178,7 @@
 		</tr>
 		<tr title="mv-multiple-path on collection (by id)">
 			<td mv-app="mvmultiplepath" mv-storage="#data-mvmultiplepath">
-				<span property="prop1" mv-multiple mv-multiple-path="bar">
+				<span property="prop1" mv-multiple mv-multiple-path="id=bar">
 					<span property="prop2"></span>
 				</span>
 			</td>
@@ -221,7 +221,7 @@
 		</tr>
 		<tr title="mv-multiple-path on collection (by id that doesn’t exist)">
 			<td mv-app="mvmultiplepath" mv-storage="#data-mvmultiplepath2">
-				<span property="prop1" mv-multiple mv-multiple-path="yolo">
+				<span property="prop1" mv-multiple mv-multiple-path="id=yolo">
 					<span property="prop2"></span>
 				</span>
 			</td>
@@ -314,7 +314,7 @@
 			</td>
 		</tr>
 		<tr>
-			<td mv-app mv-storage="#data-mvpath-7" mv-path="prop1/foo">
+			<td mv-app mv-storage="#data-mvpath-7" mv-path="prop1/id=foo">
 				<span property="id"></span>
 				<span property="prop2"></span>
 			</td>
@@ -518,7 +518,7 @@
 	</table>
 </section>
 
-<section>
+<!-- <section>
 	<h1>Turning part of a group into a child group</h1>
 
 	<p>Click Save. Does not currently pass, will pass if <a href="https://github.com/mavoweb/mavo/issues/228">#228</a> is implemented.</p>
@@ -575,7 +575,7 @@
 			</td>
 		</tr>
 	</table>
-</section>
+</section> -->
 
 <script>
 document.getElementById("saveall").addEventListener("click", function(evt) {

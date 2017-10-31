@@ -264,9 +264,14 @@
 					<span property="name">Event name</span>
 					<meta property="id" mv-default="[idify(name)]">
 				</div>
+				<div property="event" mv-multiple>
+					<span property="name">Foo Bar</span>
+					<meta property="id" mv-default="foo-bar">
+				</div>
 			</td>
 			<td>
 				Event name id
+				Foo Bar id
 			</td>
 		</tr>
 		<tr>
@@ -282,8 +287,12 @@
 				<span property="eventId" mv-edit="#events"></span>
 			</td>
 			<td>
-				event-name
+				Event name
 			</td>
+		</tr>
+		<tr>
+			<td>[eventId]</td>
+			<td>event-name</td>
 		</tr>
 	</table>
 </section>

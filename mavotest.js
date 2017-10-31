@@ -160,11 +160,20 @@ var _ = self.RefTest = $.Class({
 			});
 		}
 
-		var test = () => {
+		var test = x => {
 			requestAnimationFrame(() => this.test());
 		};
 
 		this.observer = new MutationObserver(test);
+		this.observe();
+
+		$.events(this.table, "input change click mavo:datachange", test);
+		$.events(this.table.closest("[mv-app]"), "mavo:load", test);
+	},
+
+	observe: function() {
+		this.observerRunning = true;
+
 		this.observer.observe(this.table, {
 			subtree: true,
 			childList: true,
@@ -172,9 +181,19 @@ var _ = self.RefTest = $.Class({
 			characterData: true,
 			attributeFilter: ["mv-mode"]
 		});
+	},
 
-		$.events(this.table, "input change click mavo:datachange", test);
-		$.events(this.table.closest("[mv-app]"), "mavo:load", test);
+	unobserve: function() {
+		this.observer.disconnect();
+		this.observerRunning = false;
+	},
+
+	// Run code past observer
+	sneak: function(callback) {
+		this.unobserve();
+		var ret = callback.call(this);
+		this.observe();
+		return ret;
 	},
 
 	test: function() {
@@ -188,17 +207,21 @@ var _ = self.RefTest = $.Class({
 			tr.compare = _.getTest(tr.getAttribute("data-test"), this.compare);
 		}
 
+		var resultCell;
+
 		if (cells.length) {
 			if (this.columns == 3) {
 				// Test, actual, expected
 				if (cells.length == 1) {
 					// expected is the same as test
-					cells.push($.create("td", {after: cells[0]}));
+					resultCell = $.create("td", {after: cells[0]});
+					cells.push(resultCell);
 				}
 
 				if (cells.length == 2) {
 					// missing actual
-					cells.splice(1, 0, $.create("td", {after: cells[0]}));
+					resultCell = $.create("td", {after: cells[0]})
+					cells.splice(1, 0, resultCell);
 				}
 
 				if (!cells[2].textContent) {
@@ -215,8 +238,19 @@ var _ = self.RefTest = $.Class({
 				}
 			}
 
+			try {
+				var ret = this.sneak(() => tr.compare(...cells));
+			}
+			catch(e) {
+				ret = e;
+				var error = true;
+				resultCell.textContent = e + "";
+			}
+
+			var error = ret instanceof Error;
+
 			tr.classList.remove("pass", "fail");
-			var className = tr.compare(...cells)? "pass" : "fail";
+			var className = ret && !error? "pass" : "fail";
 			tr.classList.add(className);
 
 			if (className == "pass" && !tr.classList.contains("interactive")) {
@@ -446,7 +480,7 @@ document.addEventListener("DOMContentLoaded", function(){
 	// HTML tooltips
 	var cells = $$("table.reftest td");
 	cells.forEach(td => {
-		td._.html = td.innerHTML;
+		td._.html = td.attributes.length > 0? td.outerHTML : td.innerHTML;
 	});
 
 	Promise.all([
