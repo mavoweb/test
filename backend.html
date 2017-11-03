@@ -614,6 +614,68 @@ localStorage.localstoretest = `{
 	</table>
 </section>
 
+<section>
+	<h1>Autosave + login</h1>
+
+	<p>Click login, edit the value to a 1</p>
+
+	<table class="reftest">
+		<tr class="interactive">
+			<td>
+				<pre id="saveafterlogin-data">{
+
+}</pre>
+			</td>
+			<td>
+				<pre>{
+	"text": "1"
+}</pre>
+			</td>
+		</tr>
+		<tr class="interactive">
+			<td mv-app="appName" mv-storage="2#saveafterlogin-data" mv-autosave="1">
+				<input property="text">
+			</td>
+			<td>
+				1
+			</td>
+		</tr>
+	</table>
+
+	<script>
+		Mavo.Backend.register($.Class({
+			extends: Mavo.Backend,
+			id: 'Element2',
+			constructor: function () {
+				this.permissions.on(["read", "login"]);
+				this.element = $(this.source.slice(1));
+			},
+
+			get: function() {
+				return Promise.resolve(this.element.textContent);
+			},
+
+			put: function(serialized) {
+				return Promise.resolve(this.element.textContent = serialized);
+			},
+
+			login: function() {
+				this.permissions.off("login").on(["edit", "save", "logout"]);
+				return Promise.resolve();
+			},
+
+			logout: function() {
+				this.permissions.off(["edit", "save", "logout"]).on("login");
+				return Promise.resolve();
+			},
+
+			static: {
+				test: url => url.indexOf("2#") === 0
+			}
+		}));
+	</script>
+</section>
+
 <section class="interactive">
 	<h1>Mavo in about:srcdoc</h1>
 
