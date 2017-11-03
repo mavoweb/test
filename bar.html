@@ -250,7 +250,7 @@
 </section>
 
 <section>
-	<h1>Special cases</h1>
+	<h1>Button toggling</h1>
 
 	<table class="reftest" data-test="selector">
 		<tr title="No save button when autosave is enabled with no throttling">
@@ -262,8 +262,17 @@
 			</td>
 		</tr>
 		<tr title="No edit button when no control needs edit">
-			<td mv-app="barspecial" mv-storage="local" mv-autosave="0">
+			<td mv-app="noedit" mv-storage="local" mv-autosave="0">
 				<input property="prop1" value="yolo" />
+			</td>
+			<td class="not">
+				.mv-bar .mv-edit
+			</td>
+		</tr>
+		<tr title="No edit button when no control needs edit, even if edit permission is on" class="interactive">
+			<td mv-app="noedit2" mv-storage="local">
+				<input property="prop1" value="yolo" />
+				<button onclick="Mavo.all.noedit2.permissions.edit = true">Enable edit permission</button>
 			</td>
 			<td class="not">
 				.mv-bar .mv-edit
