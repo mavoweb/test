@@ -451,6 +451,98 @@
 </section>
 
 <section>
+	<h1>mv-alias</h1>
+
+	<p>Click Save</p>
+
+	<table class="reftest">
+		<tr class="interactive">
+			<td>
+				<pre id="data-alias">{
+	"prop1": 1
+}</pre>
+			</td>
+			<td>
+				<pre>{
+	"prop2": 1
+}</pre>
+			</td>
+		</tr>
+		<tr title="Basic usage">
+			<td mv-app="primitiveongroup" mv-storage="#data-alias">
+				<span property="prop2" mv-alias="prop1"></span>
+			</td>
+			<td>1</td>
+		</tr>
+
+		<tr class="interactive">
+			<td>
+				<pre id="data-alias2">{
+	"prop1": 1,
+	"prop2": 2
+}</pre>
+			</td>
+			<td>
+				<pre>{
+	"prop2": 1,
+	"prop3": 2
+}</pre>
+			</td>
+		</tr>
+		<tr title="Half swap">
+			<td mv-app="primitiveongroup" mv-storage="#data-alias2">
+				<span property="prop2" mv-alias="prop1"></span>
+				<span property="prop3" mv-alias="prop2"></span>
+			</td>
+			<td>1 2</td>
+		</tr>
+
+		<tr class="interactive">
+			<td>
+				<pre id="data-alias3">{
+	"prop1": 1,
+	"prop2": 2
+}</pre>
+			</td>
+			<td>
+				<pre>{
+	"prop1": 2,
+	"prop2": 1
+}</pre>
+			</td>
+		</tr>
+		<tr title="Swap">
+			<td mv-app="primitiveongroup" mv-storage="#data-alias3">
+				<span property="prop1" mv-alias="prop2"></span>
+				<span property="prop2" mv-alias="prop1"></span>
+			</td>
+			<td>2 1</td>
+		</tr>
+
+		<tr class="interactive">
+			<td>
+				<pre id="data-alias4">{
+	"prop1": 1
+}</pre>
+			</td>
+			<td>
+				<pre>{
+	"prop2": 1,
+	"prop3": 1
+}</pre>
+			</td>
+		</tr>
+		<tr title="Two properties with the same alias">
+			<td mv-app="primitiveongroup" mv-storage="#data-alias4">
+				<span property="prop2" mv-alias="prop1"></span>
+				<span property="prop3" mv-alias="prop1"></span>
+			</td>
+			<td>1 1</td>
+		</tr>
+	</table>
+</section>
+
+<section>
 	<h1>Rendering on collections</h1>
 
 	<table class="reftest">
