@@ -11,6 +11,7 @@
 		}
 	</style>
 	<script src="https://dev.mavo.io/dist/mavo.js"></script>
+	<script src="mavotest.js"></script>
 </head>
 <body>
 
@@ -91,7 +92,7 @@
 </section>
 
 <section mv-app="exposed">
-	<h1>Form values</h1>
+	<h1>Form values, get</h1>
 
 	<table class="reftest">
 		<tr>
@@ -125,8 +126,12 @@
 				</select>
 				<script>
 				$.ready().then(function(){
-					for (var i = 1; i<5; i++) {
-						$("#select").appendChild($.create("option", {contents: i}))
+					var select = $("#select");
+
+					if (select) {
+						for (var i = 1; i<5; i++) {
+							select.appendChild($.create("option", {contents: i}))
+						}
 					}
 				})
 				</script>
@@ -179,6 +184,81 @@
 			<td>""</td>
 		</tr>
 	</table>
+</section>
+
+<section mv-app="formset">
+	<h1>Form values, set</h1>
+	<script>
+		function testFormGet(script) {
+			let td = script.parentNode;
+			let tr = td.parentNode;
+
+			td.previousElementSibling.addEventListener("mavo:datachange", Mavo.rr(function(evt) {
+				let controls = $$("input, select", tr);
+				td.textContent = controls.map(i => i.value).join(" ");
+			}));
+		}
+	</script>
+	<table class="reftest">
+		<tr>
+			<td><input property="foo1" value="['Lea Verou']"/></td>
+			<td><script>
+				testFormGet(document.currentScript);
+			</script></td>
+			<td>Lea Verou</td>
+		</tr>
+		<tr>
+			<td><input property="foo2" type="range" value="[5 + 5]"/></td>
+			<td><script>
+				testFormGet(document.currentScript);
+			</script></td>
+			<td>10</td>
+		</tr>
+		<tr>
+			<td><input property="foo2" type="range" max="[500 * 2]" value="[250 * 2]" /></td>
+			<td><script>
+				testFormGet(document.currentScript);
+			</script></td>
+			<td>500</td>
+		</tr>
+		<tr title="Via mv-value on parent">
+			<td id="with-mv-value">
+				<div property="foo3" mv-multiple mv-value="[
+						{max: 800, value: 750},
+						{max: 900}
+					]">
+					<input type="range" property="value" min="0" max="[max]" mv-default="[max / 2]">
+					[value]
+				</div>
+			</td>
+			<td>
+				<script>
+					testFormGet(document.currentScript);
+				</script>
+			</td>
+			<td>
+				750 450
+			</td>
+		</tr>
+		<tr>
+			<td>
+				<select name="" id="" property="foo4" value="[5 + 5]">
+					<option value="1">One</option>
+					<option value="10">Ten</option>
+				</select>
+			</td>
+			<td>
+				<script>
+					testFormGet(document.currentScript);
+				</script>
+			</td>
+			<td>
+				10
+			</td>
+		</tr>
+	</table>
+
+
 </section>
 
 <section>
@@ -271,8 +351,6 @@
 		</tr>
 	</table>
 </section>
-
-<script src="mavotest.js"></script>
 
 </body>
 </html>
