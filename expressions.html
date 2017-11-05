@@ -653,6 +653,18 @@
 			</td>
 			<td>B B</td>
 		</tr>
+		<tr title="Expression inside hidden mv-if should be able to make it visible">
+			<td>
+				<span mv-if="prop4">
+					A
+					<span property="prop4">[months(prop5)]</span>
+				</span>
+				<meta property="prop5" content="[18992567]" />
+			</td>
+			<td>
+				A 7
+			</td>
+		</tr>
 	</table>
 </section>
 
