@@ -543,6 +543,22 @@ table.reftest td:first-child {
 			<td>date("")</td>
 			<td>""</td>
 		</tr>
+		<tr title="Invalid argument">
+			<td>date("foobar")</td>
+			<td>""</td>
+		</tr>
+		<tr title="No argument">
+			<td>time()</td>
+			<td>""</td>
+		</tr>
+		<tr title="Empty argument">
+			<td>time("")</td>
+			<td>""</td>
+		</tr>
+		<tr title="Invalid argument">
+			<td>time("foobar")</td>
+			<td>""</td>
+		</tr>
 		<tr title="Subtract dates">
 			<td>subtract("1986-06-13", "1986-06-10")</td>
 			<td>259200</td>
@@ -558,13 +574,37 @@ table.reftest td:first-child {
 	</table>
 </section>
 
+<section>
+	<h1>fixDateString()</h1>
+
+	<table class="reftest" data-test="expressionEvaluation" data-columns="3">
+		<tr>
+			<td>util.fixDateString("2017-11-10")</td>
+			<td>"2017-11-10T00:00:00"</td>
+		</tr>
+		<tr>
+			<td>util.fixDateString("2017-11")</td>
+			<td>"2017-11-01T00:00:00"</td>
+		</tr>
+		<tr>
+			<td>util.fixDateString("08:15")</td>
+			<td>"<script>document.write((new Date().toISOString().slice(0, 10)))</script>T08:15"</td>
+		</tr>
+		<tr>
+			<td>util.fixDateString("foobar")</td>
+			<td>null</td>
+		</tr>
+	</table>
+</section>
+
+
+
 <script>
 function expressionEvaluation(test, result, expected) {
 	var r = (new Mavo.Expression(test.textContent)).eval({});
 	var json = JSON.stringify(r);
 	result.textContent = json;
-	return Test.equals(r, eval(expected.textContent)) || json == JSON.stringify(JSON.parse(expected.textContent));
-}
+	return Test.equals(r, eval(expected.textContent)) || json == JSON.stringify(JSON.parse(expected.textContent));}
 </script>
 
 </body>
