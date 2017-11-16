@@ -219,11 +219,12 @@ var _ = self.RefTest = $.Class({
 
 			var error = ret instanceof Error;
 
+			var previousClass = tr.classList.contains("pass")? "pass" : "fail";
 			tr.classList.remove("pass", "fail");
 			var className = ret && !error? "pass" : "fail";
 			tr.classList.add(className);
 
-			if (className == "pass" && !tr.classList.contains("interactive")) {
+			if (className == "pass" && className != previousClass && !tr.classList.contains("interactive")) {
 				// Display how long it took
 				var time = performance.now() - this.startup;
 				var unit = "ms";
