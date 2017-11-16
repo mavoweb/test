@@ -7,16 +7,7 @@
 	<link rel="stylesheet" href="style.css" />
 	<script src="https://dev.mavo.io/dist/mavo.js"></script>
 	<script src="mavotest.js"></script>
-	<script>
-		// Stub for optional control
-		Mavo.UI.Bar.controls.clear = {
-			action: function() {
-				alert("Clear pressed!");
-			},
-			permission: "delete",
-			optional: true
-		};
-	</script>
+
 	<style>
 		[data-test="selector"] th:last-child,
 		[data-test="selector"] td:last-child {
@@ -47,32 +38,32 @@
 			<td>status,save,login,logout</td>
 		</tr>
 		<tr title="Positive">
-			<td>yes-clear</td>
-			<td>status,edit,save,login,logout,clear</td>
+			<td>yes-download</td>
+			<td>status,edit,save,login,logout,download</td>
 		</tr>
 		<tr title="Both positive and negative">
-			<td>yes-clear no-edit</td>
-			<td>status,save,login,logout,clear</td>
+			<td>yes-download no-edit</td>
+			<td>status,save,login,logout,download</td>
 		</tr>
 		<tr title="Absolute">
 			<td>edit save</td>
 			<td>edit,save</td>
 		</tr>
 		<tr title="Absolute and relative">
-			<td>no-login edit save yes-clear</td>
-			<td>edit,save,clear</td>
+			<td>no-login edit save yes-download</td>
+			<td>edit,save,download</td>
 		</tr>
 		<tr title="Order of positive ids should matter">
-			<td>no-login yes-clear edit save</td>
-			<td>clear,edit,save</td>
+			<td>no-login yes-download edit save</td>
+			<td>download,edit,save</td>
 		</tr>
 		<tr title="Conflicts, last one wins">
-			<td>no-save yes-edit clear no-clear save edit</td>
+			<td>no-save yes-edit download no-download save edit</td>
 			<td>save,edit</td>
 		</tr>
 		<tr title="Conflicted absolute does not get mv-bar into absolute mode">
-			<td>save no-save yes-clear</td>
-			<td>status,edit,login,logout,clear</td>
+			<td>save no-save yes-download</td>
+			<td>status,edit,login,logout,download</td>
 		</tr>
 	</table>
 	<script>
@@ -105,7 +96,7 @@
 				<ul>
 					<li>.mv-bar</li>
 					<li>.mv-bar .mv-edit</li>
-					<li class="not">.mv-bar .mv-clear</li>
+					<li class="not">.mv-bar .mv-download</li>
 					<li class="not">.mv-bar .mv-status</li>
 					<li class="not">.mv-bar .mv-save</li>
 					<li class="not">.mv-bar .mv-login</li>
@@ -138,7 +129,7 @@
 				<ul>
 					<li>.mv-bar</li>
 					<li>.mv-bar .mv-edit</li>
-					<li class="not">.mv-bar .mv-clear</li>
+					<li class="not">.mv-bar .mv-download</li>
 					<li>.mv-bar .mv-save</li>
 					<li class="not">.mv-bar .mv-status</li>
 					<li class="not">.mv-bar .mv-login</li>
@@ -180,29 +171,27 @@
 			</td>
 		</tr>
 		<tr title="Optional mv-bar values">
-			<td mv-app mv-storage="#data" mv-bar="yes-clear">
+
+			<td mv-app mv-storage="#data" mv-bar="yes-download">
 				<span property="prop1">yolo</span>
 			</td>
 			<td>
-				<ul>
-					<li>.mv-bar .mv-edit + .mv-save</li>
-					<li>.mv-bar .mv-clear</li>
-				</ul>
+				.mv-bar .mv-save + .mv-download
 			</td>
 		</tr>
 		<tr title="Custom buttons">
 			<td mv-app mv-storage="#data">
 				<div class="mv-bar mv-ui">
 					<button class="custom">Custom</button>
-					<button class="mv-clear foo">Delete All</button>
+					<button class="mv-download foo">Get data</button>
 				</div>
 				<span property="prop1">yolo</span>
 			</td>
 			<td>
 				<ul>
 					<li>.mv-bar .custom</li>
-					<li>.mv-bar .mv-clear.foo</li>
-					<li>.mv-bar .custom + .mv-clear + .mv-edit + .mv-save</li>
+					<li>.mv-bar .mv-download.foo</li>
+					<li>.mv-bar .custom + .mv-download + .mv-edit + .mv-save</li>
 				</ul>
 			</td>
 		</tr>
@@ -231,7 +220,7 @@
 			</td>
 		</tr>
 		<tr title="Custom button order via mv-bar">
-			<td mv-app mv-storage="https://github.com/LeaVerou/mavo-test/blob/master/data/countries.json" mv-bar="clear save edit logout status login">
+			<td mv-app mv-storage="https://github.com/LeaVerou/mavo-test/blob/master/data/countries.json" mv-bar="download save edit logout status login">
 				<span property="country"><span property="name">yolo</span></span>
 			</td>
 			<td>
@@ -239,7 +228,7 @@
 			</td>
 		</tr>
 		<tr title="Custom button order, no login, no status">
-			<td mv-app="nologin" mv-storage="https://github.com/LeaVerou/mavo-test/blob/master/data/countries.json" mv-bar="clear save edit logout">
+			<td mv-app="nologin" mv-storage="https://github.com/LeaVerou/mavo-test/blob/master/data/countries.json" mv-bar="download save edit logout">
 				<span property="country"><span property="name">yolo</span></span>
 			</td>
 			<td>
@@ -304,7 +293,7 @@
 			<td>.mv-bar:not(.mv-compact):not(.mv-tiny)</td>
 		</tr>
 		<tr>
-			<td mv-app mv-storage="local" style="width: 200px; flex: none">
+			<td mv-app mv-storage="local" style="width: 250px; flex: none">
 				<div property="prop1"></div>
 			</td>
 			<td>.mv-bar.mv-compact:not(.mv-tiny)</td>
