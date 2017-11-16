@@ -167,8 +167,8 @@ var _ = self.RefTest = $.Class({
 		this.observer = new MutationObserver(test);
 		this.observe();
 
-		$.events(this.table, "input change click mavo:datachange", test);
-		$.events(this.table.closest("[mv-app]"), "mavo:load", test);
+		$.events(this.table, "input change click mv-change", test);
+		$.events(this.table.closest("[mv-app]"), "mv-load", test);
 	},
 
 	observe: function() {

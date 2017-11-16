@@ -209,7 +209,7 @@
 			let td = script.parentNode;
 			let tr = td.parentNode;
 
-			td.previousElementSibling.addEventListener("mavo:datachange", Mavo.rr(function(evt) {
+			td.previousElementSibling.addEventListener("mv-change", Mavo.rr(function(evt) {
 				let controls = $$("input, select", tr);
 				td.textContent = controls.map(i => i.value).join(" ");
 			}));
