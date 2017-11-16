@@ -297,5 +297,69 @@
 	</table>
 </section>
 
+<section mv-app>
+	<h1>Inside mv-expressions="none"</h1>
+
+	<table class="reftest" mv-expressions="none">
+		<td mv-value="5 + 5"></td>
+		<td>10</td>
+	</table>
+</section>
+
+<section>
+	<h1>Cross-references</h1>
+
+	<p>Check first checkbox</p>
+	<script id="checkboxes" type="application/json">
+		{
+			"issue": [
+				{
+					"tag": "foo"
+				},
+				{
+					"tag": "bar"
+				}
+			]
+		}
+	</script>
+	<table class="reftest" mv-app id="issues" mv-storage="#checkboxes" mv-expressions="{ }">
+		<tr class="interactive">
+			<td>
+				<label property="tagFilter" mv-multiple mv-value="unique(issue.tag)">
+					<input type="checkbox" property="show">
+					{show}
+					<span property="tagFilter"></span>
+				</label>
+
+			</td>
+			<td>
+				on true foo
+				on false bar
+			</td>
+		</tr>
+		<tr>
+			<td>
+				<span property="selectedTags">{tagFilter.show}</span>
+			</td>
+			<td>
+				true, false
+			</td>
+		</tr>
+		<tr>
+			<td>
+				<div property="issue" mv-multiple>
+					<span property="shown">{selectedTags}</span>
+					<span property="tag" mv-multiple>Tag</span>
+				</div>
+			</td>
+			<td>
+				true, false foo
+				true, false bar
+			</td>
+		</tr>
+	</table>
+
+</section>
+
 </body>
 </html>
