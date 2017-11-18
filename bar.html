@@ -179,20 +179,48 @@
 				.mv-bar .mv-save + .mv-download
 			</td>
 		</tr>
-		<tr title="Custom buttons">
+		<tr title="Custom button">
 			<td mv-app mv-storage="#data">
 				<div class="mv-bar mv-ui">
 					<button class="custom">Custom</button>
+				</div>
+				<span property="prop1">yolo</span>
+			</td>
+			<td>
+				.mv-bar .custom + .mv-edit + .mv-save
+			</td>
+		</tr>
+		<tr title="Custom download button that is link">
+			<td mv-app mv-storage="#data">
+				<div class="mv-bar mv-ui">
+					<a class="mv-download mv-button foo">Get data</a>
+				</div>
+				<span property="prop1">yolo</span>
+			</td>
+			<td>
+				.mv-bar a.mv-download.foo[download]
+			</td>
+		</tr>
+		<tr title="Custom download button that is not link">
+			<td mv-app mv-storage="#data">
+				<div class="mv-bar mv-ui">
 					<button class="mv-download foo">Get data</button>
 				</div>
 				<span property="prop1">yolo</span>
 			</td>
 			<td>
-				<ul>
-					<li>.mv-bar .custom</li>
-					<li>.mv-bar .mv-download.foo</li>
-					<li>.mv-bar .custom + .mv-download + .mv-edit + .mv-save</li>
-				</ul>
+				.mv-bar a[download] .mv-download.foo
+			</td>
+		</tr>
+		<tr title="Combination of custom button, mv-bar on root, mv-bar on toolbar">
+			<td mv-app mv-storage="#data" mv-bar="download">
+				<div class="mv-bar mv-ui" mv-bar="edit">
+					<button class="custom">Custom</button>
+				</div>
+				<span property="prop1">yolo</span>
+			</td>
+			<td>
+				.mv-bar .custom + .mv-download + .mv-edit
 			</td>
 		</tr>
 	</table>
