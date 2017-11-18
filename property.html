@@ -170,6 +170,13 @@
 			<td>[bio]</td>
 			<td>Foo Bar</td>
 		</tr>
+	</table>
+</section>
+
+<section mv-app=radio>
+	<h1>Radio buttons, get</h1>
+
+	<table class="reftest">
 		<tr title="Radio buttons without form">
 			<td>
 				<input type="radio" property name="radio1" value="a" />a
@@ -198,6 +205,15 @@
 			</td>
 			<td>"[radio4]"</td>
 			<td>""</td>
+		</tr>
+		<tr title="Radio buttons with dynamic value" class="interactive">
+			<td>
+				<input type="checkbox" property="changeRadio">
+				<input type="radio" property name="radio5" value="[if(changeRadio, 'a', 'c')]" />a
+				<input type="radio" name="radio5" value="[if(changeRadio, 'b', 'd')]" checked />b
+			</td>
+			<td>[radio5]</td>
+			<td>d</td>
 		</tr>
 	</table>
 </section>
