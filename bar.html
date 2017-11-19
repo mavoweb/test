@@ -38,32 +38,36 @@
 			<td>status,save,login,logout</td>
 		</tr>
 		<tr title="Positive">
-			<td>yes-download</td>
-			<td>status,edit,save,login,logout,download</td>
+			<td>yes-export</td>
+			<td>status,edit,save,login,logout,export</td>
 		</tr>
 		<tr title="Both positive and negative">
-			<td>yes-download no-edit</td>
-			<td>status,save,login,logout,download</td>
+			<td>yes-export no-edit</td>
+			<td>status,save,login,logout,export</td>
 		</tr>
 		<tr title="Absolute">
 			<td>edit save</td>
 			<td>edit,save</td>
 		</tr>
 		<tr title="Absolute and relative">
-			<td>no-login edit save yes-download</td>
-			<td>edit,save,download</td>
+			<td>no-login edit save yes-export</td>
+			<td>edit,save,export</td>
 		</tr>
 		<tr title="Order of positive ids should matter">
-			<td>no-login yes-download edit save</td>
-			<td>download,edit,save</td>
+			<td>no-login yes-export edit save</td>
+			<td>export,edit,save</td>
+		</tr>
+		<tr title="Setting order via relative ids only">
+			<td>yes-export yes-import yes-edit</td>
+			<td>status,export,import,edit,save,login,logout</td>
 		</tr>
 		<tr title="Conflicts, last one wins">
-			<td>no-save yes-edit download no-download save edit</td>
+			<td>no-save yes-edit export no-export save edit</td>
 			<td>save,edit</td>
 		</tr>
 		<tr title="Conflicted absolute does not get mv-bar into absolute mode">
-			<td>save no-save yes-download</td>
-			<td>status,edit,login,logout,download</td>
+			<td>save no-save yes-export</td>
+			<td>status,edit,login,logout,export</td>
 		</tr>
 	</table>
 	<script>
@@ -96,7 +100,7 @@
 				<ul>
 					<li>.mv-bar</li>
 					<li>.mv-bar .mv-edit</li>
-					<li class="not">.mv-bar .mv-download</li>
+					<li class="not">.mv-bar .mv-export</li>
 					<li class="not">.mv-bar .mv-status</li>
 					<li class="not">.mv-bar .mv-save</li>
 					<li class="not">.mv-bar .mv-login</li>
@@ -129,7 +133,7 @@
 				<ul>
 					<li>.mv-bar</li>
 					<li>.mv-bar .mv-edit</li>
-					<li class="not">.mv-bar .mv-download</li>
+					<li class="not">.mv-bar .mv-export</li>
 					<li>.mv-bar .mv-save</li>
 					<li class="not">.mv-bar .mv-status</li>
 					<li class="not">.mv-bar .mv-login</li>
@@ -171,12 +175,11 @@
 			</td>
 		</tr>
 		<tr title="Optional mv-bar values">
-
-			<td mv-app mv-storage="#data" mv-bar="yes-download">
+			<td mv-app mv-storage="#data" mv-bar="yes-export yes-import">
 				<span property="prop1">yolo</span>
 			</td>
 			<td>
-				.mv-bar .mv-save + .mv-download
+				.mv-bar .mv-save + .mv-export + .mv-import > input[type=file]
 			</td>
 		</tr>
 		<tr title="Custom button">
@@ -190,37 +193,37 @@
 				.mv-bar .custom + .mv-edit + .mv-save
 			</td>
 		</tr>
-		<tr title="Custom download button that is link">
+		<tr title="Custom export button that is link">
 			<td mv-app mv-storage="#data">
 				<div class="mv-bar mv-ui">
-					<a class="mv-download mv-button foo">Get data</a>
+					<a class="mv-export mv-button foo">Get data</a>
 				</div>
 				<span property="prop1">yolo</span>
 			</td>
 			<td>
-				.mv-bar a.mv-download.foo[download]
+				.mv-bar a.mv-export.foo[download]
 			</td>
 		</tr>
-		<tr title="Custom download button that is not link">
+		<tr title="Custom export button that is not link">
 			<td mv-app mv-storage="#data">
 				<div class="mv-bar mv-ui">
-					<button class="mv-download foo">Get data</button>
+					<button class="mv-export foo">Get data</button>
 				</div>
 				<span property="prop1">yolo</span>
 			</td>
 			<td>
-				.mv-bar a[download] .mv-download.foo
+				.mv-bar a[download] .mv-export.foo
 			</td>
 		</tr>
 		<tr title="Combination of custom button, mv-bar on root, mv-bar on toolbar">
-			<td mv-app mv-storage="#data" mv-bar="download">
+			<td mv-app mv-storage="#data" mv-bar="export">
 				<div class="mv-bar mv-ui" mv-bar="edit">
 					<button class="custom">Custom</button>
 				</div>
 				<span property="prop1">yolo</span>
 			</td>
 			<td>
-				.mv-bar .custom + .mv-download + .mv-edit
+				.mv-bar .custom + .mv-export + .mv-edit
 			</td>
 		</tr>
 	</table>
@@ -248,7 +251,7 @@
 			</td>
 		</tr>
 		<tr title="Custom button order via mv-bar">
-			<td mv-app mv-storage="https://github.com/LeaVerou/mavo-test/blob/master/data/countries.json" mv-bar="download save edit logout status login">
+			<td mv-app mv-storage="https://github.com/LeaVerou/mavo-test/blob/master/data/countries.json" mv-bar="export save edit logout status login">
 				<span property="country"><span property="name">yolo</span></span>
 			</td>
 			<td>
@@ -256,7 +259,7 @@
 			</td>
 		</tr>
 		<tr title="Custom button order, no login, no status">
-			<td mv-app="nologin" mv-storage="https://github.com/LeaVerou/mavo-test/blob/master/data/countries.json" mv-bar="download save edit logout">
+			<td mv-app="nologin" mv-storage="https://github.com/LeaVerou/mavo-test/blob/master/data/countries.json" mv-bar="export save edit logout">
 				<span property="country"><span property="name">yolo</span></span>
 			</td>
 			<td>
@@ -311,7 +314,7 @@
 <section>
 	<h1>Sizing</h1>
 
-	<p>Mutation observers won't fire here, so just click edit to trigger them.</p>
+	<p>Mutation observers won't fire here, so just click to trigger them.</p>
 
 	<table class="reftest" data-test="selector">
 		<tr>
@@ -321,7 +324,7 @@
 			<td>.mv-bar:not(.mv-compact):not(.mv-tiny)</td>
 		</tr>
 		<tr>
-			<td mv-app mv-storage="local" style="width: 250px; flex: none">
+			<td mv-app mv-storage="local" style="width: 200px; flex: none">
 				<div property="prop1"></div>
 			</td>
 			<td>.mv-bar.mv-compact:not(.mv-tiny)</td>
