@@ -22,7 +22,7 @@ if (!self.document) {
 
 if ("serviceWorker" in navigator && new URL("sw.js", location).origin === location.origin) {
 	window.addEventListener('load', function() {
-		navigator.serviceWorker.register("sw.js");
+		navigator.serviceWorker.register("sw.js").catch(e => console.log(e));
 	});
 }
 
