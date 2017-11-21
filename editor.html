@@ -5,6 +5,8 @@
 	<title>Editor</title>
 	<link rel="stylesheet" href="style.css" />
 	<link rel="stylesheet" href="https://dev.mavo.io/dist/mavo.css" />
+	<script src="https://dev.mavo.io/dist/mavo.js"></script>
+	<script src="mavotest.js"></script>
 </head>
 <body>
 
@@ -383,33 +385,73 @@ function checkAttribute(td) {
 	<address property="address"></address>
 </section>
 
-<section mv-app="whitespace" class="mv-autoedit">
+<section>
 	<h1>White-space handling</h1>
 
-	<h2>white-space: normal block element</h2>
-	<div property="address">John Doe,
-	Super long line which should wrap in most screens Super long line which should wrap in most screens Super long line which should wrap in most screens Super long line which should wrap in most screens
-	New York City, NY 10001</div>
+	<p>Click on each text block to make the tests pass or <button onclick="$$('[property=address]', this.parentNode.parentNode).forEach(p => p.click())">Click here</button></p>
 
-	<h2>white-space: pre-line block element</h2>
-	<div property="preline" style="white-space: pre-line">John Doe
-	Super long line which should wrap in most screens Super long line which should wrap in most screens Super long line which should wrap in most screens Super long line which should wrap in most screens
-	New York City, NY 10001</div>
-
-	<h2>white-space: pre block element</h2>
-	<div property="preline" style="white-space: pre">John Doe
-	Super long line which should wrap in most screens Super long line which should wrap in most screens Super long line which should wrap in most screens Super long line which should wrap in most screens
-	New York City, NY 10001</div>
-
-	<h2>white-space: pre-wrap block element</h2>
-	<div property="preline" style="white-space: pre-wrap">John Doe
-		Super long line which should wrap in most screens Super long line which should wrap in most screens Super long line which should wrap in most screens Super long line which should wrap in most screens
-	New York City, NY 10001</div>
-
-	<h2>white-space: nowrap block element</h2>
-	<div property="preline" style="white-space: nowrap">John Doe
-		Super long line which should wrap in most screens Super long line which should wrap in most screens Super long line which should wrap in most screens Super long line which should wrap in most screens
-	New York City, NY 10001</div>
+	<table class="reftest" data-test="selector">
+		<tr title="white-space: normal" class="interactive">
+			<td mv-app="whitespace" class="mv-autoedit">
+				<div property="address">
+					John Doe,
+					Super long line which should wrap in most screens Super long line which should wrap in most screens Super long line which should wrap in most screens Super long line which should wrap in most screens
+					New York City, NY 10001
+				</div>
+			</td>
+			<td>
+				div > textarea[style*="white-space: pre-wrap"]
+			</td>
+		</tr>
+		<tr title="white-space: pre-line" class="interactive">
+			<td mv-app="whitespace" class="mv-autoedit">
+				<div property="address" style="white-space: pre-line">
+					John Doe,
+					Super long line which should wrap in most screens Super long line which should wrap in most screens Super long line which should wrap in most screens Super long line which should wrap in most screens
+					New York City, NY 10001
+				</div>
+			</td>
+			<td>
+				div > textarea[style*="white-space: inherit"]
+			</td>
+		</tr>
+		<tr title="white-space: pre-wrap" class="interactive">
+			<td mv-app="whitespace" class="mv-autoedit">
+				<div property="address" style="white-space: pre-wrap">
+					John Doe,
+					Super long line which should wrap in most screens Super long line which should wrap in most screens Super long line which should wrap in most screens Super long line which should wrap in most screens
+					New York City, NY 10001
+				</div>
+			</td>
+			<td>
+				div > textarea[style*="white-space: inherit"]
+			</td>
+		</tr>
+		<tr title="white-space: pre" class="interactive">
+			<td mv-app="whitespace" class="mv-autoedit">
+				<div property="address" style="white-space: pre">
+					John Doe,
+					Super long line which should wrap in most screens Super long line which should wrap in most screens Super long line which should wrap in most screens Super long line which should wrap in most screens
+					New York City, NY 10001
+				</div>
+			</td>
+			<td>
+				div > textarea[style*="white-space: inherit"]
+			</td>
+		</tr>
+		<tr title="white-space: nowrap" class="interactive">
+			<td mv-app="whitespace" class="mv-autoedit">
+				<div property="address" style="white-space: nowrap">
+					John Doe,
+					Super long line which should wrap in most screens Super long line which should wrap in most screens Super long line which should wrap in most screens Super long line which should wrap in most screens
+					New York City, NY 10001
+				</div>
+			</td>
+			<td>
+				div > textarea[style*="white-space: pre"]
+			</td>
+		</tr>
+	</table>
 </section>
 
 <section>
@@ -432,10 +474,6 @@ function checkAttribute(td) {
 		<div property="prop2">prop2</div>
 	</details>
 </section>
-
-<script src="https://dev.mavo.io/dist/mavo.js"></script>
-
-<script src="mavotest.js"></script>
 
 </body>
 </html>
