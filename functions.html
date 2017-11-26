@@ -423,6 +423,25 @@ table.reftest td:first-child {
 	</table>
 </section>
 
+<section>
+	<h1>idify()</h1>
+
+	<table class="reftest" data-test="expressionEvaluation" data-columns="3">
+		<tr>
+			<td>idify(" Foo   ^ Bar ")</td>
+			<td>"foo-bar"</td>
+		</tr>
+		<tr>
+			<td>idify("property ↔ Collection")</td>
+			<td>"property-collection"</td>
+		</tr>
+		<tr>
+			<td>idify("pâté")</td>
+			<td>"pate"</td>
+		</tr>
+	</table>
+</section>
+
 
 <section>
 	<h1>intersects()</h1>
@@ -596,8 +615,6 @@ table.reftest td:first-child {
 		</tr>
 	</table>
 </section>
-
-
 
 <script>
 function expressionEvaluation(test, result, expected) {
