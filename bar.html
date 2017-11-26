@@ -29,45 +29,54 @@
 	<h1>mv-bar</h1>
 
 	<table class="reftest" data-test="getControls" data-columns="3">
+		<thead>
+			<th>mv-bar value</th>
+			<th>Actual buttons</th>
+			<th>Expected buttons</th>
+		</thead>
 		<tr title="Default">
 			<td></td>
 			<td>status,edit,save,login,logout</td>
 		</tr>
-		<tr title="Negative">
+		<tr title="None">
+			<td>none</td>
+			<td> </td>
+		</tr>
+		<tr title="Relative: Negative without with">
 			<td>no-edit</td>
 			<td>status,save,login,logout</td>
 		</tr>
-		<tr title="Positive">
-			<td>yes-export</td>
-			<td>status,edit,save,login,logout,export</td>
+		<tr title="Relative: Positive">
+			<td>with export</td>
+			<td>status,edit,save,export,login,logout</td>
 		</tr>
-		<tr title="Both positive and negative">
-			<td>yes-export no-edit</td>
-			<td>status,save,login,logout,export</td>
+		<tr title="Legacy yes-">
+			<td>yes-export</td>
+			<td>status,edit,save,export,login,logout</td>
+		</tr>
+		<tr title="Relative: Both positive and negative">
+			<td>with export no-edit</td>
+			<td>status,save,export,login,logout</td>
 		</tr>
 		<tr title="Absolute">
 			<td>edit save</td>
 			<td>edit,save</td>
 		</tr>
-		<tr title="Absolute and relative">
-			<td>no-login edit save yes-export</td>
-			<td>edit,save,export</td>
+		<tr title="Absolute with duplicates">
+			<td>edit edit edit save save</td>
+			<td>edit,save</td>
 		</tr>
-		<tr title="Order of positive ids should matter">
-			<td>no-login yes-export edit save</td>
-			<td>export,edit,save</td>
-		</tr>
-		<tr title="Setting order via relative ids only">
-			<td>yes-export yes-import yes-edit</td>
-			<td>status,export,import,edit,save,login,logout</td>
+		<tr title="Positive non-optional buttons have no effect">
+			<td>with no-status no-login edit save export</td>
+			<td>edit,save,export,logout</td>
 		</tr>
 		<tr title="Conflicts, last one wins">
-			<td>no-save yes-edit export no-export save edit</td>
-			<td>save,edit</td>
+			<td>with no-export edit save no-save export no-edit edit edit no-edit</td>
+			<td>status,export,login,logout</td>
 		</tr>
-		<tr title="Conflicted absolute does not get mv-bar into absolute mode">
-			<td>save no-save yes-export</td>
-			<td>status,edit,login,logout,export</td>
+		<tr title="Ignore nonexistent ids">
+			<td>with foo no-bar</td>
+			<td>status,edit,save,login,logout</td>
 		</tr>
 	</table>
 	<script>
@@ -175,22 +184,23 @@
 			</td>
 		</tr>
 		<tr title="Optional mv-bar values">
-			<td mv-app mv-storage="#data" mv-bar="yes-export yes-import">
+			<td mv-app mv-storage="#data" mv-bar="with export import">
 				<span property="prop1">yolo</span>
 			</td>
 			<td>
 				.mv-bar .mv-save + .mv-export + .mv-import > input[type=file]
 			</td>
 		</tr>
-		<tr title="Custom button">
+		<tr title="Custom buttons, both built-in and not">
 			<td mv-app mv-storage="#data">
 				<div class="mv-bar mv-ui">
 					<button class="custom">Custom</button>
+					<button class="mv-save foo">Store</button>
 				</div>
 				<span property="prop1">yolo</span>
 			</td>
 			<td>
-				.mv-bar .custom + .mv-edit + .mv-save
+				.mv-bar .custom + .mv-edit + .mv-save.foo
 			</td>
 		</tr>
 		<tr title="Custom export button that is link">
