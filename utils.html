@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+
+<meta charset="UTF-8">
+<title>Util Tests</title>
+<link rel="stylesheet" href="https://dev.mavo.io/dist/mavo.css" />
+<link rel="stylesheet" href="style.css" />
+<style>
+td {
+	font: bold 100%/1.5 Consolas, Monaco, monospace;
+	white-space: pre-wrap;
+}
+</style>
+<script src="https://dev.mavo.io/dist/mavo.js"></script>
+<script src="mavotest.js"></script>
+</head>
+<body>
+
+<h1>Util Tests</h1>
+
+<p>These tests test whether Mavo utility functions produce correct results.</p>
+
+<section>
+	<h1>options</h1>
+
+	<table class="reftest" data-test="testFunction" data-columns="3">
+		<tr>
+			<td>"foo: bar"</td>
+			<td>{"foo": "bar"}</td>
+		</tr>
+		<tr title="Empty">
+			<td>""</td>
+			<td>{}</td>
+		</tr>
+		<tr title="Ignore whitespace">
+			<td>"      foo    :  \n     bar   "</td>
+			<td>{"foo": "bar"}</td>
+		</tr>
+		<tr title="Multiple options">
+			<td>"key1: value1, key2: value2; key3"</td>
+			<td>{"key1": "value1", "key2": "value2", "key3": true}</td>
+		</tr>
+		<tr title="Multiple colons">
+			<td>"fo:oo: ba:r"</td>
+			<td>{"fo": "oo: ba:r"}</td>
+		</tr>
+		<tr title="Comma Escapes">
+			<td>"foo: ba\\,r, key: value"</td>
+			<td>{"foo": "ba,r", "key": "value"}</td>
+		</tr>
+		<tr title="Colon Escapes">
+			<td>"fo\\:o: ba\\:r"</td>
+			<td>{"fo:o": "ba\\:r"}</td>
+		</tr>
+	</table>
+</section>
+
+<script>
+function testFunction(test, result, expected) {
+	var functionName = $("h1", test.closest("section")).textContent;
+
+	var r = eval(`Mavo.${functionName}(${test.textContent})`);
+	var json = JSON.stringify(r, null, "\t");
+	var e = JSON.stringify(JSON.parse(expected.textContent), null, "\t");
+	result.textContent = json;
+	expected.textContent = e;
+	return json == e;
+}
+</script>
+
+</body>
+</html>
