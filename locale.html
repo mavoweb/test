@@ -19,25 +19,28 @@
 		<tr>
 			<td mv-app lang="el">
 				<div class="mv-bar"></div>
+				<span property="prop"></span>
 			</td>
 			<td>
-				<button>Καθαρισμός</button>
+				<button>Επεξεργασία</button>
 			</td>
 		</tr>
 		<tr title="Via &lt;datalist>">
 			<td mv-app lang="de">
 				<div class="mv-bar"></div>
+				<span property="prop"></span>
 			</td>
 			<td>
-				<button>Löschen</button>
+				<button>Bearbeiten</button>
 			</td>
 		</tr>
 		<tr title="&lt;datalist> overrides existing locale">
 			<td mv-app mv-storage="local">
 				<div class="mv-bar"></div>
+				<span property="prop"></span>
 			</td>
 			<td>
-				<button>Save All</button><button>Clear</button>
+				<button>Edit</button><button>Save All</button>
 			</td>
 		</tr>
 	</table>
@@ -45,11 +48,11 @@
 
 <script>
 Mavo.Locale.register("el", {
-	"clear": "Καθαρισμός"
+	"edit": "Επεξεργασία"
 });
 </script>
 <datalist lang="de" class="mv-phrases">
-	<option value="clear">Löschen</option>
+	<option value="edit">Bearbeiten</option>
 </datalist>
 <datalist lang="en" class="mv-phrases">
 	<option value="save">Save All</option>

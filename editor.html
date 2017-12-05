@@ -233,7 +233,7 @@ function checkAttribute(td) {
 <section mv-app="mvmode" mv-storage="local" class="mv-debug-saving">
 	<h1>mv-mode</h1>
 
-	<p>Hover over the cells in the first column.</p>
+	<p>Click on the cells in the first column.</p>
 
 	<table class="reftest" data-test="selector" mv-expressions="{ }">
 		<tr title="Normal property, edited on edit mode">
@@ -340,12 +340,21 @@ function checkAttribute(td) {
 				</ul>
 			</td>
 		</tr>
+		<!-- <tr title="Inherited from parent only when checkbox is NOT checked">
+			<td>
+				<input type="checkbox" property="preview">
+				<span property="withPreview" mv-mode="{if(preview, read, $root.$mode)}">Edited on edit mode, unless checkbox is checked</span>
+				{$mode} {$root.mode}
+			</td>
+			<td>
+				<ul>
+					<li>:checked + [property]:not([mv-mode^="edit"]) input</li>
+					<li>[mv-mode="edit"] input:not(:checked) + [property][mv-mode="edit"] input</li>
+					<li class="not">[mv-app]:not([mv-mode="edit"]) input:not(:checked) + [property][mv-mode="edit"] input</li>
+				</ul>
+			</td>
+		</tr> -->
 	</table>
-
-
-
-
-
 </section>
 
 <section>
