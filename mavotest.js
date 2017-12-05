@@ -28,7 +28,7 @@ if ("serviceWorker" in navigator && new URL("sw.js", location).origin === locati
 
 })();
 
-(function($){
+(function($, $$){
 
 self.print = function print(text) {
 	if (document.readyState == "loading") {
@@ -479,22 +479,23 @@ document.addEventListener("DOMContentLoaded", function(){
 	});
 
 	// HTML tooltips
+	var cellHTML = new WeakMap();
 	var cells = $$("table.reftest td");
 	cells.forEach(td => {
-		td._.html = td.attributes.length > 0? td.outerHTML : td.innerHTML;
+		cellHTML.set(td, td.attributes.length > 0? td.outerHTML : td.innerHTML);
 	});
 
 	Promise.all([
 		$.include(self.Prism, "https://cdnjs.cloudflare.com/ajax/libs/prism/1.8.1/prism.min.js"),
-		$.include(self.tippy, "https://unpkg.com/tippy.js@1.3.0/dist/tippy.js")
+		$.include(self.tippy, "https://unpkg.com/tippy.js@1/dist/tippy.js")
 	])
 	.then(() => $.include(Prism.plugins.NormalizeWhitespace, "https://cdnjs.cloudflare.com/ajax/libs/prism/1.8.1/plugins/normalize-whitespace/prism-normalize-whitespace.min.js"))
 	.then(() => {
-		tippy(cells, {
+		var t = tippy(cells, {
 			html: td => {
 				var pre = $.create("pre")
 				var code = $.create("code", {
-					textContent: td._.html,
+					textContent: cellHTML.get(td),
 					className: "language-markup",
 					inside: pre
 				});
@@ -503,7 +504,17 @@ document.addEventListener("DOMContentLoaded", function(){
 				return pre;
 			},
 			arrow: true,
-			theme: "light"
+			theme: "light",
+			maxWidth: "50em"
+		});
+
+		t.store.forEach(instance => {
+			$.events(instance.el, "mouseover mouseenter", function(evt) {
+				if (evt.target != this) {
+					var popper = t.getPopperElement(this);
+					t.hide(popper);
+				}
+			});
 		});
 	});
 
@@ -523,5 +534,7 @@ function loadCSS(url) {
 	}));
 }
 
+self.$ = $;
+self.$$ = $$;
 
-})(self.Bliss)
+})(self.Bliss, Bliss.$)
