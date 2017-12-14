@@ -8,7 +8,7 @@
 <link rel="stylesheet" href="style.css" />
 
 </head>
-<body mv-app="tests" mv-source="https://api.github.com/repos/mavoweb/test/contents">
+<body mv-app="tests" mv-source="https://api.github.com/repos/mavoweb/test/contents" mv-mode="read">
 
 <section>
 	<div class="mv-bar mv-ui mv-compact mv-tiny"></div>
@@ -16,15 +16,21 @@
 
 	<section>
 		<ul>
-			<li property="file" mv-multiple mv-if="ends(name, '.html') and name != 'index.html'">
+			<li property="file" mv-multiple mv-if="ends(name, '.html') and name != 'index.html'" class="[if(name = selected, 'selected')]">
 				<a target="test" property="name">[to(name, '.html')]</a>
 			</li>
 		</ul>
 	</section>
 </section>
 <iframe name="test" src="[first(name)]"></iframe>
+<span property="selected"></span>
 
 <script src="https://dev.mavo.io/dist/mavo.js"></script>
+<script>
+$("iframe").onload = function() {
+	Mavo.all.tests.root.children.selected.value = Mavo.Functions.fromlast(test.location.pathname, "/");
+};
+</script>
 
 </body>
 </html>

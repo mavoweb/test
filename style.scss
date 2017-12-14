@@ -287,8 +287,18 @@ body > section > div {
 		}
 
 		li a {
+			display: block;
+			padding: 0 .5em;
 			font-weight: bold;
 			font: 600 150%/1.4 Helvetica Neue, sans-serif;
+		}
+
+		li.selected {
+			background: var(--dark);
+
+			a {
+				color: white;
+			}
 		}
 	}
 

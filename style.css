@@ -213,8 +213,14 @@ body > section > div {
     padding: 0;
     list-style: none; }
   .index body > section li a {
+    display: block;
+    padding: 0 .5em;
     font-weight: bold;
     font: 600 150%/1.4 Helvetica Neue, sans-serif; }
+  .index body > section li.selected {
+    background: var(--dark); }
+    .index body > section li.selected a {
+      color: white; }
 
 .index iframe {
   -ms-flex: 1;
