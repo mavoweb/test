@@ -1,0 +1,383 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Github Tests</title>
+	<link rel="stylesheet" href="https://dev.mavo.io/dist/mavo.css" />
+	<link rel="stylesheet" href="style.css" />
+	<script src="https://dev.mavo.io/dist/mavo.js"></script>
+	<script src="mavotest.js"></script>
+	<style>
+	[data-test="testParseURL"] td + td {
+		white-space: pre-line
+	}
+
+	[data-test="testParseURL"] td:first-of-type {
+		word-wrap: break-word;
+		flex: none;
+		width: 20%;
+	}
+	</style>
+</head>
+<body>
+
+<h1>Github Tests</h1>
+
+<section>
+	<h1>parseURL</h1>
+
+	<table class="reftest" data-test="testParseURL" data-columns="3">
+		<tr>
+			<td>https://github.com/leaverou</td>
+			<td>{
+				username: "leaverou",
+				repo: "mv-data",
+				"filename": "foo.json",
+				"filepath": "",
+				"path": "foo.json",
+				"apiCall": "repos/leaverou/mv-data/contents/foo.json"
+			}</td>
+		</tr>
+		<tr>
+			<td>https://github.com/leaverou/bliss</td>
+			<td>{
+				username: "leaverou",
+				repo: "bliss",
+				"filename": "foo.json",
+				"filepath": "",
+				"path": "foo.json",
+				"apiCall": "repos/leaverou/bliss/contents/foo.json"
+			}</td>
+		</tr>
+		<tr>
+			<td>https://github.com/leaverou/bliss/data.json</td>
+			<td>{
+				username: "leaverou",
+				repo: "bliss",
+				"filename": "data.json",
+				"filepath": "",
+				"path": "data.json",
+				"apiCall": "repos/leaverou/bliss/contents/data.json"
+			}</td>
+		</tr>
+		<tr>
+			<td>https://github.com/leaverou/bliss/blob/master/data/countries.json</td>
+			<td>{
+				username: "leaverou",
+				repo: "bliss",
+				"filename": "countries.json",
+				"filepath": "data",
+				"path": "data/countries.json",
+				"apiCall": "repos/leaverou/bliss/contents/data/countries.json"
+			}</td>
+		</tr>
+		<tr>
+			<td>https://api.github.com/repos/mavoweb/test/contents/data</td>
+			<td>{
+				apiCall: "repos/mavoweb/test/contents/data"
+			}</td>
+		</tr>
+		<tr>
+			<td>https://api.github.com/graphql#query{}</td>
+			<td>{
+				apiCall: "graphql",
+				apiData: {query: "query{}"}
+			}</td>
+		</tr>
+	</table>
+
+	<script>
+	function testParseURL(test, result, expected) {
+		try {
+			var r = Mavo.Backend.Github.parseURL(test.textContent, {
+				filename: "foo.json",
+				repo: "mv-data"
+			});
+			result.textContent = Mavo.toJSON(r);
+
+			eval("var exp = " + expected.textContent);
+			return Test.equals(r, exp);
+		}
+		catch(e) {
+			console.error(e);
+			result.textContent = "ERROR";
+			return false;
+		}
+	}
+	</script>
+</section>
+
+<section mv-app="githubtest" mv-storage="https://github.com/LeaVerou/mavo-test/blob/master/data/countries.json">
+	<h1>Basic</h1>
+
+	<p>Need to login to Github and have access to the Mavo repo for this test to pass.</p>
+	<table class="reftest">
+		<tr>
+			<td>
+				<ul>
+					<li property="country" mv-multiple>
+						<span property="code">Code</span>
+						<span property="name">Name</span>
+					</li>
+				</ul>
+			</td>
+			<td>
+				<ul>
+					<li>Online</li>
+					<li>us United States</li>
+					<li>gb United Kingdom</li>
+				</ul>
+			</td>
+		</tr>
+	</table>
+</section>
+
+<section mv-app="githubupload" mv-storage="https://github.com/LeaVerou/mv-data" class="mv-autoedit">
+	<h1>Github upload</h1>
+
+	<p>Try to upload an image below. Try pasting an image, or drag & drop too.</p>
+	<img property="image" src="http://mavo.io/logo.svg" style="max-width: 100%">
+</section>
+
+<section mv-app="githubtest" mv-storage="https://github.com/LeaVerou">
+	<h1>Github with profile URL</h1>
+
+	<table class="reftest">
+		<tr>
+			<td>
+				<ul>
+					<li property="country" mv-multiple>
+						<span property="code">Code</span>
+						<span property="name">Name</span>
+					</li>
+				</ul>
+			</td>
+			<td>
+				<ul>
+					<li>Online</li>
+					<li>us United States</li>
+					<li>gb United Kingdom</li>
+				</ul>
+			</td>
+		</tr>
+	</table>
+</section>
+
+<section mv-app="dropboxtest" mv-storage="https://www.dropbox.com/s/5djray22aj0v7le/countries.json?dl=0">
+	<h1>Dropbox</h1>
+
+	<table class="reftest">
+		<tr>
+			<td>
+				<ul>
+					<li property="country" mv-multiple>
+						<span property="code">Code</span>
+						<span property="name">Name</span>
+					</li>
+				</ul>
+			</td>
+			<td>
+				<ul>
+					<li>Online</li>
+					<li>us United States</li>
+					<li>gb United Kingdom</li>
+				</ul>
+			</td>
+		</tr>
+	</table>
+</section>
+
+<section mv-app="mvstoragetype" mv-storage="local" mv-storage-type="remote">
+	<h1>mv-storage-type</h1>
+
+	<table class="reftest">
+		<tr>
+			<td>
+				<ul>
+					<li property="country" mv-multiple>
+						<span property="code">Code</span>
+						<span property="name">Name</span>
+					</li>
+				</ul>
+			</td>
+			<td>
+				<ul>
+					<li>Online</li>
+					<li>us United States</li>
+					<li>gb United Kingdom</li>
+				</ul>
+			</td>
+		</tr>
+	</table>
+</section>
+
+<section mv-app="githubapi" mv-storage="https://api.github.com/repos/mavoweb/test/contents/data">
+	<h1>Github API</h1>
+
+	<p>Need to login to Github and have access to the Mavo repo for this test to pass.</p>
+	<table class="reftest">
+		<tr>
+			<td>
+				<ul>
+					<li property="all" mv-multiple>
+						<span property="type">Code</span>
+						<span property="name">Name</span>
+					</li>
+				</ul>
+			</td>
+			<td>
+				<ul>
+					<li>file countries.json</li>
+					<li>file csv.csv</li>
+					<li>file markdown.md</li>
+					<li>file people.json</li>
+				</ul>
+			</td>
+		</tr>
+	</table>
+</section>
+
+<section>
+	<h1>mv-format</h1>
+
+	<p>Need to login to Github and have access to the mavo-test repo for this test to pass.</p>
+
+	<table class="reftest">
+		<tr>
+			<td mv-app="implicitmvformat" mv-storage="https://github.com/LeaVerou/mavo-test/data/markdown.md" mv-format="text">
+				<div property="content"></div>
+			</td>
+			<td>
+				<div>
+					# Heading
+
+					Paragraph **bold** *italic*
+				</div>
+			</td>
+		</tr>
+		<tr>
+			<td>
+				<pre id="data-csv">prop1,prop21,foo2,bar</pre>
+			</td>
+			<td>
+				<script>document.write($$("td pre").pop().outerHTML)</script>
+			</td>
+		</tr>
+		<tr title="CSV from Element, explicit mv-format">
+			<td mv-app="csvelement" mv-storage="#data-csv" mv-format="csv">
+				<div property="row" mv-multiple>
+					<span property="prop1"></span>
+					<span property="prop2"></span>
+				</div>
+			</td>
+			<td>
+				<div>1 foo</div>
+				<div>2 bar</div>
+			</td>
+		</tr>
+		<tr title="CSV from Github, implicit mv-format">
+			<td mv-app="csvgithub" mv-storage="https://github.com/LeaVerou/mavo-test/data/csv.csv">
+				<div property="row" mv-multiple>
+					<span property="prop1"></span>
+					<span property="prop2"></span>
+				</div>
+			</td>
+			<td>
+				<div>1 φού</div>
+				<div>2 bar</div>
+			</td>
+		</tr>
+	</table>
+</section>
+<script type="application/json" id="countries">{
+	"country": [
+		{
+			"code": "us",
+			"name": "United States"
+		},
+		{
+			"code": "jp",
+			"name": "Japan"
+		},
+		{
+			"code": "es",
+			"name": "Spain"
+		}
+	]
+}</script>
+<section mv-app="urltest" mv-storage="">
+	<h1>mv-storage=Github, mv-source=Element, via URL</h1>
+
+	<p><a href="?urltest-storage=https://github.com/LeaVerou/mavo-test/blob/master/data/countries.json&urltest-source=%23countries">Click here first for this test to pass.</a></p>
+	<table class="reftest">
+		<tr class="interactive">
+			<td>
+				<ul>
+					<li property="country" mv-multiple>
+						<span property="code">Code</span>
+						<span property="name">Name</span>
+					</li>
+				</ul>
+			</td>
+			<td>
+				<ul>
+					<li>us United States</li>
+					<li>jp Japan</li>
+					<li>es Spain</li>
+				</ul>
+			</td>
+		</tr>
+	</table>
+</section>
+
+<section mv-app mv-storage="https://github.com/LeaVerou/mavo-test/blob/master/data/countries.json" mv-source="#countries">
+	<h1>mv-storage=Github, mv-source=element</h1>
+
+	<table class="reftest">
+		<tr>
+			<td>
+				<ul>
+					<li property="country" mv-multiple>
+						<span property="code">Code</span>
+						<span property="name">Name</span>
+					</li>
+				</ul>
+			</td>
+			<td>
+				<ul>
+					<li>us United States</li>
+					<li>jp Japan</li>
+					<li>es Spain</li>
+				</ul>
+			</td>
+		</tr>
+	</table>
+</section>
+
+<section class="mv-app" mv-source="https://github.com/LeaVerou/mavo-test/blob/master/data/countries.json">
+	<h1>No storage, mv-source=Github</h1>
+	<p>Should display data but no editing controls</p>
+
+	<table class="reftest">
+		<tr>
+			<td>
+				<ul>
+					<li property="country" mv-multiple>
+						<span property="code">Code</span>
+						<span property="name">Name</span>
+					</li>
+				</ul>
+			</td>
+			<td>
+				<ul>
+					<li>Online</li>
+					<li>us United States</li>
+					<li>gb United Kingdom</li>
+				</ul>
+			</td>
+		</tr>
+	</table>
+</section>
+
+</body>
+</html>

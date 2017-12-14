@@ -75,12 +75,21 @@ self.Test = {
 			return true;
 		}
 
-		if ($.type(a) == $.type(b) && a == b) {
-			return true;
-		}
+		var type = $.type(a);
 
-		if (Array.isArray(a) && Array.isArray(b)) {
-			return a.length === b.length && a.reduce((prev, current, i) => prev && Test.equals(current, b[i]), true);
+		if (type == $.type(b)) {
+			if (a == b) {
+				return true;
+			}
+
+			if (Array.isArray(a) && Array.isArray(b)) {
+				return a.length === b.length && a.reduce((prev, current, i) => prev && Test.equals(current, b[i]), true);
+			}
+
+			if (type == "object") {
+				var test = $.extend({}, a, Object.keys(b));
+				return JSON.stringify(test) == JSON.stringify(b);
+			}
 		}
 
 		return false;
