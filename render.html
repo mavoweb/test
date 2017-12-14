@@ -154,7 +154,91 @@
 	<table class="reftest">
 		<tr>
 			<td>
+				<pre id="data-mvmultiplepathbasic">{
+	"prop1": {
+		"edges": [
+			{
+				"id": "foo",
+				"prop2": 2
+			},
+			{
+				"id": "bar",
+				"prop2": 3
+			},
+			{
+				"id": "baz",
+				"prop2": 4
+			}
+		]
+	},
+	"prop3": 1
+}</pre>
+			</td>
+			<td>
+				<script>document.write($$("td pre").pop().outerHTML)</script>
+			</td>
+		</tr>
+		<tr title="Basic mv-multiple-path">
+			<td mv-app="mvmultiplepath" mv-storage="#data-mvmultiplepathbasic">
+				<span property="prop1" mv-multiple mv-multiple-path="edges">
+					<span property="id"></span>
+					<span property="prop2"></span>
+				</span>
+			</td>
+			<td>
+				foo 2
+				bar 3
+				baz 4
+			</td>
+		</tr>
+		<tr>
+			<td>
 				<pre id="data-mvmultiplepath">{
+	"prop1": {
+		"edges": [
+			{
+				"node": {
+					"id": "foo",
+					"prop2": 2
+				}
+			},
+			{
+				"node": {
+					"id": "bar",
+					"prop2": 3
+				}
+			},
+			{
+				"node": {
+					"id": "baz",
+					"prop2": 4
+				}
+			}
+		]
+	},
+	"prop3": 1
+}</pre>
+			</td>
+			<td>
+				<script>document.write($$("td pre").pop().outerHTML)</script>
+			</td>
+		</tr>
+		<tr title="mv-multiple-path AND mv-path on collection">
+			<td mv-app="mvmultiplepath" mv-storage="#data-mvmultiplepath">
+				<span property="prop1" mv-multiple mv-multiple-path="edges" mv-path="node">
+					<span property="id"></span>
+					<span property="prop2"></span>
+				</span>
+			</td>
+			<td>
+				foo 2
+				bar 3
+				baz 4
+			</td>
+		</tr>
+		<tr>
+			<td>
+				<pre id="data-mvmultiplepathid">{
 	"prop1": [
 		{
 			"id": "foo",
@@ -177,7 +261,7 @@
 			</td>
 		</tr>
 		<tr title="mv-multiple-path on collection (by id)">
-			<td mv-app="mvmultiplepath" mv-storage="#data-mvmultiplepath">
+			<td mv-app="mvmultiplepath" mv-storage="#data-mvmultiplepathid">
 				<span property="prop1" mv-multiple mv-multiple-path="id=bar">
 					<span property="prop2"></span>
 				</span>
