@@ -336,7 +336,7 @@ table.reftest td:first-child {
 	<table class="reftest" data-test="expressionEvaluation" data-columns="3">
 		<tr>
 			<td>from("foo", ".")</td>
-			<td>"foo"</td>
+			<td>""</td>
 		</tr>
 		<tr>
 			<td>from("foo.bar", ".")</td>
@@ -352,7 +352,7 @@ table.reftest td:first-child {
 		</tr>
 		<tr>
 			<td>to("foo", ".")</td>
-			<td>"foo"</td>
+			<td>""</td>
 		</tr>
 		<tr>
 			<td>to("foo.bar", ".")</td>
@@ -369,6 +369,10 @@ table.reftest td:first-child {
 		<tr>
 			<td>between("foo.bar.baz", ".", ".")</td>
 			<td>"bar"</td>
+		</tr>
+		<tr>
+			<td>between("foo.bar.baz", "#", "$")</td>
+			<td>""</td>
 		</tr>
 	</table>
 </section>
