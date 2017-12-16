@@ -587,5 +587,164 @@
 	</table>
 </section>
 
+<section>
+	<h1>Optional collections</h1>
+
+	<table class="reftest">
+		<tr title="Without render">
+			<td mv-app class="mv-autoedit">
+				<div property="parent" mv-multiple mv-optional>
+					<span property=prop1>1</span>
+					<span property=child mv-multiple mv-optional>2</span>
+				</div>
+			</td>
+			<td>
+
+			</td>
+		</tr>
+		<tr>
+			<td><pre id="optional-data">{
+	"parent": [
+		{
+			"prop1": 3
+		},
+		{
+			"prop1": 4
+		}
+	]
+}</pre></td>
+			<td>
+				<script>document.write($$("td pre").pop().outerHTML)</script>
+			</td>
+		</tr>
+		<tr title="With render">
+			<td mv-app mv-storage="#optional-data">
+				<div property="parent" mv-multiple mv-optional>
+					<span property=prop1>1</span>
+					<span property=child mv-multiple mv-optional>2</span>
+				</div>
+			</td>
+			<td>
+				<div mv-multiple>3</div>
+				<div mv-multiple>4</div>
+			</td>
+		</tr>
+	</table>
+</section>
+
+<section>
+	<h1>Recursive collections</h1>
+
+	<table class="reftest">
+		<tr title="Without render">
+			<td mv-app class="mv-autoedit">
+				<div property="parent" mv-multiple>
+					<span property=prop1>1</span>
+					<span property=child mv-multiple mv-like="parent">2</span>
+				</div>
+			</td>
+			<td>
+				<div mv-multiple>1</div>
+			</td>
+		</tr>
+		<tr>
+			<td><pre id="recursive-data">{
+	"parent": [
+		{
+			"prop1": 2,
+			"child": {
+				"prop1": 3,
+				"child": {
+					"prop1": 4,
+					"child": []
+				}
+			}
+		},
+		{
+			"prop1": 5,
+			"child": {
+				"prop1": 6,
+				"child": {
+					"prop1": 7
+				}
+			}
+		}
+	]
+}</pre></td>
+			<td>
+				<script>document.write($$("td pre").pop().outerHTML)</script>
+			</td>
+		</tr>
+		<tr title="With render">
+			<td mv-app mv-storage="#recursive-data">
+				<div property="parent" mv-multiple>
+					<span property=prop1>1</span>
+					<span property=child mv-multiple mv-like="parent">2</span>
+				</div>
+			</td>
+			<td>
+				<div mv-multiple>2
+					<div mv-multiple>3
+						<div mv-multiple>4</div>
+					</div>
+				</div>
+				<div mv-multiple>5
+					<div mv-multiple>6
+						<div mv-multiple>7</div>
+					</div>
+				</div>
+			</td>
+		</tr>
+		<tr>
+			<td><pre id="recursive-data2">{
+	"child": [
+		{
+			"prop1": 2,
+			"child": {
+				"prop1": 3,
+				"child": {
+					"prop1": 4,
+					"child": []
+				}
+			}
+		},
+		{
+			"prop1": 5,
+			"child": {
+				"prop1": 6,
+				"child": {
+					"prop1": 7
+				}
+			}
+		}
+	]
+}</pre></td>
+			<td>
+				<script>document.write($$("td pre").pop().outerHTML)</script>
+			</td>
+		</tr>
+		<tr title="With render, same name">
+			<td mv-app mv-storage="#recursive-data2">
+				<div property="child" mv-multiple>
+					<span property=prop1>1</span>
+					<span property=child mv-multiple mv-like="child">2</span>
+				</div>
+			</td>
+			<td>
+				<div mv-multiple>2
+					<div mv-multiple>3
+						<div mv-multiple>4</div>
+					</div>
+				</div>
+				<div mv-multiple>5
+					<div mv-multiple>6
+						<div mv-multiple>7</div>
+					</div>
+				</div>
+			</td>
+		</tr>
+	</table>
+</section>
+
 </body>
 </html>
