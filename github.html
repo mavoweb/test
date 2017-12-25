@@ -107,10 +107,34 @@
 	</script>
 </section>
 
-<section mv-app="githubtest" mv-storage="https://github.com/LeaVerou/mavo-test/blob/master/data/countries.json">
+<section mv-app="githubtest" mv-storage="https://github.com/mavoweb/test/blob/master/data/countries.json">
 	<h1>Basic</h1>
 
-	<p>Need to login to Github and have access to the Mavo repo for this test to pass.</p>
+	<table class="reftest">
+		<tr>
+			<td>
+				<ul>
+					<li property="country" mv-multiple>
+						<span property="code">Code</span>
+						<span property="name">Name</span>
+					</li>
+				</ul>
+			</td>
+			<td>
+				<ul>
+					<li>Online</li>
+					<li>us United States</li>
+					<li>gb United Kingdom</li>
+				</ul>
+			</td>
+		</tr>
+	</table>
+</section>
+<section mv-app="dynamic" mv-storage="https://github.com/mavoweb/test/blob/master/data/[flip? 'countries' : 'people'].json">
+	<h1>Dynamic</h1>
+
+	<p><input type="checkbox" property="flip"> Check me</p>
+
 	<table class="reftest">
 		<tr>
 			<td>
@@ -244,7 +268,7 @@
 
 	<table class="reftest">
 		<tr>
-			<td mv-app="implicitmvformat" mv-storage="https://github.com/LeaVerou/mavo-test/data/markdown.md" mv-format="text">
+			<td mv-app="implicitmvformat" mv-storage="https://github.com/mavoweb/test/data/markdown.md" mv-format="text">
 				<div property="content"></div>
 			</td>
 			<td>
@@ -276,7 +300,7 @@
 			</td>
 		</tr>
 		<tr title="CSV from Github, implicit mv-format">
-			<td mv-app="csvgithub" mv-storage="https://github.com/LeaVerou/mavo-test/data/csv.csv">
+			<td mv-app="csvgithub" mv-storage="https://github.com/mavoweb/test/data/csv.csv">
 				<div property="row" mv-multiple>
 					<span property="prop1"></span>
 					<span property="prop2"></span>
@@ -308,7 +332,7 @@
 <section mv-app="urltest" mv-storage="">
 	<h1>mv-storage=Github, mv-source=Element, via URL</h1>
 
-	<p><a href="?urltest-storage=https://github.com/LeaVerou/mavo-test/blob/master/data/countries.json&urltest-source=%23countries">Click here first for this test to pass.</a></p>
+	<p><a href="?urltest-storage=https://github.com/mavoweb/test/blob/master/data/countries.json&urltest-source=%23countries">Click here first for this test to pass.</a></p>
 	<table class="reftest">
 		<tr class="interactive">
 			<td>
@@ -330,7 +354,7 @@
 	</table>
 </section>
 
-<section mv-app mv-storage="https://github.com/LeaVerou/mavo-test/blob/master/data/countries.json" mv-source="#countries">
+<section mv-app mv-storage="https://github.com/mavoweb/test/blob/master/data/countries.json" mv-source="#countries">
 	<h1>mv-storage=Github, mv-source=element</h1>
 
 	<table class="reftest">
@@ -354,7 +378,7 @@
 	</table>
 </section>
 
-<section class="mv-app" mv-source="https://github.com/LeaVerou/mavo-test/blob/master/data/countries.json">
+<section class="mv-app" mv-source="https://github.com/mavoweb/test/blob/master/data/countries.json">
 	<h1>No storage, mv-source=Github</h1>
 	<p>Should display data but no editing controls</p>
 

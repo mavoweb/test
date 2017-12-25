@@ -341,8 +341,21 @@ localStorage.localstoretest = `{
 				using element storage
 			</td>
 		</tr>
-		<tr title="Interactive" class="interactive">
+		<tr title="Interactive (element to local)" class="interactive">
 			<td mv-app="mvstoragexpression" mv-storage="[if(storage, '#element-data-2', local)]">
+				<label>
+					<input type="checkbox" property="storage" />
+					Element storage
+				</label>
+				<div property="prop1"></div>
+			</td>
+			<td>
+				<input type="checkbox" checked /> Element storage
+				using element storage
+			</td>
+		</tr>
+		<tr title="Interactive (element to element)" class="interactive">
+			<td mv-app="mvstoragexpression" mv-storage="[if(storage, '#element-data-2', '#element-data-3')]">
 				<label>
 					<input type="checkbox" property="storage" />
 					Element storage

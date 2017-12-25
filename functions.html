@@ -131,6 +131,21 @@ table.reftest td:first-child {
 </section>
 
 <section>
+	<h1>Aggregates</h1>
+
+	<table class="reftest" data-test="expressionEvaluation" data-columns="3">
+		<tr>
+			<td>average(null, 1, 2, 3, null, "")</td>
+			<td>2</td>
+		</tr>
+		<tr>
+			<td>average([null, 1, 2, 3, null, ""])</td>
+			<td>2</td>
+		</tr>
+	</table>
+</section>
+
+<section>
 	<h1>iff()</h1>
 
 	<table class="reftest" data-test="expressionEvaluation" data-columns="3">
