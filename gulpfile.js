@@ -40,14 +40,14 @@ gulp.task("sass", function() {
 });
 
 gulp.task("concat", function () {
-	return gulp.src(["sw.js", "test.js"])
+	return gulp.src(["sw.js", "test.js", "mavo-specific.js"])
 		.pipe(concat("mavotest.js"))
 		.pipe(gulp.dest("."));
 });
 
 gulp.task("watch", function() {
 	gulp.watch(["**/*.scss"], ["sass"]);
-	gulp.watch(["sw.js", "test.js"], ["concat"]);
+	gulp.watch(["sw.js", "test.js", "mavo-specific.js"], ["concat"]);
 });
 
 gulp.task("default", ["sass"]);
