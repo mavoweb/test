@@ -14,7 +14,12 @@
 	"cat": [
 		{
 			"name": "Vector",
-			"age": 10,
+			"age": 12,
+			"hobby": ["Eating", "Purring", "Sitting"]
+		},
+		{
+			"name": "Adam Catlace",
+			"age": 4,
 			"hobby": ["Eating", "Purring"]
 		},
 		{
