@@ -2,12 +2,12 @@
 	"person": [
 		{
 			"name": "Lea Verou",
-			"age": 31,
+			"age": 32,
 			"hobby": ["Coding", "Design", "Cooking"]
 		},
 		{
 			"name": "David Karger",
-			"age": 49,
+			"age": 50,
 			"hobby": ["Dancing", "Theory"]
 		}
 	],
@@ -23,7 +23,7 @@
 			"hobby": ["Eating", "Purring"]
 		},
 		{
-			"name": "Chiki",
+			"name": "Çiki",
 			"age": 1,
 			"hobby": "Playing"
 		}
