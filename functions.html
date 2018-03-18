@@ -28,23 +28,23 @@ table.reftest td:first-child {
 
 	<table class="reftest" data-test="expressionEvaluation" data-columns="3">
 		<tr>
-			<td>add("1", 1)</td>
+			<td>addition("1", 1)</td>
 			<td>2</td>
 		</tr>
 		<tr>
-			<td>add("", "")</td>
+			<td>addition("", "")</td>
 			<td>0</td>
 		</tr>
 		<tr>
-			<td>add("3", "5")</td>
+			<td>addition("3", "5")</td>
 			<td>8</td>
 		</tr>
 		<tr>
-			<td>add([1, 2, 3])</td>
+			<td>addition([1, 2, 3])</td>
 			<td>6</td>
 		</tr>
 		<tr>
-			<td>add([1, 2, 3], [4, 5])</td>
+			<td>addition([1, 2, 3], [4, 5])</td>
 			<td>[5, 7, 3]</td>
 		</tr>
 		<tr>
@@ -126,6 +126,21 @@ table.reftest td:first-child {
 		<tr>
 			<td>neq(2, 2, 3)</td>
 			<td>false</td>
+		</tr>
+	</table>
+</section>
+
+<section>
+	<h1>Objects</h1>
+
+	<table class="reftest" data-test="expressionEvaluation" data-columns="3">
+		<tr>
+			<td>group(name: 'Lea', age: 32)</td>
+			<td>{"name":"Lea","age":32}</td>
+		</tr>
+		<tr>
+			<td>list(1, 2, 3)</td>
+			<td>[1, 2, 3]</td>
 		</tr>
 	</table>
 </section>
@@ -644,7 +659,28 @@ function expressionEvaluation(test, result, expected) {
 	var r = (new Mavo.Expression(test.textContent)).eval({});
 	var json = JSON.stringify(r);
 	result.textContent = json;
-	return Test.equals(r, eval(expected.textContent)) || json == JSON.stringify(JSON.parse(expected.textContent));}
+	var err;
+
+	try {
+		var evaluated = eval(expected.textContent);
+
+		if (Test.equals(r, evaluated)) {
+			return true;
+		}
+	}
+	catch(e) {err = e}
+
+	try {
+		var stringified = JSON.stringify(JSON.parse(expected.textContent));
+
+		if (json == stringified) {
+			return true;
+		}
+	}
+	catch(e) {err = e}
+
+	return err || false;
+}
 </script>
 
 </body>

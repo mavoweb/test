@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Actions tests</title>
+	<link rel="stylesheet" href="https://dev.mavo.io/dist/mavo.css" />
+	<link rel="stylesheet" href="style.css" />
+	<style>
+		div[mv-multiple] {
+			border: 1px solid rgba(0,0,0,.2);
+			background: rgba(0,0,0,.1);
+			padding: .5em;
+			margin: .5em;
+		}
+
+		button {
+			font: inherit;
+		}
+	</style>
+	<script src="https://dev.mavo.io/dist/mavo.js"></script>
+	<script src="mavotest.js"></script>
+</head>
+<body>
+
+<h1>Actions tests</h1>
+
+<button onclick="$$('td:first-of-type > button[mv-action]').forEach(b => b.click())">Trigger all actions</button>
+<section>
+	<h1>Delete / clear</h1>
+	<p>Click the buttons in the first column</p>
+
+	<table class="reftest">
+		<tr title="Delete one item" mv-app mv-source="data/people.json" class="mv-autoedit">
+			<td><button mv-action="delete(person where name = 'Lea Verou')">Delete Lea</button></td>
+			<td>
+				<div class="mv-bar mv-ui"></div>
+				<div property="person" mv-multiple>
+					<strong property="name">John Doe</strong>
+					<span property="age">0</span>
+				</div>
+			</td>
+			<td>
+				David Karger 50
+			</td>
+		</tr>
+		<tr title="Delete multiple items" mv-app mv-source="data/people.json" class="mv-autoedit">
+			<td><button mv-action="delete(cat where age > 2)">Delete cats older than 2</button></td>
+			<td>
+				<div class="mv-bar mv-ui"></div>
+				<div property="cat" mv-multiple>
+					<strong property="name">John Doe</strong>
+					<span property="age">0</span>
+				</div>
+			</td>
+			<td>
+				Çiki 1
+			</td>
+		</tr>
+		<tr title="Empty collection" mv-app mv-source="data/people.json" class="mv-autoedit">
+			<td><button mv-action="delete(cat)">Delete all cats</button></td>
+			<td>
+				<div class="mv-bar mv-ui"></div>
+				<div property="cat" mv-multiple>
+					<strong property="name">John Doe</strong>
+					<span property="age">0</span>
+				</div>
+			</td>
+			<td>
+
+			</td>
+		</tr>
+		<tr title="Clear collection without deleting items" mv-app mv-source="data/people.json" class="mv-autoedit">
+			<td><button mv-action="clear(cat.name, cat.age)">Clear cat data</button></td>
+			<td>
+				<div class="mv-bar mv-ui"></div>
+				<div property="cat" mv-multiple>
+					<strong property="name">John Doe</strong>
+					<span property="age">0</span>
+				</div>
+			</td>
+			<td>
+
+			</td>
+		</tr>
+	</table>
+</section>
+<section>
+	<h1>Add</h1>
+	<p>Click the buttons in the first column</p>
+
+	<table class="reftest">
+		<tr title="Add one item" mv-app mv-source="data/people.json" class="mv-autoedit">
+			<td><button mv-action="add(person, group(name: 'Tarfah Alrashed', age: 30))">Add Tarfah</button></td>
+			<td>
+				<div class="mv-bar mv-ui"></div>
+				<div property="person" mv-multiple>
+					<strong property="name">John Doe</strong>
+					<span property="age">0</span>
+				</div>
+			</td>
+			<td>
+				Lea Verou 32
+				David Karger 50
+				Tarfah Alrashed 30
+			</td>
+		</tr>
+		<tr title="Duplicate item" mv-app mv-source="data/people.json" class="mv-autoedit">
+			<td></td>
+			<td>
+				<div class="mv-bar mv-ui"></div>
+				<div property="person" mv-multiple>
+					<strong property="name">John Doe</strong>
+					<span property="age">0</span>
+					<button mv-action="add(person, person)">Duplicate [name]</button>
+				</div>
+			</td>
+			<td>
+				Lea Verou 32
+				David Karger 50
+				David Karger 50
+			</td>
+		</tr>
+	</table>
+</section>
+<section>
+	<h1>Set</h1>
+	<p>Click the buttons in the first column</p>
+
+	<table class="reftest">
+		<tr title="Set one property across multiple items" mv-app mv-source="data/people.json" class="mv-autoedit">
+			<td><button mv-action="set(name, 'Chris Lilley')">Set all names to Chris Lilley</button></td>
+			<td>
+				<div class="mv-bar mv-ui"></div>
+				<div property="person" mv-multiple>
+					<strong property="name">John Doe</strong>
+					<span property="age">0</span>
+				</div>
+			</td>
+			<td>
+				Chris Lilley 32
+				Chris Lilley 50
+			</td>
+		</tr>
+		<tr title="Set property to other property" mv-app mv-source="data/people.json" class="mv-autoedit">
+			<td><button mv-action="set(name, age)">Set all names to their ages</button></td>
+			<td>
+				<div class="mv-bar mv-ui"></div>
+				<div property="person" mv-multiple>
+					<strong property="name">John Doe</strong>
+					<span property="age">0</span>
+				</div>
+			</td>
+			<td>
+				32 32
+				50 50
+			</td>
+		</tr>
+		<tr title="Increment property" mv-app mv-source="data/people.json" class="mv-autoedit">
+			<td><button mv-action="set(age, age + 1)">Increment all ages</button></td>
+			<td>
+				<div class="mv-bar mv-ui"></div>
+				<div property="person" mv-multiple>
+					<strong property="name">John Doe</strong>
+					<span property="age">0</span>
+				</div>
+			</td>
+			<td>
+				Lea Verou 33
+				David Karger 51
+			</td>
+		</tr>
+		<tr title="Set property with filter" mv-app mv-source="data/people.json" class="mv-autoedit">
+			<td><button mv-action="set(name where age > 40, 'Chris Lilley')">Set names to Chris Lilley for people above 40</button></td>
+			<td>
+				<div class="mv-bar mv-ui"></div>
+				<div property="person" mv-multiple>
+					<strong property="name">John Doe</strong>
+					<span property="age">0</span>
+				</div>
+			</td>
+			<td>
+				Lea Verou 32
+				Chris Lilley 50
+			</td>
+		</tr>
+	</table>
+</section>
+
+
+</body>
+</html>

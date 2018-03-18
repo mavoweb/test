@@ -26,11 +26,11 @@ td {
 	<table class="reftest" data-test="expressionRewrite" data-columns="3">
 		<tr>
 			<td>1 + 1</td>
-			<td>add(1, 1)</td>
+			<td>addition(1, 1)</td>
 		</tr>
 		<tr>
 			<td>1 + 2 + 3</td>
-			<td>add(1, 2, 3)</td>
+			<td>addition(1, 2, 3)</td>
 		</tr>
 		<tr>
 			<td>!foo</td>
@@ -123,6 +123,22 @@ td {
 			<td>foo["bar"]</td>
 			<td>get(foo, "bar")</td>
 		</tr>
+		<tr>
+			<td>foo: "bar"</td>
+			<td>object("foo", "bar")</td>
+		</tr>
+		<tr>
+			<td>"foo": "bar"</td>
+			<td>object("foo", "bar")</td>
+		</tr>
+		<tr>
+			<td>"foo": "bar" : "baz"</td>
+			<td>object("foo", "bar", "baz")</td>
+		</tr>
+		<tr>
+			<td>person where age > 6</td>
+			<td>filter(person, gt(age, 6))</td>
+		</tr>
 		<tr title="Pass-through to JS">
 			<td>foo.filter(a => a + 5)</td>
 		</tr>
@@ -149,12 +165,12 @@ td {
 			<td>5</td>
 		</tr>
 		<tr title="Functions">
-			<td>[add(1, 2)]</td>
+			<td>[addition(1, 2)]</td>
 			<td>3</td>
 		</tr>
 		<tr title="Case insenstive functions">
-			<td>[ADD(1, 2)]</td>
-			<td>3</td>
+			<td>[SUBTRACT(1, 2)]</td>
+			<td>-1</td>
 		</tr>
 		<tr title="Unquoted strings that are function names">
 			<td>[Average]</td>
