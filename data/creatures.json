@@ -1,0 +1,45 @@
+{
+	"person": [
+		{
+			"name": "Lea Verou",
+			"age": 32,
+			"hobby": [
+				"Coding",
+				"Design",
+				"Cooking"
+			]
+		},
+		{
+			"name": "David Karger",
+			"age": 50,
+			"hobby": [
+				"Dancing",
+				"Theory"
+			]
+		}
+	],
+	"cat": [
+		{
+			"name": "Vector",
+			"age": 12,
+			"hobby": [
+				"Eating",
+				"Purring",
+				"Sitting"
+			]
+		},
+		{
+			"name": "Adam Catlace",
+			"age": 4,
+			"hobby": [
+				"Eating",
+				"Purring"
+			]
+		},
+		{
+			"name": "Çiki",
+			"age": 1,
+			"hobby": "Playing"
+		}
+	]
+}
