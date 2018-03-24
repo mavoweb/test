@@ -47,7 +47,7 @@
 	<p>Click the buttons in the first column</p>
 
 	<table class="reftest">
-		<tr title="Delete one item" mv-app mv-source="data/people.json" class="mv-autoedit">
+		<tr title="Delete one item" mv-app mv-source="data/creatures.json" class="mv-autoedit">
 			<td><button mv-action="delete(person where name = 'Lea Verou')">Delete Lea</button></td>
 			<td>
 				<div class="mv-bar mv-ui"></div>
@@ -60,7 +60,7 @@
 				David Karger 50
 			</td>
 		</tr>
-		<tr title="Delete multiple items" mv-app mv-source="data/people.json" class="mv-autoedit">
+		<tr title="Delete multiple items" mv-app mv-source="data/creatures.json" class="mv-autoedit">
 			<td><button mv-action="delete(cat where age > 2)">Delete cats older than 2</button></td>
 			<td>
 				<div class="mv-bar mv-ui"></div>
@@ -73,7 +73,7 @@
 				Çiki 1
 			</td>
 		</tr>
-		<tr title="Empty collection" mv-app mv-source="data/people.json" class="mv-autoedit">
+		<tr title="Empty collection" mv-app mv-source="data/creatures.json" class="mv-autoedit">
 			<td><button mv-action="delete(cat)">Delete all cats</button></td>
 			<td>
 				<div class="mv-bar mv-ui"></div>
@@ -86,7 +86,7 @@
 
 			</td>
 		</tr>
-		<tr title="Clear collection without deleting items" mv-app mv-source="data/people.json" class="mv-autoedit">
+		<tr title="Clear collection without deleting items" mv-app mv-source="data/creatures.json" class="mv-autoedit">
 			<td><button mv-action="clear(cat.name, cat.age)">Clear cat data</button></td>
 			<td>
 				<div class="mv-bar mv-ui"></div>
@@ -106,7 +106,7 @@
 	<p>Click the buttons in the first column</p>
 
 	<table class="reftest">
-		<tr title="Add one item" mv-app mv-source="data/people.json" class="mv-autoedit">
+		<tr title="Add one item" mv-app mv-source="data/creatures.json" class="mv-autoedit">
 			<td><button mv-action="add(person, group(name: 'Tarfah Alrashed', age: 30))">Add Tarfah</button></td>
 			<td>
 				<div class="mv-bar mv-ui"></div>
@@ -121,7 +121,7 @@
 				Tarfah Alrashed 30
 			</td>
 		</tr>
-		<tr title="Duplicate item" mv-app mv-source="data/people.json" class="mv-autoedit">
+		<tr title="Duplicate item" mv-app mv-source="data/creatures.json" class="mv-autoedit">
 			<td></td>
 			<td>
 				<div class="mv-bar mv-ui"></div>
@@ -144,7 +144,7 @@
 	<p>Click the buttons in the first column</p>
 
 	<table class="reftest">
-		<tr title="Set one property across multiple items" mv-app mv-source="data/people.json" class="mv-autoedit">
+		<tr title="Set one property across multiple items" mv-app mv-source="data/creatures.json" class="mv-autoedit">
 			<td><button mv-action="set(name, 'Chris Lilley')">Set all names to Chris Lilley</button></td>
 			<td>
 				<div class="mv-bar mv-ui"></div>
@@ -158,7 +158,7 @@
 				Chris Lilley 50
 			</td>
 		</tr>
-		<tr title="Set property to other property" mv-app mv-source="data/people.json" class="mv-autoedit">
+		<tr title="Set property to other property" mv-app mv-source="data/creatures.json" class="mv-autoedit">
 			<td><button mv-action="set(name, age)">Set all names to their ages</button></td>
 			<td>
 				<div class="mv-bar mv-ui"></div>
@@ -172,7 +172,7 @@
 				50 50
 			</td>
 		</tr>
-		<tr title="Increment property" mv-app mv-source="data/people.json" class="mv-autoedit">
+		<tr title="Increment property" mv-app mv-source="data/creatures.json" class="mv-autoedit">
 			<td><button mv-action="set(age, age + 1)">Increment all ages</button></td>
 			<td>
 				<div class="mv-bar mv-ui"></div>
@@ -186,7 +186,7 @@
 				David Karger 51
 			</td>
 		</tr>
-		<tr title="Set property with filter" mv-app mv-source="data/people.json" class="mv-autoedit">
+		<tr title="Set property with filter" mv-app mv-source="data/creatures.json" class="mv-autoedit">
 			<td><button mv-action="set(name where age > 40, 'Chris Lilley')">Set names to Chris Lilley for people above 40</button></td>
 			<td>
 				<div class="mv-bar mv-ui"></div>
@@ -200,7 +200,7 @@
 				Chris Lilley 50
 			</td>
 		</tr>
-		<tr title="Set property with if" mv-app mv-source="data/people.json" class="mv-autoedit">
+		<tr title="Set property with if" mv-app mv-source="data/creatures.json" class="mv-autoedit">
 			<td><button mv-action="if (age > 40, set(name, 'Chris Lilley'))">Set names to Chris Lilley for people above 40</button></td>
 			<td>
 				<div class="mv-bar mv-ui"></div>
@@ -221,7 +221,7 @@
 	<p>Click the buttons in the first column</p>
 
 	<table class="reftest">
-		<tr title="Move item" mv-app mv-source="data/people.json" class="mv-autoedit">
+		<tr title="Move item" mv-app mv-source="data/creatures.json" class="mv-autoedit">
 			<td><button mv-action="move(first(person), cat)">Move first person to cats</button></td>
 			<td>
 				<div class="mv-bar mv-ui"></div>
