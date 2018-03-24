@@ -26,19 +26,19 @@ td {
 	<table class="reftest" data-test="expressionRewrite" data-columns="3">
 		<tr>
 			<td>1 + 1</td>
-			<td>addition(1, 1)</td>
+			<td>call(addition, [1, 1])</td>
 		</tr>
 		<tr>
 			<td>1 + 2 + 3</td>
-			<td>addition(1, 2, 3)</td>
+			<td>call(addition, [1, 2, 3])</td>
 		</tr>
 		<tr>
 			<td>!foo</td>
-			<td>not(foo)</td>
+			<td>call(not, [foo])</td>
 		</tr>
 		<tr title="Currently failing">
 			<td>not foo</td>
-			<td>not(foo)</td>
+			<td>call(not, [foo])</td>
 		</tr>
 		<tr title="Do not parse as not operator">
 			<td>notes</td>
@@ -46,19 +46,19 @@ td {
 		</tr>
 		<tr>
 			<td>-1</td>
-			<td>minus(1)</td>
+			<td>call(minus, [1])</td>
 		</tr>
 		<tr>
 			<td>+1</td>
-			<td>plus(1)</td>
+			<td>call(plus, [1])</td>
 		</tr>
 		<tr>
 			<td>if(2, 3, 4)</td>
-			<td>Mavo.Functions._Trap.iff(2, 3, 4)</td>
+			<td>call(iff, [2, 3, 4])</td>
 		</tr>
 		<tr>
 			<td>foo and 5 or baz</td>
-			<td>or(and(foo, 5), baz)</td>
+			<td>call(or, [call(and, [foo, 5]), baz])</td>
 		</tr>
 		<tr title="Do not parse as and operator">
 			<td>bands</td>
@@ -69,47 +69,47 @@ td {
 		</tr>
 		<tr>
 			<td>if(foo >= 5, 1, 2)</td>
-			<td>Mavo.Functions._Trap.iff(gte(foo, 5), 1, 2)</td>
+			<td>call(iff, [call(gte, [foo, 5]), 1, 2])</td>
 		</tr>
 		<tr>
 			<td>foo == "bar"</td>
-			<td>eq(foo, "bar")</td>
+			<td>call(eq, [foo, "bar"])</td>
 		</tr>
 		<tr title="Single character equals">
 			<td>foo = 5</td>
-			<td>eq(foo, 5)</td>
+			<td>call(eq, [foo, 5])</td>
 		</tr>
 		<tr>
 			<td>foo > bar</td>
-			<td>gt(foo, bar)</td>
+			<td>call(gt, [foo, bar])</td>
 		</tr>
 		<tr title="3 operand comparison">
 			<td>foo > bar > baz</td>
-			<td>gt(foo, bar, baz)</td>
+			<td>call(gt, [foo, bar, baz])</td>
 		</tr>
 		<tr title="3 operand equality">
 			<td>foo = bar = baz</td>
-			<td>eq(foo, bar, baz)</td>
+			<td>call(eq, [foo, bar, baz])</td>
 		</tr>
 		<tr title="4 operand equality">
 			<td>foo = bar = baz = yolo</td>
-			<td>eq(foo, bar, baz, yolo)</td>
+			<td>call(eq, [foo, bar, baz, yolo])</td>
 		</tr>
 		<tr title="4 operand equality">
 			<td>foo = bar = baz == yolo</td>
-			<td>eq(foo, bar, baz, yolo)</td>
+			<td>call(eq, [foo, bar, baz, yolo])</td>
 		</tr>
 		<tr>
 			<td>foo != bar</td>
-			<td>neq(foo, bar)</td>
+			<td>call(neq, [foo, bar])</td>
 		</tr>
 		<tr>
 			<td>foo != bar != baz</td>
-			<td>neq(foo, bar, baz)</td>
+			<td>call(neq, [foo, bar, baz])</td>
 		</tr>
 		<tr>
 			<td>foo & bar & baz</td>
-			<td>concatenate(foo, bar, baz)</td>
+			<td>call(concatenate, [foo, bar, baz])</td>
 		</tr>
 		<tr>
 			<td>foo.bar</td>
@@ -125,19 +125,31 @@ td {
 		</tr>
 		<tr>
 			<td>foo: "bar"</td>
-			<td>object("foo", "bar")</td>
+			<td>call(object, ["foo", "bar"])</td>
 		</tr>
 		<tr>
 			<td>"foo": "bar"</td>
-			<td>object("foo", "bar")</td>
+			<td>call(object, ["foo", "bar"])</td>
 		</tr>
 		<tr>
 			<td>"foo": "bar" : "baz"</td>
-			<td>object("foo", "bar", "baz")</td>
+			<td>call(object, ["foo", "bar", "baz"])</td>
+		</tr>
+		<tr>
+			<td>task where done</td>
+			<td>call(Mavo.Functions.filter || filter, [task, get(task, "done")])</td>
 		</tr>
 		<tr>
 			<td>person where age > 6</td>
-			<td>filter(person, gt(age, 6))</td>
+			<td>call(Mavo.Functions.filter || filter, [person, call(gt, [get(person, "age"), 6])])</td>
+		</tr>
+		<tr>
+			<td>person where age > 6 where gender = 'female'</td>
+			<td>call(Mavo.Functions.filter || filter, [person, call(gt, [get(person, "age"), 6]), call(eq, [get(person, "gender"), 'female'])])</td>
+		</tr>
+		<tr title="Rewrite function that clashes with prototype function">
+			<td>split(solution)</td>
+			<td>call(Mavo.Functions.split || split, [solution])</td>
 		</tr>
 		<tr title="Pass-through to JS">
 			<td>foo.filter(a => a + 5)</td>

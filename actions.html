@@ -24,6 +24,23 @@
 
 <h1>Actions tests</h1>
 
+<section>
+	<h1>Expression Rewrite</h1>
+
+	<p>These tests check if MavoScript is rewritten to JS correctly</p>
+
+	<table class="reftest" data-test="expressionRewrite" data-columns="3">
+		<tr>
+			<td>if(age > 40, set(name, Chris))</td>
+			<td>call(iff, [call(gt, [age, 40]), call(setif, [call(gt, [age, 40]), name, Chris])])</td>
+		</tr>
+		<tr>
+			<td>if(age > 40, set(name, Gandalf), set(name, Sauron))</td>
+			<td>call(iff, [call(gt, [age, 40]), call(setif, [call(gt, [age, 40]), name, Gandalf]), call(setif, [call(not, [call(gt, [age, 40])]), name, Sauron])])</td>
+		</tr>
+	</table>
+</section>
+
 <button onclick="$$('td:first-of-type > button[mv-action]').forEach(b => b.click())">Trigger all actions</button>
 <section>
 	<h1>Delete / clear</h1>
@@ -183,9 +200,59 @@
 				Chris Lilley 50
 			</td>
 		</tr>
+		<tr title="Set property with if" mv-app mv-source="data/people.json" class="mv-autoedit">
+			<td><button mv-action="if (age > 40, set(name, 'Chris Lilley'))">Set names to Chris Lilley for people above 40</button></td>
+			<td>
+				<div class="mv-bar mv-ui"></div>
+				<div property="person" mv-multiple>
+					<strong property="name">John Doe</strong>
+					<span property="age">0</span>
+				</div>
+			</td>
+			<td>
+				Lea Verou 32
+				Chris Lilley 50
+			</td>
+		</tr>
+	</table>
+</section>
+<section>
+	<h1>Move</h1>
+	<p>Click the buttons in the first column</p>
+
+	<table class="reftest">
+		<tr title="Move item" mv-app mv-source="data/people.json" class="mv-autoedit">
+			<td><button mv-action="move(first(person), cat)">Move first person to cats</button></td>
+			<td>
+				<div class="mv-bar mv-ui"></div>
+				<div property="person" mv-multiple>
+					<strong property="name">John Doe</strong>
+					<span property="age">0</span>
+					<button mv-action="move(person, cat)">Move to cats</button>
+				</div>
+				<div property="cat" mv-multiple>
+					<strong property="name">John Doe</strong>
+					<span property="age">0</span>
+					<button mv-action="move(cat, 0)">Move to top</button>
+				</div>
+			</td>
+			<td>
+				David Karger 50  Move to cats
+				Vector 12  Move to people
+				Adam Catlace 4  Move to people
+				Çiki 1  Move to people
+				Lea Verou 32  Move to people
+			</td>
+		</tr>
 	</table>
 </section>
 
+<script>
+function expressionRewrite(test, result, expected) {
+	var r = result.textContent = Mavo.Script.rewrite(test.textContent);
 
+	return Test.equals(r, expected.textContent);
+}
+</script>
 </body>
 </html>

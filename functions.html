@@ -521,6 +521,37 @@ table.reftest td:first-child {
 </section>
 
 <section>
+	<h1>digits()</h1>
+
+	<table class="reftest" data-test="expressionEvaluation" data-columns="3">
+		<tr>
+			<td>digits(2, 1234.5678)</td>
+			<td>"34.5678"</td>
+		</tr>
+		<tr>
+			<td>digits(2, 0, 1234.5678)</td>
+			<td>"34"</td>
+		</tr>
+		<tr>
+			<td>digits(2, 5, 1234.5678)</td>
+			<td>"34.56780"</td>
+		</tr>
+		<tr>
+			<td>digits(2, 1)</td>
+			<td>"01"</td>
+		</tr>
+		<tr>
+			<td>digits(2, 2, 0)</td>
+			<td>"00.00"</td>
+		</tr>
+		<tr>
+			<td>digits(0)</td>
+			<td>null</td>
+		</tr>
+	</table>
+</section>
+
+<section>
 	<h1>Dates</h1>
 
 	<table class="reftest" data-test="expressionEvaluation" data-columns="3">
@@ -545,7 +576,7 @@ table.reftest td:first-child {
 			<td>6</td>
 		</tr>
 		<tr>
-			<td>month("1986-06-13").twodigit</td>
+			<td>digits(2, month("1986-06-13"))</td>
 			<td>"06"</td>
 		</tr>
 		<tr>
@@ -561,11 +592,11 @@ table.reftest td:first-child {
 			<td>"1986"</td>
 		</tr>
 		<tr>
-			<td>year("1986-06-13").twodigit</td>
+			<td>digits(2, year("1986-06-13"))</td>
 			<td>"86"</td>
 		</tr>
 		<tr>
-			<td>year("1900-06-13").twodigit</td>
+			<td>digits(2, year("1900-06-13"))</td>
 			<td>"00"</td>
 		</tr>
 		<tr>
@@ -618,7 +649,7 @@ table.reftest td:first-child {
 		</tr>
 		<tr title="Subtract dates">
 			<td>subtract("1986-06-13", "1986-06-10")</td>
-			<td>259200</td>
+			<td>259200000</td>
 		</tr>
 		<tr>
 			<td>days(subtract("1986-06-13", "1986-06-10"))</td>

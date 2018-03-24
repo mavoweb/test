@@ -75,7 +75,8 @@ h1 {
 
 html:not(.index) {
 	body {
-		max-width: 50em;
+		width: calc(100vw - 25em);
+		max-width: 100em;
 		counter-reset: fail pass interactive;
 	}
 
