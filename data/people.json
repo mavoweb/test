@@ -74,7 +74,11 @@
 		{
 			"name": "Tarfah Alrashed",
 			"age": "30",
-			"hobby": []
+			"hobby": [
+				"Hiking",
+				"Scuba diving",
+				"Canyonyeering"
+			]
 		},
 		{
 			"name": "Amy Zhang",
