@@ -3,29 +3,86 @@
 		{
 			"name": "Lea Verou",
 			"age": 32,
-			"hobby": ["Coding", "Design", "Cooking"]
+			"hobby": [
+				"Coding",
+				"Design",
+				"Cooking"
+			]
 		},
 		{
 			"name": "David Karger",
 			"age": 50,
-			"hobby": ["Dancing", "Theory"]
+			"hobby": [
+				"Dancing",
+				"Theory"
+			]
 		}
 	],
 	"cat": [
 		{
 			"name": "Vector",
 			"age": 12,
-			"hobby": ["Eating", "Purring", "Sitting"]
+			"hobby": [
+				"Eating",
+				"Purring",
+				"Sitting"
+			]
 		},
 		{
 			"name": "Adam Catlace",
 			"age": 4,
-			"hobby": ["Eating", "Purring"]
+			"hobby": [
+				"Eating",
+				"Purring"
+			]
 		},
 		{
 			"name": "Çiki",
 			"age": 1,
 			"hobby": "Playing"
+		}
+	],
+	"man": [
+		{
+			"name": "David Karger",
+			"age": "50",
+			"hobby": [
+				"Dancing",
+				"Theory"
+			]
+		},
+		{
+			"name": "Eirik Bakke",
+			"age": "32",
+			"hobby": [
+				"Coding",
+				"Design"
+			]
+		}
+	],
+	"woman": [
+		{
+			"name": "Lea Verou",
+			"age": "32",
+			"hobby": [
+				"Coding",
+				"Design",
+				"Cooking",
+				"Eating out"
+			]
+		},
+		{
+			"name": "Tarfah Alrashed",
+			"age": "30",
+			"hobby": []
+		},
+		{
+			"name": "Amy Zhang",
+			"age": "28",
+			"hobby": [
+				"Research",
+				"Eating out"
+			]
 		}
 	]
 }
