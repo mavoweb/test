@@ -10,6 +10,14 @@
 			content: " " var(--append);
 		}
 
+		.side-by-side {
+			display: flex;
+		}
+
+			.side-by-side > div {
+				flex: 1;
+			}
+
 		[mv-app="customitemcontrols"] .mv-item-bar {
 			position: static;
 			opacity: 1;
@@ -79,83 +87,87 @@
 	You should be able to drag across hobby lists or cats to people and vice versa, but not hobbies to people or people to hobbies.
 	For the last reftest, click Save without making any changes.</p>
 
-	<div property="person" mv-multiple mv-accepts="cat">
-		<strong property="name">John Doe</strong>
-		<span property="age">0</span>
-		<ul>
-			<li property="hobby" mv-multiple>Fishing</li>
-		</ul>
+	<div class="side-by-side">
+		<div>
+			<div property="person" mv-multiple mv-accepts="cat">
+				<strong property="name">John Doe</strong>
+				<span property="age">0</span>
+				<ul>
+					<li property="hobby" mv-multiple>Fishing</li>
+				</ul>
+			</div>
+			<div property="cat" mv-multiple mv-accepts="person">
+				<strong property="name">John Doe</strong>
+				<span property="age">0</span>
+				<ul>
+					<li property="hobby" mv-multiple mv-related="hobby">Fishing</li>
+				</ul>
+			</div>
+
+			<div>Another random div</div>
+		</div>
+		<div>
+			<table class="reftest">
+				<tr title="count(person)">
+					<td>[count(person)]</td>
+					<td>2</td>
+				</tr>
+				<tr title="count(cat)">
+					<td>[count(cat)]</td>
+					<td>2</td>
+				</tr>
+				<tr title="count(hobby)">
+					<td>[count(hobby)]</td>
+					<td>8</td>
+				</tr>
+				<tr mv-expressions="none" class="interactive">
+					<td>
+						<pre id="people">{
+			"person": [
+				{
+					"name": "Lea Verou",
+					"age": 31,
+					"hobby": [
+						"Coding",
+						"Design",
+						"Cooking"
+					]
+				},
+				{
+					"name": "David Karger",
+					"age": 50,
+					"hobby": [
+						"Dancing",
+						"Theory"
+					]
+				}
+			],
+			"cat": [
+				{
+					"name": "Vector",
+					"age": 12,
+					"hobby": [
+						"Eating",
+						"Purring"
+					]
+				},
+				{
+					"name": "Çiki",
+					"age": 1,
+					"hobby": [
+						"Playing"
+					]
+				}
+			]
+		}</pre>
+					</td>
+					<td>
+						<script>document.write($$("td pre").pop().outerHTML)</script>
+					</td>
+				</tr>
+			</table>
+		</div>
 	</div>
-	<div property="cat" mv-multiple mv-accepts="person">
-		<strong property="name">John Doe</strong>
-		<span property="age">0</span>
-		<ul>
-			<li property="hobby" mv-multiple mv-related="hobby">Fishing</li>
-		</ul>
-	</div>
-
-	<div>Another random div</div>
-
-	<table class="reftest">
-		<tr title="count(person)">
-			<td>[count(person)]</td>
-			<td>2</td>
-		</tr>
-		<tr title="count(cat)">
-			<td>[count(cat)]</td>
-			<td>2</td>
-		</tr>
-		<tr title="count(hobby)">
-			<td>[count(hobby)]</td>
-			<td>8</td>
-		</tr>
-		<tr mv-expressions="none" class="interactive">
-			<td>
-				<pre id="people">{
-	"person": [
-		{
-			"name": "Lea Verou",
-			"age": 31,
-			"hobby": [
-				"Coding",
-				"Design",
-				"Cooking"
-			]
-		},
-		{
-			"name": "David Karger",
-			"age": 50,
-			"hobby": [
-				"Dancing",
-				"Theory"
-			]
-		}
-	],
-	"cat": [
-		{
-			"name": "Vector",
-			"age": 12,
-			"hobby": [
-				"Eating",
-				"Purring"
-			]
-		},
-		{
-			"name": "Çiki",
-			"age": 1,
-			"hobby": [
-				"Playing"
-			]
-		}
-	]
-}</pre>
-			</td>
-			<td>
-				<script>document.write($$("td pre").pop().outerHTML)</script>
-			</td>
-		</tr>
-	</table>
-
 </section>
 
 <section mv-app="primitives" mv-storage="#numbers">
@@ -188,7 +200,8 @@
 </section>
 
 <section mv-app="primitives" mv-storage="#numbers-2">
-	<h1>Immutable collection of primitives</h1>
+	<h1>Implicit collection of primitives</h1>
+
 	<table class="reftest">
 		<tr mv-expressions="none">
 			<td>
@@ -226,6 +239,37 @@
 		<tr>
 			<td>[numbers]</td>
 			<td>1, 2, 3</td>
+		</tr>
+	</table>
+</section>
+
+<section mv-app="primitives" mv-storage="#numbers-3">
+	<h1>Implicit collection of primitives with only 1 item</h1>
+
+	<table class="reftest">
+		<tr mv-expressions="none">
+			<td>
+				<pre id="numbers-3">{
+	"numbers": 42
+}</pre>
+			</td>
+			<td>
+				<script>document.write($$("td pre").pop().outerHTML)</script>
+			</td>
+		</tr>
+		<tr>
+			<td>
+				<div property="numbers" style="--prepend: '[numbers]'; --append: '[$index]';">11</div>
+				<div property="numbers" style="--prepend: '[numbers]'; --append: '[$index]';">12</div>
+				<div property="numbers" style="--prepend: '[numbers]'; --append: '[$index]';">13</div>
+			</td>
+			<td>
+				<div>42 42 0</div>
+			</td>
+		</tr>
+		<tr>
+			<td>[numbers]</td>
+			<td>42</td>
 		</tr>
 	</table>
 </section>
