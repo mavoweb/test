@@ -30,7 +30,7 @@
 			background: rgba(0,0,0,.1);
 		}
 
-		div[mv-multiple] {
+		div[mv-multiple], .bordered {
 			border: 1px solid rgba(0,0,0,.2);
 			background: rgba(0,0,0,.1);
 			padding: .5em;
@@ -178,18 +178,18 @@
 				<div property="numbers" mv-multiple style="--prepend: '[numbers]'; --append: '[$index]';"></div>
 			</td>
 			<td>
-				<div mv-multiple="" style="--prepend: '-1'; --append: '0'">-1</div><!--
-				--><div mv-multiple="" style="--prepend: '0'; --append: '1'">0</div><!--
-				--><div mv-multiple="" style="--prepend: '1'; --append: '2'">1</div><!--
-				--><div mv-multiple="" style="--prepend: '2'; --append: '3'">2</div><!--
-				--><div mv-multiple="" style="--prepend: '3'; --append: '4'">3</div><!--
-				--><div mv-multiple="" style="--prepend: '4'; --append: '5'">4</div><!--
-				--><div mv-multiple="" style="--prepend: '5'; --append: '6'">5</div><!--
-				--><div mv-multiple="" style="--prepend: '6'; --append: '7'">6</div><!--
-				--><div mv-multiple="" style="--prepend: '7'; --append: '8'">7</div><!--
-				--><div mv-multiple="" style="--prepend: '8'; --append: '9'">8</div><!--
-				--><div mv-multiple="" style="--prepend: '9'; --append: '10'">9</div><!--
-				--><div mv-multiple="" style="--prepend: '10'; --append: '11'">10</div>
+				<div class="bordered" style="--prepend: '-1'; --append: '0'">-1</div><!--
+				--><div class="bordered" style="--prepend: '0'; --append: '1'">0</div><!--
+				--><div class="bordered" style="--prepend: '1'; --append: '2'">1</div><!--
+				--><div class="bordered" style="--prepend: '2'; --append: '3'">2</div><!--
+				--><div class="bordered" style="--prepend: '3'; --append: '4'">3</div><!--
+				--><div class="bordered" style="--prepend: '4'; --append: '5'">4</div><!--
+				--><div class="bordered" style="--prepend: '5'; --append: '6'">5</div><!--
+				--><div class="bordered" style="--prepend: '6'; --append: '7'">6</div><!--
+				--><div class="bordered" style="--prepend: '7'; --append: '8'">7</div><!--
+				--><div class="bordered" style="--prepend: '8'; --append: '9'">8</div><!--
+				--><div class="bordered" style="--prepend: '9'; --append: '10'">9</div><!--
+				--><div class="bordered" style="--prepend: '10'; --append: '11'">10</div>
 			</td>
 		</tr>
 		<tr>
@@ -624,14 +624,14 @@
 </section>
 
 <section>
-	<h1>Optional collections</h1>
+	<h1>mv-initial-items="0"</h1>
 
 	<table class="reftest">
 		<tr title="Without render">
 			<td mv-app class="mv-autoedit">
-				<div property="parent" mv-multiple mv-optional>
+				<div property="parent" mv-multiple mv-initial-items="0">
 					<span property=prop1>1</span>
-					<span property=child mv-multiple mv-optional>2</span>
+					<span property=child mv-multiple mv-initial-items="0">2</span>
 				</div>
 			</td>
 			<td>
@@ -655,14 +655,115 @@
 		</tr>
 		<tr title="With render">
 			<td mv-app mv-storage="#optional-data">
-				<div property="parent" mv-multiple mv-optional>
+				<div property="parent" mv-multiple mv-initial-items="0">
 					<span property=prop1>1</span>
-					<span property=child mv-multiple mv-optional>2</span>
+					<span property=child mv-multiple mv-initial-items="0">2</span>
 				</div>
 			</td>
 			<td>
 				<div mv-multiple>3</div>
 				<div mv-multiple>4</div>
+			</td>
+		</tr>
+	</table>
+</section>
+
+<section>
+	<h1>mv-initial-items="2"</h1>
+
+	<table class="reftest">
+		<tr title="Without render">
+			<td mv-app class="mv-autoedit">
+				<div property="parent" mv-multiple mv-initial-items="2">
+					<span property=prop1 mv-default="8">1</span>
+					<span property=child mv-multiple mv-initial-items="2" mv-default="9">2</span>
+				</div>
+			</td>
+			<td>
+				<div mv-multiple>8 99</div>
+				<div mv-multiple>8 99</div>
+			</td>
+		</tr>
+		<tr>
+			<td><pre id="optional-data-2">{
+	"parent": [
+		{
+			"prop1": 3
+		},
+		{
+			"prop1": 4
+		}
+	]
+}</pre></td>
+			<td>
+				<script>document.write($$("td pre").pop().outerHTML)</script>
+			</td>
+		</tr>
+		<tr title="With render">
+			<td mv-app mv-storage="#optional-data-2">
+				<div property="parent" mv-multiple mv-initial-items="2">
+					<span property=prop1 mv-default="8">1</span>
+					<span property=child mv-multiple mv-initial-items="2" mv-default="9">2</span>
+				</div>
+			</td>
+			<td>
+				<div mv-multiple>3 99</div>
+				<div mv-multiple>4 99</div>
+			</td>
+		</tr>
+	</table>
+</section>
+
+<section>
+	<h1>mv-like</h1>
+
+	<table class="reftest">
+		<tr title="Without render">
+			<td mv-app class="mv-autoedit">
+				<div property="prop1" mv-multiple>
+					<span property=prop2>1</span>
+				</div>
+				<div property="prop3" mv-multiple mv-like="prop1"></div>
+			</td>
+			<td>
+				<div mv-multiple>1</div>
+			</td>
+		</tr>
+		<tr>
+			<td><pre id="like-data">{
+	"prop1": [
+		{
+			"prop2": 2
+		},
+		{
+			"prop2": 3
+		}
+	],
+	"prop3": [
+		{
+			"prop2": 4
+		},
+		{
+			"prop2": 5
+		}
+	]
+}</pre></td>
+			<td>
+				<script>document.write($$("td pre").pop().outerHTML)</script>
+			</td>
+		</tr>
+		<tr title="With render">
+			<td mv-app mv-storage="#like-data">
+				<div property="prop1" mv-multiple>
+					<span property=prop2>1</span>
+				</div>
+				<div property="prop3" mv-multiple mv-like="prop1"></div>
+			</td>
+			<td>
+				<div mv-multiple>2</div>
+				<div mv-multiple>3</div>
+				<div mv-multiple>4</div>
+				<div mv-multiple>5</div>
 			</td>
 		</tr>
 	</table>
