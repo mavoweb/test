@@ -29,6 +29,31 @@
 <button id="saveall" style="font-size: 200%">Save All Mavos</button>
 
 <section>
+	<h1>Render data URI</h1>
+
+	<table class="reftest">
+		<tr>
+			<td mv-app mv-source='data:application/json,{"prop1":1}'>
+				<span property="prop1"></span>
+			</td>
+			<td>
+				1
+			</td>
+		</tr>
+		<tr title="With line breaks">
+			<td mv-app mv-source='data:application/json,{
+				"prop1":1
+			}'>
+				<span property="prop1"></span>
+			</td>
+			<td>
+				1
+			</td>
+		</tr>
+	</table>
+</section>
+
+<section>
 	<h1>mv-path</h1>
 
 	<p>Click Save. The tests should still pass.</p>
