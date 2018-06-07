@@ -848,6 +848,94 @@
 	<div title="$hash">[$hash]</div>
 </section>
 
+<section>
+	<h1>$all, $next keywords</h1>
+	<table class="reftest">
+		<tr title="bare $all">
+			<td>
+				<div mv-app="appName" mv-storage='data:application/json,{"prop": [{"child":1},{"child":2},{"child":3}]}' mv-expressions="{{ }}">
+					<div property="prop" mv-multiple>
+						<meta property="child" />
+						{{ $all }}
+					</div>
+				</div>
+			</td>
+			<td>
+				{ "child": 1 }, { "child": 2 }, { "child": 3 }
+				{ "child": 1 }, { "child": 2 }, { "child": 3 }
+				{ "child": 1 }, { "child": 2 }, { "child": 3 }
+			</td>
+		</tr>
+		<tr title="$all on subproperty">
+			<td>
+				<div mv-app="appName" mv-storage='data:application/json,{"prop": [{"child":1},{"child":2},{"child":3}]}' mv-expressions="{{ }}">
+					<div property="prop" mv-multiple>
+						<meta property="child" />
+						{{ child.$all }}
+					</div>
+				</div>
+			</td>
+			<td>
+				1, 2, 3
+				1, 2, 3
+				1, 2, 3
+			</td>
+		</tr>
+		<tr title="Bare $next">
+			<td>
+				<div mv-app="appName" mv-storage='data:application/json,{"prop": [{"child":1},{"child":2},{"child":3}]}' mv-expressions="{{ }}">
+					<div property="prop" mv-multiple>
+						<meta property="child" />
+						{{ $next }}
+					</div>
+				</div>
+			</td>
+			<td>
+				{ "child": 2 }
+				{ "child": 3 }
+			</td>
+		</tr>
+		<tr title="$next on subproperty">
+			<td>
+				<div mv-app="appName" mv-storage='data:application/json,{"prop": [{"child":1},{"child":2},{"child":3}]}' mv-expressions="{{ }}">
+					<div property="prop" mv-multiple>
+						<meta property="child" />
+						{{ child.$next }}
+					</div>
+				</div>
+			</td>
+			<td>
+				2
+				3
+			</td>
+		</tr>
+		<tr title="$previous on subproperty">
+			<td>
+				<div mv-app="appName" mv-storage='data:application/json,{"prop": [{"child":1},{"child":2},{"child":3}]}' mv-expressions="{{ }}">
+					<div property="prop" mv-multiple>
+						<meta property="child" />
+						{{ child.$previous }}
+					</div>
+				</div>
+			</td>
+			<td>
+				1
+				2
+			</td>
+		</tr>
+		<tr title="$previous outside collection">
+			<td>
+				<div mv-app="appName" mv-storage='data:application/json,{}' mv-expressions="{{ }}">
+					{{ $previous }}
+				</div>
+			</td>
+			<td>
+
+			</td>
+		</tr>
+	</table>
+</section>
+
 <script>
 	var compareChecked = RefTest.compare.attribute.bind(null, "checked");
 	var compareDisabled = RefTest.compare.attribute.bind(null, "disabled");
