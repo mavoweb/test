@@ -125,15 +125,15 @@ td {
 		</tr>
 		<tr>
 			<td>foo: "bar"</td>
-			<td>call(object, ["foo", "bar"])</td>
+			<td>call(keyvalue, ["foo", "bar"])</td>
 		</tr>
 		<tr>
 			<td>"foo": "bar"</td>
-			<td>call(object, ["foo", "bar"])</td>
+			<td>call(keyvalue, ["foo", "bar"])</td>
 		</tr>
 		<tr>
 			<td>"foo": "bar" : "baz"</td>
-			<td>call(object, ["foo", "bar", "baz"])</td>
+			<td>call(keyvalue, ["foo", "bar", "baz"])</td>
 		</tr>
 		<tr>
 			<td>task where done</td>
@@ -146,6 +146,18 @@ td {
 		<tr>
 			<td>person where age > 6 where gender = 'female'</td>
 			<td>call(Mavo.Functions.filter || filter, [person, call(gt, [get(person, "age"), 6]), call(eq, [get(person, "gender"), 'female'])])</td>
+		</tr>
+		<tr title="Do not rewrite $`this.foo">
+			<td>person where age = this.prop</td>
+			<td>call(Mavo.Functions.filter || filter, [person, call(eq, [get(person, "age"), get($this, "prop")])])</td>
+		</tr>
+		<tr title="Do not rewrite this.foo">
+			<td>person where age = this.prop</td>
+			<td>call(Mavo.Functions.filter || filter, [person, call(eq, [get(person, "age"), get($this, "prop")])])</td>
+		</tr>
+		<tr>
+			<td>1 .. 5</td>
+			<td>call(range, [1, 5])</td>
 		</tr>
 		<tr title="Rewrite function that clashes with prototype function">
 			<td>split(solution)</td>
