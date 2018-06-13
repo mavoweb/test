@@ -64,10 +64,8 @@ self.Test = {
 			ret += Test.pseudo(node, "before");
 			var special = false;
 
-			for (let selector of Test.contentIgnore) {
-				if (node.matches(selector)) {
-					return "";
-				}
+			if (node.matches(Test.contentIgnore.join(", "))) {
+				return "";
 			}
 
 			for (let selector in Test.contentSpecial) {
@@ -98,7 +96,7 @@ self.Test = {
 		"select": e => e.selectedOptions[0] && e.selectedOptions[0].textContent
 	},
 
-	contentIgnore: [".mv-ui"],
+	contentIgnore: [".mv-ui", ".test-content-ignore"],
 
 	equals: function(a, b) {
 		if (a === b) {
@@ -396,7 +394,7 @@ document.addEventListener("DOMContentLoaded", function(){
 				href: "index.html",
 				target: "_top",
 				inside: h1
-			});	
+			});
 		}
 	}
 
