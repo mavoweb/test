@@ -32,11 +32,11 @@
 	<table class="reftest" data-test="expressionRewrite" data-columns="3">
 		<tr>
 			<td>if(age > 40, set(name, Chris))</td>
-			<td>call(iff, [call(gt, [age, 40]), call(setif, [call(gt, [age, 40]), name, Chris])])</td>
+			<td>iff(gt(age, 40), setif(gt(age, 40), name, Chris))</td>
 		</tr>
 		<tr>
 			<td>if(age > 40, set(name, Gandalf), set(name, Sauron))</td>
-			<td>call(iff, [call(gt, [age, 40]), call(setif, [call(gt, [age, 40]), name, Gandalf]), call(setif, [call(not, [call(gt, [age, 40])]), name, Sauron])])</td>
+			<td>iff(gt(age, 40), setif(gt(age, 40), name, Gandalf), setif(not(gt(age, 40)), name, Sauron))</td>
 		</tr>
 	</table>
 </section>
@@ -242,6 +242,22 @@
 				Adam Catlace 4  Move to people
 				Çiki 1  Move to people
 				Lea Verou 32  Move to people
+			</td>
+		</tr>
+	</table>
+</section>
+
+<section>
+	<h1>Using action names as unquoted strings in mv-action</h1>
+
+	<table class="reftest">
+		<tr>
+			<td mv-app>
+				<span property="prop1"></span>
+				<button mv-action="set(prop1, add)" class="test-content-ignore">Set prop1 to add</button>
+			</td>
+			<td>
+				add
 			</td>
 		</tr>
 	</table>

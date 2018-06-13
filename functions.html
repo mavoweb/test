@@ -707,7 +707,7 @@ table.reftest td:first-child {
 
 <script>
 function expressionEvaluation(test, result, expected) {
-	var r = (new Mavo.Expression(test.textContent)).eval({});
+	var r = (new Mavo.Expression(test.textContent)).eval();
 	var json = JSON.stringify(r);
 	result.textContent = json;
 	var err;

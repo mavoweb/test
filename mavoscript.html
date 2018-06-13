@@ -26,39 +26,39 @@ td {
 	<table class="reftest" data-test="expressionRewrite" data-columns="3">
 		<tr>
 			<td>1 + 1</td>
-			<td>call(addition, [1, 1])</td>
+			<td>addition(1, 1)</td>
 		</tr>
-		<tr>
+		<tr title="Operator flattening">
 			<td>1 + 2 + 3</td>
-			<td>call(addition, [1, 2, 3])</td>
+			<td>addition(1, 2, 3)</td>
 		</tr>
 		<tr>
 			<td>!foo</td>
-			<td>call(not, [foo])</td>
+			<td>not(foo)</td>
 		</tr>
-		<tr title="Currently failing">
+		<!-- <tr title="Currently failing">
 			<td>not foo</td>
-			<td>call(not, [foo])</td>
-		</tr>
+			<td>not(foo)</td>
+		</tr> -->
 		<tr title="Do not parse as not operator">
 			<td>notes</td>
 			<td>notes</td>
 		</tr>
 		<tr>
 			<td>-1</td>
-			<td>call(minus, [1])</td>
+			<td>minus(1)</td>
 		</tr>
 		<tr>
 			<td>+1</td>
-			<td>call(plus, [1])</td>
+			<td>plus(1)</td>
 		</tr>
 		<tr>
 			<td>if(2, 3, 4)</td>
-			<td>call(iff, [2, 3, 4])</td>
+			<td>iff(2, 3, 4)</td>
 		</tr>
 		<tr>
 			<td>foo and 5 or baz</td>
-			<td>call(or, [call(and, [foo, 5]), baz])</td>
+			<td>or(and(foo, 5), baz)</td>
 		</tr>
 		<tr title="Do not parse as and operator">
 			<td>bands</td>
@@ -69,47 +69,47 @@ td {
 		</tr>
 		<tr>
 			<td>if(foo >= 5, 1, 2)</td>
-			<td>call(iff, [call(gte, [foo, 5]), 1, 2])</td>
+			<td>iff(gte(foo, 5), 1, 2)</td>
 		</tr>
 		<tr>
 			<td>foo == "bar"</td>
-			<td>call(eq, [foo, "bar"])</td>
+			<td>eq(foo, "bar")</td>
 		</tr>
 		<tr title="Single character equals">
 			<td>foo = 5</td>
-			<td>call(eq, [foo, 5])</td>
+			<td>eq(foo, 5)</td>
 		</tr>
 		<tr>
 			<td>foo > bar</td>
-			<td>call(gt, [foo, bar])</td>
+			<td>gt(foo, bar)</td>
 		</tr>
 		<tr title="3 operand comparison">
 			<td>foo > bar > baz</td>
-			<td>call(gt, [foo, bar, baz])</td>
+			<td>gt(foo, bar, baz)</td>
 		</tr>
 		<tr title="3 operand equality">
 			<td>foo = bar = baz</td>
-			<td>call(eq, [foo, bar, baz])</td>
+			<td>eq(foo, bar, baz)</td>
 		</tr>
 		<tr title="4 operand equality">
 			<td>foo = bar = baz = yolo</td>
-			<td>call(eq, [foo, bar, baz, yolo])</td>
+			<td>eq(foo, bar, baz, yolo)</td>
 		</tr>
 		<tr title="4 operand equality">
 			<td>foo = bar = baz == yolo</td>
-			<td>call(eq, [foo, bar, baz, yolo])</td>
+			<td>eq(foo, bar, baz, yolo)</td>
 		</tr>
 		<tr>
 			<td>foo != bar</td>
-			<td>call(neq, [foo, bar])</td>
+			<td>neq(foo, bar)</td>
 		</tr>
 		<tr>
 			<td>foo != bar != baz</td>
-			<td>call(neq, [foo, bar, baz])</td>
+			<td>neq(foo, bar, baz)</td>
 		</tr>
 		<tr>
 			<td>foo & bar & baz</td>
-			<td>call(concatenate, [foo, bar, baz])</td>
+			<td>concatenate(foo, bar, baz)</td>
 		</tr>
 		<tr>
 			<td>foo.bar</td>
@@ -125,15 +125,15 @@ td {
 		</tr>
 		<tr>
 			<td>foo: "bar"</td>
-			<td>call(keyvalue, ["foo", "bar"])</td>
+			<td>keyvalue("foo", "bar")</td>
 		</tr>
 		<tr>
 			<td>"foo": "bar"</td>
-			<td>call(keyvalue, ["foo", "bar"])</td>
+			<td>keyvalue("foo", "bar")</td>
 		</tr>
 		<tr>
 			<td>"foo": "bar" : "baz"</td>
-			<td>call(keyvalue, ["foo", "bar", "baz"])</td>
+			<td>keyvalue("foo", "bar", "baz")</td>
 		</tr>
 		<tr>
 			<td>task where done</td>
@@ -141,23 +141,23 @@ td {
 		</tr>
 		<tr>
 			<td>person where age > 6</td>
-			<td>call(Mavo.Functions.filter || filter, [person, call(gt, [get(person, "age"), 6])])</td>
+			<td>call(Mavo.Functions.filter || filter, [person, gt(get(person, "age"), 6)])</td>
 		</tr>
 		<tr>
 			<td>person where age > 6 where gender = 'female'</td>
-			<td>call(Mavo.Functions.filter || filter, [person, call(gt, [get(person, "age"), 6]), call(eq, [get(person, "gender"), 'female'])])</td>
+			<td>call(Mavo.Functions.filter || filter, [person, gt(get(person, "age"), 6), eq(get(person, "gender"), 'female')])</td>
 		</tr>
-		<tr title="Do not rewrite $`this.foo">
-			<td>person where age = this.prop</td>
-			<td>call(Mavo.Functions.filter || filter, [person, call(eq, [get(person, "age"), get($this, "prop")])])</td>
+		<tr title="Do not rewrite $this.foo">
+			<td>person where age = $this.prop</td>
+			<td>call(Mavo.Functions.filter || filter, [person, eq(get(person, "age"), get($this, "prop"))])</td>
 		</tr>
 		<tr title="Do not rewrite this.foo">
 			<td>person where age = this.prop</td>
-			<td>call(Mavo.Functions.filter || filter, [person, call(eq, [get(person, "age"), get($this, "prop")])])</td>
+			<td>call(Mavo.Functions.filter || filter, [person, eq(get(person, "age"), get($this, "prop"))])</td>
 		</tr>
 		<tr>
 			<td>1 .. 5</td>
-			<td>call(range, [1, 5])</td>
+			<td>range(1, 5)</td>
 		</tr>
 		<tr title="Rewrite function that clashes with prototype function">
 			<td>split(solution)</td>
@@ -173,7 +173,7 @@ td {
 </section>
 
 <section mv-app>
-	<h1>Mavo.Functions._Trap</h1>
+	<h1>Expression resolution</h1>
 
 	<script>
 	window.foo = 5;
@@ -203,6 +203,10 @@ td {
 		<tr title="Same as above, different casing">
 			<td>[AVERAGE]</td>
 			<td>AVERAGE</td>
+		</tr>
+		<tr title="Unquoted strings that are action names">
+			<td>[set]</td>
+			<td>set</td>
 		</tr>
 		<tr title="Math function">
 			<td>[pow(2, 2)]</td>

@@ -118,8 +118,13 @@
 				</tr>
 				<tr title="count(hobby)">
 					<td>[count(hobby)]</td>
-					<td>8</td>
+					<td>9</td>
 				</tr>
+				<tr title="count(hobby where hobby = 'Cooking')">
+					<td>[count(hobby where hobby = 'Cooking')]</td>
+					<td>2</td>
+				</tr>
+
 				<tr mv-expressions="none" class="interactive">
 					<td>
 						<pre id="people">{
@@ -138,7 +143,8 @@
 					"age": 50,
 					"hobby": [
 						"Dancing",
-						"Theory"
+						"Theory",
+						"Cooking"
 					]
 				}
 			],
@@ -409,17 +415,6 @@
 			</td>
 		</tr>
 	</table>
-</section>
-
-<section mv-storage="local" mv-app id="collector" class="mv-autoedit">
-	<h1>
-		Collection with expressions and HTML comments
-	</h1>
-
-	<div property="book" mv-multiple>
-		<!-- input a number of properties - use input type="range" to create a slider for the property "condition" - use expressions to translate this to the representation on a scale of 0 to 10 by single decimals
-		--><p>Condition: [20/10]</p>
-	</div>
 </section>
 
 <script type="application/json" id="indexes" mv-expressions="none">
@@ -885,13 +880,40 @@
 
 <section>
 	<h1>Collections with form elements</h1>
-	<p>Press enter or backspace inside the inputs, verify a new item gets added</p>
+	<p>Press enter or backspace inside the input</p>
 
-	<ul mv-app class="mv-autoedit">
-		<li property="prop1" mv-multiple>
-			<input property="prop2">
-		</li>
-	</ul>
+	<table class="reftest" data-test="selector">
+		<tr>
+			<td mv-app class="mv-autoedit">
+				<div property="prop1" mv-multiple>
+					<input property="prop2" autofocus>
+				</div>
+			</td>
+			<td>
+				[property=prop1] + [property=prop1] input[property=prop2]
+			</td>
+		</tr>
+	</table>
+</section>
+
+<section>
+	<h1>Keywords without $</h1>
+
+	<table class="reftest">
+		<tr>
+			<td mv-app mv-source='data:application/json,{"prop1": [{"prop2": 1}, {"prop2": 2}, {"prop2": 3}]}' mv-expressions-ignore="mv-source">
+				<div mv-multiple property="prop1">
+					<span property="prop2"></span>
+					[index]
+				</div>
+			</td>
+			<td>
+				1 0
+				2 1
+				3 2
+			</td>
+		</tr>
+	</table>
 </section>
 
 </body>
