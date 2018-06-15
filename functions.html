@@ -408,6 +408,41 @@ table.reftest td:first-child {
 </section>
 
 <section>
+    <h1>contains()</h1>
+
+    <table class="reftest" data-test="expressionEvaluation" data-columns="3">
+        <tr>
+            <td>contains(3, "3")</td>
+            <td>true</td>
+        </tr>
+        <tr>
+            <td>
+                contains(["Lea", "David", "Amy", "Tarfah", "Jared"], "Kenneth")
+            </td>
+            <td>false</td>
+        </tr>
+        <tr>
+            <td>
+                contains({name: "Kenneth", age: 17, state: "constant despair", work: "MIT", interest: ["coding", {food: "rice", quantity: 6}, "sleeping"]}, "rice")
+            </td>
+            <td>true</td>
+		</tr>
+		<tr>
+            <td>
+                contains({name: "Kenneth", work: "MIT", interest: ["coding", {food: "rice", quantity: 6}, "sleeping"]}, {name: "Kenneth", work: "MIT"})
+            </td>
+            <td>false</td>
+        </tr>
+        <tr>
+            <td>
+                contains(null, null)
+            </td>
+            <td>false</td>
+        </tr>
+    </table>
+</section>
+
+<section>
 	<h1>filter()</h1>
 
 	<table class="reftest" data-test="expressionEvaluation" data-columns="3">
