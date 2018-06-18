@@ -414,24 +414,36 @@ table.reftest td:first-child {
         <tr>
             <td>contains(3, "3")</td>
             <td>true</td>
-        </tr>
-        <tr>
-            <td>
-                contains(["Lea", "David", "Amy", "Tarfah", "Jared"], "Kenneth")
-            </td>
-            <td>false</td>
-        </tr>
-        <tr>
+		</tr>
+		<tr>
             <td>
                 contains({name: "Kenneth", age: 17, state: "constant despair", work: "MIT", interest: ["coding", {food: "rice", quantity: 6}, "sleeping"]}, "rice")
             </td>
             <td>true</td>
+		</tr>
+        <tr>
+            <td>
+                contains(["Lea", "Kenneth", "Amy", "Kenneth"], "Kenneth")
+            </td>
+            <td>[false,true,false,true]</td>
+        </tr>
+		<tr>
+            <td>
+                contains(["Kenneth", "MIT", {name: "Kenneth", food: "rice", quantity: 6}, "sleeping"], "Kenneth")
+            </td>
+            <td>[true,false,true,false]</td>
 		</tr>
 		<tr>
             <td>
                 contains({name: "Kenneth", work: "MIT", interest: ["coding", {food: "rice", quantity: 6}, "sleeping"]}, {name: "Kenneth", work: "MIT"})
             </td>
             <td>false</td>
+		</tr>
+		<tr>
+            <td>
+                contains(["Kenneth", "MIT", {name: "Kenneth", food: "rice", quantity: 6}, "sleeping"], {name: "Kenneth", work: "MIT"})
+            </td>
+            <td>[false, false, false, false]</td>
         </tr>
         <tr>
             <td>
