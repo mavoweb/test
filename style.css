@@ -41,13 +41,13 @@ h1 {
   color: var(--dark);
   letter-spacing: -.04em; }
 
-.pass {
+.pass, .count-pass {
   --color: #ceec93;
-  --dark-color: #84b620; }
+  --dark-color: #7ead1f; }
 
-.fail {
+.fail, .count-fail {
   --color: #f7d4d4;
-  --dark-color: #d92626; }
+  --dark-color: #d02525; }
 
 .error {
   --color: #e87d7d;
@@ -58,26 +58,63 @@ html:not(.index) body {
   max-width: 100em;
   counter-reset: fail pass interactive; }
 
-html:not(.index) .results {
+html:not(.index) .test-results {
   position: fixed;
-  left: 1rem;
-  top: .6rem;
-  font: bold 180%/1 Helvetica Neue, sans-serif;
-  content: counter(interactive) " interactive"; }
-  html:not(.index) .results .count-fail::before {
-    content: counter(fail) " failing";
-    color: #b00; }
-  html:not(.index) .results .count-pass::before {
-    content: counter(pass) " passing";
-    color: #86ac39;
+  top: 0;
+  right: 0;
+  left: 0;
+  z-index: 3;
+  display: -ms-flexbox;
+  display: flex;
+  background: black;
+  color: white;
+  font: bold 150%/1 Helvetica Neue, sans-serif; }
+  html:not(.index) .test-results .count-fail,
+  html:not(.index) .test-results .count-pass {
+    -ms-flex-negative: 0;
+    flex-shrink: 0;
+    display: -ms-flexbox;
+    display: flex;
+    -ms-flex-align: center;
+    align-items: center;
+    padding: .2em;
+    background: var(--dark-color);
+    cursor: pointer;
+    transition: .4s; }
+  html:not(.index) .test-results .nav:not([hidden]) {
+    display: -ms-flexbox;
+    display: flex;
+    -ms-flex-align: center;
+    align-items: center;
+    margin-left: auto;
+    font-weight: normal;
     font-size: 75%;
-    line-height: 1.334; }
-  html:not(.index) .results .count-pass::after {
-    content: counter(interactive) " interactive";
-    display: block;
-    color: #ffaa00;
-    font-size: 60%;
-    line-height: 1.667; }
+    line-height: 1; }
+    html:not(.index) .test-results .nav:not([hidden]) button {
+      padding: 0 .2em;
+      background: transparent;
+      border: none;
+      color: inherit;
+      font-size: inherit;
+      line-height: 1;
+      cursor: pointer; }
+  html:not(.index) .test-results .count::after {
+    font-weight: 300;
+    margin-left: .2em; }
+  html:not(.index) .test-results .count-fail {
+    -ms-flex-positive: var(--fail, 1);
+    flex-grow: var(--fail, 1); }
+    html:not(.index) .test-results .count-fail .count::after {
+      content: "failing"; }
+  html:not(.index) .test-results .count-pass {
+    -ms-flex-positive: var(--pass, 1);
+    flex-grow: var(--pass, 1); }
+    html:not(.index) .test-results .count-pass .count::after {
+      content: "passing"; }
+  html:not(.index) .test-results[style*="--fail:0;"] .count-fail {
+    display: none; }
+  html:not(.index) .test-results[style*="--pass:0;"] .count-pass {
+    display: none; }
 
 html:not(.index) body > section {
   border: 0.2em solid var(--ciel);
@@ -227,17 +264,5 @@ body > section > div {
   -ms-flex: 1;
   flex: 1;
   border: 0; }
-
-.fail {
-  counter-increment: fail; }
-
-.pass {
-  counter-increment: pass; }
-
-.fail.interactive {
-  counter-increment: fail interactive; }
-
-.pass.interactive {
-  counter-increment: pass interactive; }
 
 /*# sourceMappingURL=style.css.map */
