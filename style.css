@@ -56,7 +56,7 @@ h1 {
 html:not(.index) body {
   width: calc(100vw - 25em);
   max-width: 100em;
-  counter-reset: fail pass interactive; }
+  padding-top: 2em; }
 
 html:not(.index) .test-results {
   position: fixed;
