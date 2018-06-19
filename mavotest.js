@@ -225,11 +225,36 @@ var _ = self.RefTest = $.Class({
 
 		$.events(this.table, "input change click mv-change", test);
 		$.events(this.table.closest("[mv-app]"), "mv-load", test);
+
+		$$("[data-click]", this.table)
+			.concat(this.table.matches("[data-click]")? [this.table] : [])
+			.forEach(target => {
+				var clicks = target.getAttribute("data-click").trim().split(/\s*,\s*/).map(_.parseClick);
+
+				clicks.forEach(click => {
+					var event = click.event? new Promise(resolve => target.addEventListener(click.event, resolve)) : Promise.resolve();
+
+					event.then(evt => {
+						var delay = click.delay? new Promise(resolve => setTimeout(resolve, click.delay)) : Promise.resolve();
+
+						delay.then(() => {
+							var targets = click.selector? $$(click.selector, target) : [target];
+
+							targets.forEach(el => {
+								for (let i=0; i<click.times; i++) {
+									el.click();
+								}
+							});
+						});
+					});
+				});
+			});
 	},
 
 	observe: function() {
 		this.observerRunning = true;
 
+		// TODO move this somewhere else, it's Mavo specific
 		this.observer.observe(this.table, {
 			subtree: true,
 			childList: true,
@@ -297,7 +322,7 @@ var _ = self.RefTest = $.Class({
 			try {
 				var ret = this.sneak(() => tr.compare(...cells));
 			}
-			catch(e) {
+			catch (e) {
 				ret = e;
 				var error = true;
 				resultCell.textContent = e + "";
@@ -334,6 +359,7 @@ var _ = self.RefTest = $.Class({
 	},
 
 	static: {
+		// Retrieve the comparator function based on a data-test string
 		getTest: function(test, fallback) {
 			if (test) {
 				if (test in _.compare) {
@@ -350,6 +376,7 @@ var _ = self.RefTest = $.Class({
 			return fallback || _.compare.contents;
 		},
 
+		// Default comparison functions
 		compare: {
 			contents: (...cells) => {
 				var td = cells[cells.length - 2] || cells[cells.length - 1];
@@ -416,6 +443,7 @@ var _ = self.RefTest = $.Class({
 			}
 		},
 
+		// Prettify code for presentation
 		presentCode: function(code) {
 			// Remove blank line in the beginning and end
 			code = code.replace(/^\s*\n|\n\s*$/g, "");
@@ -450,6 +478,7 @@ var _ = self.RefTest = $.Class({
 			// $(".count-interactive", _.resultsUI).textContent = _.results.interactive.length;
 		},
 
+		// Navigate tests
 		nav: function(type = "fail", offset) {
 			var elements = _.results[type];
 			var i = _.results.current[type] + offset;
@@ -485,6 +514,36 @@ var _ = self.RefTest = $.Class({
 
 		previous: function(type = "fail") {
 			_.nav(type, -1);
+		},
+
+		/**
+		 * Parse data-click text into a meaningful structure
+		 * Examples:
+		   .mv-bar .mv-save wait 5s after load"
+		   .mv-bar .mv-save wait 3s" (no event, DOMContentLoaded assumed)
+		    wait 1s after load" (no selector, element assumed)
+		  */
+		parseClick: function(click) {
+			var ret = {times: 1};
+
+			click = click.replace(/wait ([\d.]+)s/i, ($0, $1) => {
+				ret.delay = $1;
+				return "";
+			});
+
+			click = click.replace(/after ([\w:-]+)\s*$/i, ($0, $1) => {
+				ret.event = $1;
+				return "";
+			});
+
+			click = click.replace(/(\d+) times/i, ($0, $1) => {
+				ret.times = $1;
+				return "";
+			});
+
+			ret.selector = click.trim();
+
+			return ret;
 		}
 	}
 });

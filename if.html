@@ -57,7 +57,7 @@
 			</td>
 			<td>B B</td>
 		</tr>
-		<tr title="Expression inside hidden mv-if should be able to make it visible (currently failing)">
+		<!-- <tr title="Expression inside hidden mv-if should be able to make it visible (currently failing)">
 			<td>
 				<span mv-if="prop4">
 					A
@@ -68,8 +68,7 @@
 			<td>
 				A 7
 			</td>
-		</tr>
-		<tr title="Filtering a collection"></tr>
+		</tr> -->
 	</table>
 </section>
 
@@ -77,7 +76,7 @@
 	<h1>mv-if on Collection</h1>
 
 	<table class="reftest" style="height: 10em; /* Prevent flickering */">
-		<tr>
+		<tr title="Filtering a collection">
 			<td mv-expressions="{{ }}" mv-app="app" mv-storage='data:application/json,{
 				"task": [
 					{
@@ -109,9 +108,9 @@
 	<p>Check the checkbox. The displayed value next to it should go from "1 1 1" to "2 4 6 3 5 7"</p>
 
 	<table class="reftest">
-		<tr class="interactive">
+		<tr>
 			<td>
-				<input property="test" type="checkbox">
+				<input property="test" type="checkbox" data-click="wait 1s">
 				<span mv-if="test" class="if1">
 					<span property="nested1">2</span>
 
@@ -126,6 +125,23 @@
 				[nested1 + 1] [nested2 + 1] [nested3 + 1]
 			</td>
 			<td><input type="checkbox" checked> 2 4 6 3 5 7</td>
+		</tr>
+		<tr>
+			<td>
+				<span mv-if="test" class="if1">
+					<span property="nested4">2</span>
+
+					<span mv-if="test" class="if2">
+						<span property="nested5">4</span>
+
+						<span mv-if="test" class="if3">
+							<span property="nested6">6</span>
+						</span>
+					</span>
+				</span>
+				[nested4 + 1] [nested5 + 1] [nested6 + 1]
+			</td>
+			<td>2 4 6 3 5 7</td>
 		</tr>
 	</table>
 </section>

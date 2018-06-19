@@ -205,7 +205,61 @@
 	</table>
 </section>
 
-<section mv-app="primitives" mv-storage="#numbers-2">
+<section mv-app="primitives" mv-storage="#numbers-3" class="mv-autoedit">
+	<h1>Implicit collection of groups</h1>
+
+	<table class="reftest">
+		<tr mv-expressions="none">
+			<td>
+				<pre id="numbers-3">{
+	"numbers": [
+		{"prop": 1},
+		{"prop": 2},
+		{"prop": 3},
+		{"prop": 4},
+		{"prop": 5},
+		{"prop": 6},
+		{"prop": 7},
+		{"prop": 8},
+		{"prop": 9},
+		{"prop": 10}
+	]
+}</pre>
+			</td>
+			<td>
+				<script>document.write($$("td pre").pop().outerHTML)</script>
+			</td>
+		</tr>
+		<tr>
+			<td>
+				<div property="numbers">
+					<span property="prop" style="--prepend: '[prop]'; --append: '[$index]';">11</span>
+				</div>
+				<div property="numbers">
+					<span property="prop" style="--prepend: '[prop]'; --append: '[$index]';">12</span>
+				</div>
+				<div property="numbers">
+					<span property="prop" style="--prepend: '[prop]'; --append: '[$index]';">13</span>
+				</div>
+			</td>
+			<td>
+				<div>1 1 0</div>
+				<div>2 2 1</div>
+				<div>3 3 2</div>
+			</td>
+		</tr>
+		<tr>
+			<td>[numbers.prop]</td>
+			<td>1, 2, 3</td>
+		</tr>
+		<tr>
+			<td>[prop]</td>
+			<td>1, 2, 3</td>
+		</tr>
+	</table>
+</section>
+
+<section mv-app="primitives" mv-storage="#numbers-2" class="mv-autoedit">
 	<h1>Implicit collection of primitives</h1>
 
 	<table class="reftest">
@@ -249,13 +303,13 @@
 	</table>
 </section>
 
-<section mv-app="primitives" mv-storage="#numbers-3">
+<section mv-app="primitives" mv-storage="#numbers-4">
 	<h1>Implicit collection of primitives with only 1 item</h1>
 
 	<table class="reftest">
 		<tr mv-expressions="none">
 			<td>
-				<pre id="numbers-3">{
+				<pre id="numbers-4">{
 	"numbers": 42
 }</pre>
 			</td>

@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+
+<meta charset="UTF-8">
+<title>Function Tests</title>
+<link rel="stylesheet" href="https://dev.mavo.io/dist/mavo.css" />
+<link rel="stylesheet" href="style.css" />
+<style>
+td {
+	font: bold 100%/1.5 Consolas, Monaco, monospace;
+}
+</style>
+<script src="https://dev.mavo.io/dist/mavo.js"></script>
+<script src="mavotest.js"></script>
+</head>
+<body>
+
+<h1>Data routing Tests</h1>
+
+<p>These tests test whether routing works correctly on objects</p>
+
+<section>
+	<h1>Mavo.Data.computeRoutes()</h1>
+
+	<table class="reftest">
+		<!-- <tr>
+			<td>
+				<script>
+					let obj = {foo: [{ yolo: 3}, {yolo: 4}], bar: {baz: 5}};
+					print(obj);
+				</script>
+			</td>
+			<td>
+				<script>
+					Mavo.Data.computeRoutes(obj);
+					println("obj route: ", obj[Mavo.route]);
+					println("foo route:", obj.foo[Mavo.route]);
+					println("obj.foo[0] route:", obj.foo[0][Mavo.route]);
+					println("obj.foo[0].yolo route:", obj.foo[0].yolo[Mavo.route]);
+					println("obj.bar route:", obj.bar[Mavo.route]);
+				</script>
+			</td>
+			<td style="white-space: pre-line">obj route: foo yolo bar baz
+				foo route: yolo
+				obj.foo[0] route: yolo
+				obj.foo[0].yolo route: undefined
+				obj.bar route: baz
+			</td>
+		</tr>
+		<tr>
+			<td mv-app="testRoutes" mv-source='data:application/json,{"foo": [{ "yolo": 3}, {"yolo": 4}], "bar": {"baz": 5}}' mv-expressions-ignore="mv-source">
+				<div property="foo" mv-multiple>
+					<span property="yolo">1</span>
+				</div>
+			</td>
+			<td>
+				<script>
+					{
+						let td = $("[mv-app=testRoutes]");
+						let out = document.currentScript.parentNode;
+						td.addEventListener("mv-load", evt => {
+							var obj = Mavo.all.testRoutes.root.liveData.data;
+
+							out.innerHTML = `obj route: ${Test.format(obj[Mavo.route])}<br>
+							foo route: ${Test.format(obj.foo[Mavo.route])}<br>
+							obj.foo[0] route: ${Test.format(obj.foo[0][Mavo.route])}<br>
+							obj.foo[0].yolo route: ${Test.format(obj.foo[0].yolo[Mavo.route])}<br>
+							obj.bar route: ${Test.format(obj.bar[Mavo.route])}
+							`;
+						});
+					}
+				</script>
+			</td>
+			<td>
+				obj route: foo yolo bar baz<br>
+				foo route: yolo<br>
+				obj.foo[0] route: yolo<br>
+				obj.foo[0].yolo route: undefined<br>
+				obj.bar route: baz
+			</td>
+		</tr> -->
+		<tr>
+			<td mv-app="creatures" mv-source='data/creatures.json' mv-expressions-ignore="mv-source">
+				<div property="person" mv-multiple mv-accepts="cat">
+					<strong property="name">John Doe</strong>
+					<span property="age">0</span>
+					[person]
+					<ul>
+						<li property="hobby" mv-multiple>Fishing</li>
+					</ul>
+				</div>
+				<div property="cat" mv-multiple mv-accepts="person">
+					<strong property="name">John Doe</strong>
+					<span property="age">0</span>
+					<ul>
+						<li property="hobby" mv-multiple mv-related="hobby">Fishing</li>
+					</ul>
+				</div>
+			</td>
+			<td>
+				<script>
+					{
+						let td = $("[mv-app=creatures]");
+						let out = document.currentScript.parentNode;
+						td.addEventListener("mv-load", evt => {
+							var obj = Mavo.all.creatures.root.liveData.data;
+
+							out.innerHTML = `obj route: ${Test.format(obj[Mavo.route])}<br>
+							person route: ${Test.format(obj.person[Mavo.route])}<br>
+							cat route: ${Test.format(obj.cat[Mavo.route])}<br>
+							obj.person[0] route: ${Test.format(obj.person[0][Mavo.route])}<br>
+							obj.cat[0] route: ${Test.format(obj.cat[0][Mavo.route])}<br>
+							obj.cat[0].hobby route: ${Test.format(obj.cat[0].hobby[Mavo.route])}<br>
+							obj.cat[0].hobby[0] route: ${Test.format(obj.cat[0].hobby[0][Mavo.route])}
+							`;
+						});
+					}
+				</script>
+			</td>
+			<td>obj route: person name age hobby cat<br>
+				person route: name age hobby<br>
+				cat route: name age hobby<br>
+				obj.person[0] route: name age hobby<br>
+				obj.cat[0] route: name age hobby<br>
+				obj.cat[0].hobby route: (empty set)<br>
+				obj.cat[0].hobby[0] route: undefined
+			</td>
+		</tr>
+	</table>
+</section>
+
+</body>
+</html>

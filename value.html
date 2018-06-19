@@ -118,7 +118,7 @@
 			</td>
 			<td>123</td>
 		</tr>
-		<tr class="interactive" title="Collection of primitives, interactive">
+		<tr title="Collection of primitives, interactive" data-click=".mv-add-collection3 wait 3s">
 			<td>
 				<span property="collection3" mv-multiple mv-mode="edit" mv-default="[$index]"></span>
 			</td>
@@ -126,7 +126,7 @@
 				<span property="collection4" mv-multiple mv-value="collection3"></span>
 			</td>
 		</tr>
-		<tr class="interactive" title="Collection of groups, interactive">
+		<tr title="Collection of groups, interactive" data-click=".mv-add-collection5 wait 3s">
 			<td>
 				<div property="collection5" mv-multiple mv-mode="edit">
 					<span property="prop" mv-default="Foo"></span>
@@ -140,7 +140,7 @@
 				</div>
 			</td>
 		</tr>
-		<tr class="interactive" title="Collection of groups, interactive">
+		<tr title="Collection of groups, interactive" data-click=".mv-add-collection7 wait 3s">
 			<td>
 				<div property="collection7" mv-multiple mv-mode="edit">
 					<span property="prop2" mv-default="Foo[$index]"></span>
@@ -309,7 +309,6 @@
 <section>
 	<h1>Cross-references</h1>
 
-	<p>Check first checkbox</p>
 	<script id="checkboxes" type="application/json">
 		{
 			"issue": [
@@ -323,7 +322,7 @@
 		}
 	</script>
 	<table class="reftest" mv-app id="issues" mv-storage="#checkboxes" mv-expressions="{ }">
-		<tr class="interactive">
+		<tr data-click="label:first-of-type input[type=checkbox] wait 1s">
 			<td>
 				<label property="tagFilter" mv-multiple mv-value="unique(issue.tag)">
 					<input type="checkbox" property="show">
