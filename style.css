@@ -87,9 +87,9 @@ html:not(.index) .test-results {
     -ms-flex-align: center;
     align-items: center;
     margin-left: auto;
-    font-weight: normal;
     font-size: 75%;
-    line-height: 1; }
+    line-height: 1;
+    color: var(--color); }
     html:not(.index) .test-results .nav:not([hidden]) button {
       padding: 0 .2em;
       background: transparent;

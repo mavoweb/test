@@ -112,9 +112,9 @@ html:not(.index) {
 			display: flex;
 			align-items: center;
 			margin-left: auto;
-			font-weight: normal;
 			font-size: 75%;
 			line-height: 1;
+			color: var(--color);
 
 			button {
 				padding: 0 .2em;
