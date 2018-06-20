@@ -327,7 +327,7 @@ body > section > div {
 	}
 
 	body > section {
-		padding: 1em;
+		padding: 1em .5em;
 		background: var(--ciel);
 
 		h1 {
@@ -340,18 +340,38 @@ body > section > div {
 			list-style: none;
 		}
 
-		li a {
-			display: block;
+		li {
+			display: flex;
+			align-items: center;
 			padding: 0 .5em;
-			font-weight: bold;
-			font: 600 150%/1.4 Helvetica Neue, sans-serif;
-		}
+			border-radius: .2em;
 
-		li.selected {
-			background: var(--dark);
+			a:first-of-type {
+				flex: 1;
+				padding: 0 .3em 0 .1em;
+				font-weight: bold;
+				font: 600 150%/1.4 Helvetica Neue, sans-serif;
+			}
 
-			a {
-				color: white;
+			&:not(:focus-within):not(:hover) a.new-tab {
+				opacity: 0;
+				transition: .4s;
+			}
+
+			a.new-tab {
+				text-decoration: none;
+
+				&:not(:focus-within):not(:hover)  {
+					mix-blend-mode: multiply;
+				}
+			}
+
+			&.selected {
+				background: var(--dark);
+
+				a {
+					color: white;
+				}
 			}
 		}
 	}

@@ -248,7 +248,7 @@ body > section > div {
   height: 100vh; }
 
 .index body > section {
-  padding: 1em;
+  padding: 1em .5em;
   background: var(--ciel); }
   .index body > section h1 {
     font-weight: 300;
@@ -256,15 +256,30 @@ body > section > div {
   .index body > section ul {
     padding: 0;
     list-style: none; }
-  .index body > section li a {
-    display: block;
+  .index body > section li {
+    display: -ms-flexbox;
+    display: flex;
+    -ms-flex-align: center;
+    align-items: center;
     padding: 0 .5em;
-    font-weight: bold;
-    font: 600 150%/1.4 Helvetica Neue, sans-serif; }
-  .index body > section li.selected {
-    background: var(--dark); }
-    .index body > section li.selected a {
-      color: white; }
+    border-radius: .2em; }
+    .index body > section li a:first-of-type {
+      -ms-flex: 1;
+      flex: 1;
+      padding: 0 .3em 0 .1em;
+      font-weight: bold;
+      font: 600 150%/1.4 Helvetica Neue, sans-serif; }
+    .index body > section li:not(:focus-within):not(:hover) a.new-tab {
+      opacity: 0;
+      transition: .4s; }
+    .index body > section li a.new-tab {
+      text-decoration: none; }
+      .index body > section li a.new-tab:not(:focus-within):not(:hover) {
+        mix-blend-mode: multiply; }
+    .index body > section li.selected {
+      background: var(--dark); }
+      .index body > section li.selected a {
+        color: white; }
 
 .index iframe {
   -ms-flex: 1;
