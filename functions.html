@@ -774,6 +774,30 @@ table.reftest td:first-child {
 			<td>{"prop1": 1, "prop2": 2}</td>
 		</tr>
 		<tr>
+			<td>first(0, [1, 2, 3])</td>
+			<td>[]</td>
+		</tr>
+		<tr>
+			<td>first(1, [1, 2, 3])</td>
+			<td>[1]</td>
+		</tr>
+		<tr>
+			<td>first(2.5, [1, null, 2, 3])</td>
+			<td>[1,2]</td>
+		</tr>
+		<tr>
+			<td>first(-2.5, [1, 2, 3])</td>
+			<td>[3,2]</td>
+		</tr>
+		<tr>
+			<td>first(-0.1, [1, 2, 3])</td>
+			<td>[]</td>
+		</tr>
+		<tr>
+			<td>first(0.5, [1, 2, 3])</td>
+			<td>[]</td>
+		</tr>
+		<tr>
 			<td>last()</td>
 			<td>undefined</td>
 		</tr>
@@ -836,6 +860,30 @@ table.reftest td:first-child {
 		<tr>
 			<td>last({"prop1": 1, "prop2": 2})</td>
 			<td>{"prop1": 1, "prop2": 2}</td>
+		</tr>
+		<tr>
+			<td>last(0, [1, 2, 3])</td>
+			<td>[]</td>
+		</tr>
+		<tr>
+			<td>last(1, [1, 2, 3])</td>
+			<td>[3]</td>
+		</tr>
+		<tr>
+			<td>last(2.5, [1, 2, null, 3])</td>
+			<td>[3,2]</td>
+		</tr>
+		<tr>
+			<td>last(-2.5, [1, 2, 3])</td>
+			<td>[1,2]</td>
+		</tr>
+		<tr>
+			<td>last(-0.1, [1, 2, 3])</td>
+			<td>[]</td>
+		</tr>
+		<tr>
+			<td>last(0.5, [1, 2, 3])</td>
+			<td>[]</td>
 		</tr>
 	</table>
 </section>
