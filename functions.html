@@ -412,7 +412,7 @@ table.reftest td:first-child {
 
     <table class="reftest" data-test="expressionEvaluation" data-columns="3">
         <tr>
-            <td>contains(3, "3")</td>
+            <td>contains("0", 0)</td>
             <td>true</td>
 		</tr>
 		<tr>
@@ -426,12 +426,18 @@ table.reftest td:first-child {
                 contains(["Lea", "Kenneth", "Amy", "Kenneth"], "Kenneth")
             </td>
             <td>[false,true,false,true]</td>
-        </tr>
+		</tr>
 		<tr>
             <td>
                 contains(["Kenneth", "MIT", {name: "Kenneth", food: "rice", quantity: 6}, "sleeping"], "Kenneth")
             </td>
             <td>[true,false,true,false]</td>
+		</tr>
+		<tr>
+			<td>
+				contains(["Kenneth", "MIT", ["Kenneth", 6], "sleeping"], "Kenneth")
+			</td>
+			<td>[true,false,[true,false],false]</td>
 		</tr>
 		<tr>
             <td>
@@ -444,10 +450,70 @@ table.reftest td:first-child {
                 contains(["Kenneth", "MIT", {name: "Kenneth", food: "rice", quantity: 6}, "sleeping"], {name: "Kenneth", work: "MIT"})
             </td>
             <td>[false,false,false,false]</td>
+		</tr>
+		<tr>
+			<td>
+				contains("Kenneth", ["Kenneth", "Lea"])
+			</td>
+			<td>[true,false]</td>
+		</tr>
+		<tr>
+			<td>
+				contains(["Kenneth, "Lea", "Amy", "Kenneth"], ["Kenneth", "Lea"])
+			</td>
+			<td>[true, true]</td>
+		</tr>
+		<tr>
+			<td>
+				contains([["Kenneth, "Lea"], "Amy", "Kenneth"], ["Kenneth", "Lea"])
+			</td>
+			<td>[false,true,false,true]</td>
+		</tr>
+		<tr>
+            <td>
+                contains({name: "Kenneth", work: "MIT", interest: ["coding", {food: "rice", quantity: 6}, "sleeping"]}, ["Kenneth", "MIT"])
+            </td>
+            <td>false</td>
+		</tr>
+		<tr>
+            <td>
+                contains(["Kenneth", "MIT", {name: "Kenneth", food: "rice", quantity: 6}, "sleeping"], ["Kenneth", "MIT"])
+            </td>
+            <td>[false,false,false,false]</td>
         </tr>
         <tr>
             <td>
                 contains(null, null)
+            </td>
+            <td>false</td>
+		</tr>
+		<tr>
+            <td>
+                contains("foo", null)
+            </td>
+            <td>false</td>
+		</tr>
+		<tr>
+            <td>
+                contains(null, "foo")
+            </td>
+            <td>false</td>
+		</tr>
+		<tr>
+            <td>
+                contains()
+            </td>
+            <td>false</td>
+		</tr>
+		<tr>
+            <td>
+                contains("foo")
+            </td>
+            <td>false</td>
+		</tr>
+		<tr>
+            <td>
+                contains([], "foo")
             </td>
             <td>false</td>
         </tr>
