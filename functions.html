@@ -437,7 +437,7 @@ table.reftest td:first-child {
 			<td>
 				contains(["Kenneth", "MIT", ["Kenneth", 6], "sleeping"], "Kenneth")
 			</td>
-			<td>[true,false,[true,false],false]</td>
+			<td>[true,false,true,false]</td>
 		</tr>
 		<tr>
             <td>
@@ -459,13 +459,25 @@ table.reftest td:first-child {
 		</tr>
 		<tr>
 			<td>
-				contains(["Kenneth, "Lea", "Amy", "Kenneth"], ["Kenneth", "Lea"])
+				contains(["Kenneth", "Verou"], ["Kenneth", "Lea"])
+			</td>
+			<td>[true, false]</td>
+		</tr>
+		<tr>
+			<td>
+				contains(["Kenneth", "Lea", "Amy", "Kenneth"], ["Kenneth", "Lea"])
 			</td>
 			<td>[true, true]</td>
 		</tr>
 		<tr>
 			<td>
-				contains([["Kenneth, "Lea"], "Amy", "Kenneth"], ["Kenneth", "Lea"])
+				contains([["Kenneth", "Lea"], "Amy", "Kenneth"], ["Kenneth", "Lea"])
+			</td>
+			<td>[true,false,false,false]</td>
+		</tr>
+		<tr>
+			<td>
+				contains(["Amy", ["Kenneth", "Lea"], "Kenneth"], ["Kenneth", "Lea"])
 			</td>
 			<td>[false,true,false,true]</td>
 		</tr>
@@ -473,13 +485,13 @@ table.reftest td:first-child {
             <td>
                 contains({name: "Kenneth", work: "MIT", interest: ["coding", {food: "rice", quantity: 6}, "sleeping"]}, ["Kenneth", "MIT"])
             </td>
-            <td>false</td>
+            <td>[true,true]</td>
 		</tr>
 		<tr>
             <td>
                 contains(["Kenneth", "MIT", {name: "Kenneth", food: "rice", quantity: 6}, "sleeping"], ["Kenneth", "MIT"])
             </td>
-            <td>[false,false,false,false]</td>
+            <td>[true,true,false,false]</td>
         </tr>
         <tr>
             <td>
