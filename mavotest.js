@@ -479,7 +479,7 @@ var _ = self.RefTest = $.Class({
 		},
 
 		// Navigate tests
-		nav: function(type = "fail", offset) {
+		navigateTests: function(type = "fail", offset) {
 			var elements = _.results[type];
 			var i = _.results.current[type] + offset;
 
@@ -509,11 +509,11 @@ var _ = self.RefTest = $.Class({
 		},
 
 		next: function(type = "fail") {
-			_.nav(type, 1);
+			_.navigateTests(type, 1);
 		},
 
 		previous: function(type = "fail") {
-			_.nav(type, -1);
+			_.navigateTests(type, -1);
 		},
 
 		/**
