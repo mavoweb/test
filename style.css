@@ -58,7 +58,7 @@ html:not(.index) body {
   max-width: 100em;
   padding-top: 2em; }
 
-html:not(.index) .test-results {
+html:not(.index) body > nav {
   position: fixed;
   top: 0;
   right: 0;
@@ -69,8 +69,14 @@ html:not(.index) .test-results {
   background: black;
   color: white;
   font: bold 150%/1 Helvetica Neue, sans-serif; }
-  html:not(.index) .test-results .count-fail,
-  html:not(.index) .test-results .count-pass {
+  html:not(.index) body > nav .home {
+    padding: .4em .3em;
+    font-size: 80%; }
+    html:not(.index) body > nav .home:hover {
+      text-decoration: none;
+      background: #444; }
+  html:not(.index) body > nav .count-fail,
+  html:not(.index) body > nav .count-pass {
     -ms-flex-negative: 0;
     flex-shrink: 0;
     display: -ms-flexbox;
@@ -81,7 +87,7 @@ html:not(.index) .test-results {
     background: var(--dark-color);
     cursor: pointer;
     transition: .4s; }
-  html:not(.index) .test-results .nav:not([hidden]) {
+  html:not(.index) body > nav .nav:not([hidden]) {
     display: -ms-flexbox;
     display: flex;
     -ms-flex-align: center;
@@ -90,7 +96,7 @@ html:not(.index) .test-results {
     font-size: 75%;
     line-height: 1;
     color: var(--color); }
-    html:not(.index) .test-results .nav:not([hidden]) button {
+    html:not(.index) body > nav .nav:not([hidden]) button {
       padding: 0 .2em;
       background: transparent;
       border: none;
@@ -98,22 +104,22 @@ html:not(.index) .test-results {
       font-size: inherit;
       line-height: 1;
       cursor: pointer; }
-  html:not(.index) .test-results .count::after {
+  html:not(.index) body > nav .count::after {
     font-weight: 300;
     margin-left: .2em; }
-  html:not(.index) .test-results .count-fail {
+  html:not(.index) body > nav .count-fail {
     -ms-flex-positive: var(--fail, 1);
     flex-grow: var(--fail, 1); }
-    html:not(.index) .test-results .count-fail .count::after {
+    html:not(.index) body > nav .count-fail .count::after {
       content: "failing"; }
-  html:not(.index) .test-results .count-pass {
+  html:not(.index) body > nav .count-pass {
     -ms-flex-positive: var(--pass, 1);
     flex-grow: var(--pass, 1); }
-    html:not(.index) .test-results .count-pass .count::after {
+    html:not(.index) body > nav .count-pass .count::after {
       content: "passing"; }
-  html:not(.index) .test-results[style*="--fail:0;"] .count-fail {
+  html:not(.index) body > nav[style*="--fail:0;"] .count-fail {
     display: none; }
-  html:not(.index) .test-results[style*="--pass:0;"] .count-pass {
+  html:not(.index) body > nav[style*="--pass:0;"] .count-pass {
     display: none; }
 
 html:not(.index) body > section {

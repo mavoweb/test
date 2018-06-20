@@ -468,14 +468,14 @@ var _ = self.RefTest = $.Class({
 				// interactive: $$("table.reftest tr.interactive")
 			};
 
-			$(".count-fail .count", _.resultsUI).textContent = _.results.fail.length;
-			$(".count-pass .count", _.resultsUI).textContent = _.results.pass.length;
-			$.style(_.resultsUI, {
+			$(".count-fail .count", _.nav).textContent = _.results.fail.length;
+			$(".count-pass .count", _.nav).textContent = _.results.pass.length;
+			$.style(_.nav, {
 				"--pass": _.results.pass.length,
 				"--fail": _.results.fail.length
 			});
 
-			// $(".count-interactive", _.resultsUI).textContent = _.results.interactive.length;
+			// $(".count-interactive", _.nav).textContent = _.results.interactive.length;
 		},
 
 		// Navigate tests
@@ -494,7 +494,7 @@ var _ = self.RefTest = $.Class({
 				i = elements.length - 1;
 			}
 
-			var countElement = $(".count-" + type, _.resultsUI);
+			var countElement = $(".count-" + type, _.nav);
 
 			if (elements.length > 1) {
 				$(".nav", countElement).hidden = false;
@@ -554,16 +554,6 @@ document.addEventListener("DOMContentLoaded", function(){
 	if (page !== "index") {
 		// Create link to home and to remote version
 		let h1 = $("body > h1");
-
-		if (h1) {
-			$.create("a", {
-				className: "home",
-				textContent: "Home",
-				href: "index.html",
-				target: "_top",
-				inside: h1
-			});
-		}
 	}
 
 	// Add ids to section headers and make them links
@@ -618,41 +608,51 @@ document.addEventListener("DOMContentLoaded", function(){
 	onhashchange = hashchanged;
 
 	// Add div for counter at the end of body
-	_.resultsUI = $.create({
-		className: "test-results",
+	_.nav = $.create({
+		tag: "nav",
 		inside: document.body,
-		contents: ["fail", "pass"].map(type => {
-			return {
-					className: "count-" + type,
-					contents: [
-						{className: "count"},
-						{
-							className: "nav",
-							hidden: true,
-							contents: [
-								{
-									tag: "button", type: "button",
-									className: "previous", textContent: "◂",
-									onclick: evt => {
-										RefTest.previous(type);
-										evt.stopPropagation();
+		contents: [
+			window === parent? {
+				tag: "a",
+				className: "home",
+				title: "Home",
+				textContent: "🏠",
+				href: "index.html",
+				target: "_top"
+			} : undefined,
+			...["fail", "pass"].map(type => {
+				return {
+						className: "count-" + type,
+						contents: [
+							{className: "count"},
+							{
+								className: "nav",
+								hidden: true,
+								contents: [
+									{
+										tag: "button", type: "button",
+										className: "previous", textContent: "◂",
+										onclick: evt => {
+											RefTest.previous(type);
+											evt.stopPropagation();
+										}
+									},
+									{className: "current"},
+									{
+										tag: "button", type: "button",
+										className: "next", textContent: "▸",
+										onclick: evt => {
+											RefTest.next(type);
+											evt.stopPropagation();
+										}
 									}
-								},
-								{className: "current"},
-								{
-									tag: "button", type: "button",
-									className: "next", textContent: "▸",
-									onclick: evt => {
-										RefTest.next(type);
-										evt.stopPropagation();
-									}
-								}
-							]
-						}
-					],
-					onclick: RefTest.next.bind(RefTest, type)
-				};
-		})
+								]
+							}
+						],
+						onclick: RefTest.next.bind(RefTest, type)
+					};
+			})
+		]
 	});
 
 	// HTML tooltips
