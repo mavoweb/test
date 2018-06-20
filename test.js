@@ -1,17 +1,5 @@
 (function($, $$){
 
-self.print = function print(text) {
-	if (document.readyState == "loading") {
-		document.write(text);
-	}
-	else if (document.currentScript && document.currentScript.parentNode) {
-		document.currentScript.parentNode.appendChild(document.createTextNode(text));
-	}
-	else {
-		console.log("Test print", text);
-	}
-};
-
 self.Test = {
 	pseudo: (element, pseudo) => {
 		var content = getComputedStyle(element, ":" + pseudo).content;
@@ -66,7 +54,7 @@ self.Test = {
 		"select": e => e.selectedOptions[0] && e.selectedOptions[0].textContent
 	},
 
-	contentIgnore: [".mv-ui", ".test-content-ignore"],
+	contentIgnore: [".mv-ui", "script", ".test-content-ignore"],
 
 	equals: function(a, b) {
 		if (a === b) {
@@ -98,6 +86,73 @@ self.Test = {
 			.replace(/\s+/g, "-") // Convert whitespace to hyphens
 			.replace(/[^\w-]/g, "") // Remove weird characters
 			.toLowerCase();
+	},
+
+	// Stringify object in a useful way
+	format: (obj) => {
+		var type = $.type(obj);
+
+		if (obj && obj[Symbol.iterator] && type != "string") {
+			var arr = [...obj];
+			if (obj && arr.length > 1) {
+				return arr.map(o => Test.format(o)).join(" ");
+			}
+			else if (arr.length == 1) {
+				obj = arr[0];
+			}
+			else {
+				return `(empty ${type})`
+			}
+		}
+
+		if (obj instanceof HTMLElement) {
+			return obj.outerHTML;
+		}
+
+		var toString = obj + "";
+
+		if (!/\[object \w+/.test(toString)) {
+			// Has reasonable toString method, return that
+			return toString;
+		}
+
+		return JSON.stringify(obj, function(key, value) {
+			switch ($.type(value)) {
+				case "set":
+					return {
+						type: "Set",
+						value: [...value]
+					};
+				default:
+					return value;
+			}
+		}, "\t");
+	},
+
+	print: function print(...text) {
+		var script = this instanceof HTMLElement && this.matches("script")? this : document.currentScript;
+
+		text = Test.format(text);
+
+		if (document.readyState == "loading") {
+			document.write(text);
+		}
+		else if (script && script.parentNode) {
+			script.insertAdjacentHTML("afterend", text);
+		}
+		else {
+			console.log("Test print", text);
+		}
+	},
+
+	println: (...text) => {
+		Test.print(...text);
+		Test.print(" ", document.createElement("br"));
+	},
+
+	async: function(callback) {
+		var script = document.currentScript;
+		callback(Test.print.bind(script));
 	}
 };
 
@@ -112,12 +167,6 @@ var _ = self.RefTest = $.Class({
 	},
 
 	setup: function() {
-		// Remove any <script> elements to prevent them messing up the contents. They've already been processed anyway.
-		// Keep them in an attribute though, as they may be useful to display
-		for (var script of $$("script", this.table)) {
-			$.remove(script);
-		}
-
 		// Add table header if not present
 		var cells = $$(this.table.rows[0].cells);
 
@@ -146,11 +195,36 @@ var _ = self.RefTest = $.Class({
 
 		$.events(this.table, "input change click mv-change", test);
 		$.events(this.table.closest("[mv-app]"), "mv-load", test);
+
+		$$("[data-click]", this.table)
+			.concat(this.table.matches("[data-click]")? [this.table] : [])
+			.forEach(target => {
+				var clicks = target.getAttribute("data-click").trim().split(/\s*,\s*/).map(_.parseClick);
+
+				clicks.forEach(click => {
+					var event = click.event? new Promise(resolve => target.addEventListener(click.event, resolve)) : Promise.resolve();
+
+					event.then(evt => {
+						var delay = click.delay? new Promise(resolve => setTimeout(resolve, click.delay)) : Promise.resolve();
+
+						delay.then(() => {
+							var targets = click.selector? $$(click.selector, target) : [target];
+
+							targets.forEach(el => {
+								for (let i=0; i<click.times; i++) {
+									el.click();
+								}
+							});
+						});
+					});
+				});
+			});
 	},
 
 	observe: function() {
 		this.observerRunning = true;
 
+		// TODO move this somewhere else, it's Mavo specific
 		this.observer.observe(this.table, {
 			subtree: true,
 			childList: true,
@@ -218,7 +292,7 @@ var _ = self.RefTest = $.Class({
 			try {
 				var ret = this.sneak(() => tr.compare(...cells));
 			}
-			catch(e) {
+			catch (e) {
 				ret = e;
 				var error = true;
 				resultCell.textContent = e + "";
@@ -249,10 +323,13 @@ var _ = self.RefTest = $.Class({
 
 				tr.setAttribute("data-time", time + unit);
 			}
+
+			_.updateResults();
 		}
 	},
 
 	static: {
+		// Retrieve the comparator function based on a data-test string
 		getTest: function(test, fallback) {
 			if (test) {
 				if (test in _.compare) {
@@ -269,6 +346,7 @@ var _ = self.RefTest = $.Class({
 			return fallback || _.compare.contents;
 		},
 
+		// Default comparison functions
 		compare: {
 			contents: (...cells) => {
 				var td = cells[cells.length - 2] || cells[cells.length - 1];
@@ -330,11 +408,12 @@ var _ = self.RefTest = $.Class({
 
 					return element.nodeName == refElement.nodeName
 							&& $$(refElement.attributes).every(attr => element.getAttribute(attr.name) === attr.value)
-							&& Test.content(element).trim() == Test.content(refElement).trim()
-				})
+							&& Test.content(element).trim() == Test.content(refElement).trim();
+				});
 			}
 		},
 
+		// Prettify code for presentation
 		presentCode: function(code) {
 			// Remove blank line in the beginning and end
 			code = code.replace(/^\s*\n|\n\s*$/g, "");
@@ -346,6 +425,95 @@ var _ = self.RefTest = $.Class({
 			code = code.replace(/document.write/g, "print");
 
 			return code;
+		},
+
+		updateResults: function() {
+			_.results = {
+				pass: $$("table.reftest tr.pass"),
+				fail: $$("table.reftest tr.fail"),
+				current: {
+					pass: -1,
+					fail: -1
+				}
+				// interactive: $$("table.reftest tr.interactive")
+			};
+
+			$(".count-fail .count", _.nav).textContent = _.results.fail.length;
+			$(".count-pass .count", _.nav).textContent = _.results.pass.length;
+			$.style(_.nav, {
+				"--pass": _.results.pass.length,
+				"--fail": _.results.fail.length
+			});
+
+			// $(".count-interactive", _.nav).textContent = _.results.interactive.length;
+		},
+
+		// Navigate tests
+		navigateTests: function(type = "fail", offset) {
+			var elements = _.results[type];
+			var i = _.results.current[type] + offset;
+
+			if (!elements.length) {
+				return;
+			}
+
+			if (i >= elements.length) {
+				i = 0;
+			}
+			else if (i < 0) {
+				i = elements.length - 1;
+			}
+
+			var countElement = $(".count-" + type, _.nav);
+
+			if (elements.length > 1) {
+				$(".nav", countElement).hidden = false;
+				$(".current", countElement).textContent = i + 1;
+			}
+
+			var target = elements[i];
+
+			target.scrollIntoView({behavior: "smooth"});
+
+			_.results.current[type] = i;
+		},
+
+		next: function(type = "fail") {
+			_.navigateTests(type, 1);
+		},
+
+		previous: function(type = "fail") {
+			_.navigateTests(type, -1);
+		},
+
+		/**
+		 * Parse data-click text into a meaningful structure
+		 * Examples:
+		   .mv-bar .mv-save wait 5s after load"
+		   .mv-bar .mv-save wait 3s" (no event, DOMContentLoaded assumed)
+		    wait 1s after load" (no selector, element assumed)
+		  */
+		parseClick: function(click) {
+			var ret = {times: 1};
+
+			click = click.replace(/wait ([\d.]+)s/i, ($0, $1) => {
+				ret.delay = $1;
+				return "";
+			});
+
+			click = click.replace(/after ([\w:-]+)\s*$/i, ($0, $1) => {
+				ret.event = $1;
+				return "";
+			});
+
+			click = click.replace(/(\d+) times/i, ($0, $1) => {
+				ret.times = $1;
+				return "";
+			});
+
+			ret.selector = click.trim();
+
+			return ret;
 		}
 	}
 });
@@ -356,16 +524,6 @@ document.addEventListener("DOMContentLoaded", function(){
 	if (page !== "index") {
 		// Create link to home and to remote version
 		let h1 = $("body > h1");
-
-		if (h1) {
-			$.create("a", {
-				className: "home",
-				textContent: "Home",
-				href: "index.html",
-				target: "_top",
-				inside: h1
-			});
-		}
 	}
 
 	// Add ids to section headers and make them links
@@ -420,26 +578,51 @@ document.addEventListener("DOMContentLoaded", function(){
 	onhashchange = hashchanged;
 
 	// Add div for counter at the end of body
-	$.create({
-		className: "results",
+	_.nav = $.create({
+		tag: "nav",
 		inside: document.body,
 		contents: [
-			{
-				className: "count-fail",
-				onclick: function(evt) {
-					var first = $(".fail");
-					first.scrollIntoView({behavior: "smooth"});
-				}
-			},
-			{
-				className: "count-pass",
-				onclick: function(evt) {
-					var first = $(".interactive");
-					first.scrollIntoView({behavior: "smooth"});
-				}
-			}
-		],
-
+			window === parent? {
+				tag: "a",
+				className: "home",
+				title: "Home",
+				textContent: "🏠",
+				href: "index.html",
+				target: "_top"
+			} : undefined,
+			...["fail", "pass"].map(type => {
+				return {
+						className: "count-" + type,
+						contents: [
+							{className: "count"},
+							{
+								className: "nav",
+								hidden: true,
+								contents: [
+									{
+										tag: "button", type: "button",
+										className: "previous", textContent: "◂",
+										onclick: evt => {
+											RefTest.previous(type);
+											evt.stopPropagation();
+										}
+									},
+									{className: "current"},
+									{
+										tag: "button", type: "button",
+										className: "next", textContent: "▸",
+										onclick: evt => {
+											RefTest.next(type);
+											evt.stopPropagation();
+										}
+									}
+								]
+							}
+						],
+						onclick: RefTest.next.bind(RefTest, type)
+					};
+			})
+		]
 	});
 
 	// HTML tooltips
@@ -498,6 +681,8 @@ function loadCSS(url) {
 	}));
 }
 
+self.print = Test.print;
+self.println = Test.println;
 self.$ = $;
 self.$$ = $$;
 

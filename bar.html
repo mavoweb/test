@@ -101,7 +101,7 @@
 	<p>Click Edit</p>
 
 	<table class="reftest" data-test="selector">
-		<tr>
+		<tr data-click=".mv-bar .mv-edit after mv-load">
 			<td mv-app>
 				<span property="prop1">yolo</span>
 			</td>
@@ -131,9 +131,7 @@
 <section>
 	<h1>Element storage</h1>
 
-	<p>Click Save. The test should still pass</p>
-
-	<table class="reftest" data-test="selector">
+	<table class="reftest" data-test="selector" data-click=".mv-bar .mv-save after mv-load">
 		<tr>
 			<td mv-app mv-storage="#data">
 				<span property="prop1">yolo</span>
@@ -333,13 +331,13 @@
 			</td>
 			<td>.mv-bar:not(.mv-compact):not(.mv-tiny)</td>
 		</tr>
-		<tr>
+		<tr data-click="after mv-load">
 			<td mv-app mv-storage="local" style="width: 200px; flex: none">
 				<div property="prop1"></div>
 			</td>
 			<td>.mv-bar.mv-compact:not(.mv-tiny)</td>
 		</tr>
-		<tr>
+		<tr data-click="after mv-load">
 			<td mv-app mv-storage="local" style="width: 150px; flex: none">
 				<div property="prop1"></div>
 			</td>
