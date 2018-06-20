@@ -50,7 +50,8 @@ Examples:
 - `data-click=".foo"`: Clicks `.foo` elements immediately on DOMContentLoaded
 - `data-click=".foo .bar wait 5s after mv-load"`: Clicks `.foo .bar` elements 5 seconds after the `mv-load` event fires
 - `data-click=".foo 3 times after hashchange"`: Clicks `.foo` elements 3 times after the `hashchange` event
-- `data-click="wait 1s after load"` Clicks the element it's specified on 1 second after the `load` event fires.
+- `data-click="wait 1s after load"`: Clicks the element it's specified on 1 second after the `load` event fires.
+- `data-click="wait 1s after load 2 times"`: Same as above, but clicks twice.
 
 ## `print()` and `println()` functions
 
