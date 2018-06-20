@@ -579,7 +579,7 @@
 		</tr>
 		<tr title="Basic usage">
 			<td mv-app="primitiveongroup" mv-storage="#data-alias">
-				<span property="prop2" mv-alias="fakeProp1 prop1 fakeProp2 fakeProp3"></span>
+				<span property="prop2" mv-alias="prop1"></span>
 			</td>
 			<td>1</td>
 		</tr>
@@ -600,8 +600,8 @@
 		</tr>
 		<tr title="Half swap">
 			<td mv-app="primitiveongroup" mv-storage="#data-alias2">
-				<span property="prop2" mv-alias="fakeProp1 prop1 fakeProp2 fakeProp3"></span>
-				<span property="prop3" mv-alias="fakeProp1 prop2 fakeProp2 fakeProp3"></span>
+				<span property="prop2" mv-alias="prop1"></span>
+				<span property="prop3" mv-alias="prop2"></span>
 			</td>
 			<td>1 2</td>
 		</tr>
@@ -622,8 +622,8 @@
 		</tr>
 		<tr title="Swap">
 			<td mv-app="primitiveongroup" mv-storage="#data-alias3">
-				<span property="prop1" mv-alias="fakeProp1 prop2 fakeProp2 fakeProp3"></span>
-				<span property="prop2" mv-alias="fakeProp1 prop1 fakeProp2 fakeProp3"></span>
+				<span property="prop1" mv-alias="prop2"></span>
+				<span property="prop2" mv-alias="prop1"></span>
 			</td>
 			<td>2 1</td>
 		</tr>
@@ -643,14 +643,99 @@
 		</tr>
 		<tr title="Two properties with the same alias">
 			<td mv-app="primitiveongroup" mv-storage="#data-alias4">
+				<span property="prop2" mv-alias="prop1"></span>
+				<span property="prop3" mv-alias="prop1"></span>
+			</td>
+			<td>1 1</td>
+		</tr>
+
+		<tr class="interactive">
+			<td>
+				<pre id="data-alias5">{
+	"prop1": 1
+}</pre>
+			</td>
+			<td>
+				<pre>{
+	"prop2": 1
+}</pre>
+			</td>
+		</tr>
+		<tr title="Basic usage (multiple)">
+			<td mv-app="primitiveongroup" mv-storage="#data-alias5">
+				<span property="prop2" mv-alias="fakeProp1 prop1 fakeProp2 fakeProp3"></span>
+			</td>
+			<td>1</td>
+		</tr>
+
+		<tr class="interactive">
+			<td>
+				<pre id="data-alias6">{
+	"prop1": 1,
+	"prop2": 2
+}</pre>
+			</td>
+			<td>
+				<pre>{
+	"prop2": 1,
+	"prop3": 2
+}</pre>
+			</td>
+		</tr>
+		<tr title="Half swap (multiple)">
+			<td mv-app="primitiveongroup" mv-storage="#data-alias6">
+				<span property="prop2" mv-alias="fakeProp1 prop1 fakeProp2 fakeProp3"></span>
+				<span property="prop3" mv-alias="fakeProp1 prop2 fakeProp2 fakeProp3"></span>
+			</td>
+			<td>1 2</td>
+		</tr>
+
+		<tr class="interactive">
+			<td>
+				<pre id="data-alias7">{
+	"prop1": 1,
+	"prop2": 2
+}</pre>
+			</td>
+			<td>
+				<pre>{
+	"prop1": 2,
+	"prop2": 1
+}</pre>
+			</td>
+		</tr>
+		<tr title="Swap (multiple)">
+			<td mv-app="primitiveongroup" mv-storage="#data-alias7">
+				<span property="prop1" mv-alias="fakeProp1 prop2 fakeProp2 fakeProp3"></span>
+				<span property="prop2" mv-alias="fakeProp1 prop1 fakeProp2 fakeProp3"></span>
+			</td>
+			<td>2 1</td>
+		</tr>
+
+		<tr class="interactive">
+			<td>
+				<pre id="data-alias8">{
+	"prop1": 1
+}</pre>
+			</td>
+			<td>
+				<pre>{
+	"prop2": 1,
+	"prop3": 1
+}</pre>
+			</td>
+		</tr>
+		<tr title="Two properties with the same alias (multiple)">
+			<td mv-app="primitiveongroup" mv-storage="#data-alias8">
 				<span property="prop2" mv-alias="fakeProp1 prop1 fakeProp2 fakeProp3"></span>
 				<span property="prop3" mv-alias="fakeProp1 prop1 fakeProp2 fakeProp3"></span>
 			</td>
 			<td>1 1</td>
 		</tr>
+
 		<tr class="interactive">
 			<td>
-				<pre id="data-alias5">{
+				<pre id="data-alias9">{
 	"prop1": 1,
 	"unusedRealProp": 3
 }</pre>
@@ -663,7 +748,7 @@
 			</td>
 		</tr>
 		<tr title="Uses first of multiple">
-			<td mv-app="primitiveongroup" mv-storage="#data-alias5">
+			<td mv-app="primitiveongroup" mv-storage="#data-alias9">
 				<span property="prop2" mv-alias="fakeProp1 prop1 fakeProp2 unusedRealProp fakeProp3"></span>
 			</td>
 			<td>1</td>
