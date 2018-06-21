@@ -411,10 +411,6 @@ table.reftest td:first-child {
     <h1>contains()</h1>
 
     <table class="reftest" data-test="expressionEvaluation" data-columns="3">
-        <tr>
-            <td>contains("0", 0)</td>
-            <td>true</td>
-		</tr>
 		<tr>
             <td>
                 contains({name: "Kenneth", age: 17, state: "constant despair", work: "MIT", interest: ["coding", {food: "rice", quantity: 6}, "sleeping"]}, "rice")
@@ -461,25 +457,31 @@ table.reftest td:first-child {
 			<td>
 				contains(["Kenneth", "Verou"], ["Kenneth", "Lea"])
 			</td>
-			<td>[true, false]</td>
+			<td>[true,false]</td>
 		</tr>
 		<tr>
 			<td>
 				contains(["Kenneth", "Lea", "Amy", "Kenneth"], ["Kenneth", "Lea"])
 			</td>
-			<td>[true, true]</td>
+			<td>[true,true,false,false]</td>
+		</tr>
+		<tr>
+			<td>
+				contains(["Kenneth", "Lea"], ["Kenneth", "Lea", "Amy", "Kenneth"])
+			</td>
+			<td>[true,true,false,false]</td>
 		</tr>
 		<tr>
 			<td>
 				contains([["Kenneth", "Lea"], "Amy", "Kenneth"], ["Kenneth", "Lea"])
 			</td>
-			<td>[true,false,false,false]</td>
+			<td>[true,false,false]</td>
 		</tr>
 		<tr>
 			<td>
 				contains(["Amy", ["Kenneth", "Lea"], "Kenneth"], ["Kenneth", "Lea"])
 			</td>
-			<td>[false,true,false,true]</td>
+			<td>[false,true,false]</td>
 		</tr>
 		<tr>
             <td>
@@ -524,11 +526,15 @@ table.reftest td:first-child {
             <td>false</td>
 		</tr>
 		<tr>
-            <td>
-                contains([], "foo")
-            </td>
-            <td>false</td>
-        </tr>
+			<td>contains("0", 0)</td>
+			<td>true</td>
+		</tr>
+		<tr>
+			<td>
+				contains([], "foo")
+			</td>
+			<td>false</td>
+		</tr>
     </table>
 </section>
 
