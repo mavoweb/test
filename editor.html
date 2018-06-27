@@ -397,9 +397,9 @@ function checkAttribute(td) {
 <section>
 	<h1>White-space handling</h1>
 
-	<p>Click on each text block to make the tests pass or <button onclick="$$('[property=address]', this.parentNode.parentNode).forEach(p => p.click())">Click here</button></p>
+	<p>Click on each text block to make the tests pass</p>
 
-	<table class="reftest" data-test="selector">
+	<table class="reftest" data-test="selector" data-click="[property=address] wait 2s">
 		<tr title="white-space: normal" class="interactive">
 			<td mv-app="whitespace" class="mv-autoedit">
 				<div property="address">

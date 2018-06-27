@@ -58,14 +58,14 @@ h1 {
 	letter-spacing: -.04em;
 }
 
-.pass {
+.pass, .count-pass {
 	--color: $pass;
-	--dark-color: hsl(80, 70%, 42%);
+	--dark-color: hsl(80, 70%, 40%);
 }
 
-.fail {
+.fail, .count-fail {
 	--color: $fail;
-	--dark-color: hsl(0, 70%, 50%);
+	--dark-color: hsl(0, 70%, 48%);
 }
 
 .error {
@@ -77,34 +77,87 @@ html:not(.index) {
 	body {
 		width: calc(100vw - 25em);
 		max-width: 100em;
-		counter-reset: fail pass interactive;
+		padding-top: 2em;
 	}
 
-	.results {
+	body > nav {
 		position: fixed;
-		left: 1rem;
-		top: .6rem;
-		font: bold 180%/1 Helvetica Neue, sans-serif;
-		content: counter(interactive) " interactive";
+		top: 0;
+		right: 0;
+		left: 0;
+		z-index: 3;
+		display: flex;
+		background: black;
+		color: white;
+		font: bold 150%/1 Helvetica Neue, sans-serif;
 
-		.count-fail::before {
-			content: counter(fail) " failing";
-			color: #b00;
+		.home {
+			padding: .4em .3em;
+			font-size: 80%;
+
+			&:hover {
+				text-decoration: none;
+				background: #444;
+			}
 		}
 
-		.count-pass::before {
-			content: counter(pass) " passing";
-			color: hsl(80, 50%, 45%);
+		.count-fail,
+		.count-pass {
+			flex-shrink: 0;
+			display: flex;
+			align-items: center;
+			padding: .2em;
+			background: var(--dark-color);
+			cursor: pointer;
+			transition: .4s;
+		}
+
+		.nav:not([hidden]) {
+			display: flex;
+			align-items: center;
+			margin-left: auto;
 			font-size: 75%;
-			line-height: 1.334;
+			line-height: 1;
+			color: var(--color);
+
+			button {
+				padding: 0 .2em;
+				background: transparent;
+				border: none;
+				color: inherit;
+				font-size: inherit;
+				line-height: 1;
+				cursor: pointer;
+			}
 		}
 
-		.count-pass::after {
-			content: counter(interactive) " interactive";
-			display: block;
-			color: hsl(40, 100%, 50%);
-			font-size: 60%;
-			line-height: 1.667;
+		.count::after {
+			font-weight: 300;
+			margin-left: .2em;
+		}
+
+		.count-fail {
+			flex-grow: var(--fail, 1);
+
+			.count::after {
+				content: "failing";
+			}
+		}
+
+		.count-pass {
+			flex-grow: var(--pass, 1);
+
+			.count::after {
+				content: "passing";
+			}
+		}
+
+		&[style*="--fail:0;"] .count-fail {
+			display: none;
+		}
+
+		&[style*="--pass:0;"] .count-pass {
+			display: none;
 		}
 	}
 
@@ -274,7 +327,7 @@ body > section > div {
 	}
 
 	body > section {
-		padding: 1em;
+		padding: 1em .5em;
 		background: var(--ciel);
 
 		h1 {
@@ -287,18 +340,38 @@ body > section > div {
 			list-style: none;
 		}
 
-		li a {
-			display: block;
+		li {
+			display: flex;
+			align-items: center;
 			padding: 0 .5em;
-			font-weight: bold;
-			font: 600 150%/1.4 Helvetica Neue, sans-serif;
-		}
+			border-radius: .2em;
 
-		li.selected {
-			background: var(--dark);
+			a:first-of-type {
+				flex: 1;
+				padding: 0 .3em 0 .1em;
+				font-weight: bold;
+				font: 600 150%/1.4 Helvetica Neue, sans-serif;
+			}
 
-			a {
-				color: white;
+			&:not(:focus-within):not(:hover) a.new-tab {
+				opacity: 0;
+				transition: .4s;
+			}
+
+			a.new-tab {
+				text-decoration: none;
+
+				&:not(:focus-within):not(:hover)  {
+					mix-blend-mode: multiply;
+				}
+			}
+
+			&.selected {
+				background: var(--dark);
+
+				a {
+					color: white;
+				}
 			}
 		}
 	}
@@ -307,20 +380,4 @@ body > section > div {
 		flex: 1;
 		border: 0;
 	}
-}
-
-.fail {
-	counter-increment: fail;
-}
-
-.pass {
-	counter-increment: pass;
-}
-
-.fail.interactive {
-	counter-increment: fail interactive;
-}
-
-.pass.interactive {
-	counter-increment: pass interactive;
 }
