@@ -120,11 +120,19 @@
 					<td>[count(hobby)]</td>
 					<td>9</td>
 				</tr>
+				<tr title="count(person where age > 0)">
+					<td>[count(person where age > 0)]</td>
+					<td>2</td>
+				</tr>
 				<tr title="count(hobby where hobby = 'Cooking')">
 					<td>[count(hobby where hobby = 'Cooking')]</td>
 					<td>2</td>
 				</tr>
 
+				<tr title="get(hobby, 'hobby')">
+					<td>[get(hobby, 'hobby')]</td>
+					<td>[hobby]</td>
+				</tr>
 				<tr mv-expressions="none" class="interactive">
 					<td>
 						<pre id="people">{
@@ -531,9 +539,9 @@
 				</div>
 			</td>
 			<td>
-				<div mv-multiple><div class="mv-item-bar mv-ui">A</div> (Code) Online</div>
-				<div mv-multiple><div class="mv-item-bar mv-ui">A</div> us United States</div>
-				<div mv-multiple><div class="mv-item-bar mv-ui">A</div> gb United Kingdom </div>
+				<div class="bordered"><div class="mv-item-bar mv-ui">A</div> (Code) Online</div>
+				<div class="bordered"><div class="mv-item-bar mv-ui">A</div> us United States</div>
+				<div class="bordered"><div class="mv-item-bar mv-ui">A</div> gb United Kingdom </div>
 			</td>
 		</tr>
 	</table>
