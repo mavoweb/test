@@ -329,6 +329,7 @@ body > section > div {
 	body > section {
 		padding: 1em .5em;
 		background: var(--ciel);
+		overflow: auto;
 
 		h1 {
 			font-weight: 300;

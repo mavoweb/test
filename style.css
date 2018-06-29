@@ -249,7 +249,8 @@ body > section > div {
 
 .index body > section {
   padding: 1em .5em;
-  background: var(--ciel); }
+  background: var(--ciel);
+  overflow: auto; }
   .index body > section h1 {
     font-weight: 300;
     margin: 0; }
