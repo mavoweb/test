@@ -85,6 +85,7 @@
 	<h1>Nested collections</h1>
 	<p>Use this to test dragging, both within a collection and to different collections.
 	You should be able to drag across hobby lists or cats to people and vice versa, but not hobbies to people or people to hobbies.
+	Also, you should be able to drag people hobbies to cat hobbies but not vice versa.
 	For the last reftest, click Save without making any changes.</p>
 
 	<div class="side-by-side">
@@ -100,7 +101,7 @@
 				<strong property="name">John Doe</strong>
 				<span property="age">0</span>
 				<ul>
-					<li property="hobby" mv-multiple mv-related="hobby">Fishing</li>
+					<li property="hobby" mv-multiple mv-accepts="hobby">Fishing</li>
 				</ul>
 			</div>
 
@@ -781,6 +782,17 @@
 					<span property=prop2>1</span>
 				</div>
 				<div property="prop3" mv-multiple mv-like="prop1"></div>
+			</td>
+			<td>
+				<div mv-multiple>1</div>
+			</td>
+		</tr>
+		<tr title="Without render, like before referenced element">
+			<td mv-app class="mv-autoedit">
+				<div property="prop3" mv-multiple mv-like="prop1"></div>
+				<div property="prop1" mv-multiple>
+					<span property=prop2>1</span>
+				</div>
 			</td>
 			<td>
 				<div mv-multiple>1</div>

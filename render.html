@@ -848,21 +848,14 @@
 </section>
 
 <section mv-app mv-source='data:application/json,{
-	"prop": [
-		{
-			"prop1": 1
-		},
-		{
-			"prop1": 2
-		}
-	]
-}'>
-	<h1>Rendering an object on a primitive</h1>
+	"prop": [{"prop1": 1}, {"prop1": 2}]
+}' mv-expressions-ignore="mv-source">
+	<h1>Rendering an object on a helper property</h1>
 
 	<table class="reftest">
 		<tr>
 			<td>
-				<span property="prop"></span>
+				<meta property="prop" />
 			</td>
 			<td></td>
 		</tr>
@@ -870,7 +863,9 @@
 			<td>
 				[prop]
 			</td>
-			<td></td>
+			<td>
+				{ "prop1": 1 }, { "prop1": 2 }
+			</td>
 		</tr>
 		<tr>
 			<td>
@@ -940,12 +935,5 @@
 	</table>
 </section> -->
 
-<script>
-document.getElementById("saveall").addEventListener("click", function(evt) {
-	$$(".mv-bar .mv-save").forEach(function(save) {
-		save.click();
-	});
-});
-</script>
 </body>
 </html>
