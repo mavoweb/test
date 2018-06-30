@@ -197,6 +197,12 @@ var _ = self.RefTest = $.Class({
 	},
 
 	setup: function() {
+		// Remove any <script> elements to prevent them messing up the contents. They've already been processed anyway.
+		// Keep them in an attribute though, as they may be useful to display
+		for (var script of $$("script", this.table)) {
+			$.remove(script);
+		}
+
 		// Add table header if not present
 		var cells = $$(this.table.rows[0].cells);
 
