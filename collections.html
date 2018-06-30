@@ -121,15 +121,18 @@
 					<td>[count(hobby)]</td>
 					<td>9</td>
 				</tr>
-				<tr title="count(person where age > 0)">
-					<td>[count(person where age > 0)]</td>
-					<td>2</td>
+				<tr title="Verify that where is properly scoped">
+					<td>[count(cat where age > 2)]</td>
+					<td>1</td>
 				</tr>
-				<tr title="count(hobby where hobby = 'Cooking')">
+				<tr title="count(hobby where hobby = Cooking) / where for filtering primitives + unquoted strings in where">
 					<td>[count(hobby where hobby = 'Cooking')]</td>
 					<td>2</td>
 				</tr>
-
+				<tr title="scope(hobby, hobby = 'Cooking')">
+					<td>[scope(hobby, hobby = 'Cooking')]</td>
+					<td>[hobby = 'Cooking']</td>
+				</tr>
 				<tr title="get(hobby, 'hobby')">
 					<td>[get(hobby, 'hobby')]</td>
 					<td>[hobby]</td>

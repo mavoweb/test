@@ -68,12 +68,12 @@ table.reftest td:first-child {
 			<td>false</td>
 		</tr>
 		<tr>
-			<td>and([0, 1, 2, 3], [true, false])</td>
-			<td>[false, false, 2, 3]</td>
+			<td>and([0, 1, 2, 3], [true, true, false])</td>
+			<td>[false, 1, false, false]</td>
 		</tr>
 		<tr>
-			<td>and([true, false], [0, 1, 2, 3])</td>
-			<td>[false, false, true, true]</td>
+			<td>and([true, true, false], [0, 1, 2, 3])</td>
+			<td>[false, 1, false, false]</td>
 		</tr>
 		<tr>
 			<td>or(true, false, false)</td>
