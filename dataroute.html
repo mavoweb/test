@@ -3,7 +3,7 @@
 <head>
 
 <meta charset="UTF-8">
-<title>Function Tests</title>
+<title>Data Routing Tests</title>
 <link rel="stylesheet" href="https://dev.mavo.io/dist/mavo.css" />
 <link rel="stylesheet" href="style.css" />
 <style>
@@ -13,6 +13,34 @@ td {
 </style>
 <script src="https://dev.mavo.io/dist/mavo.js"></script>
 <script src="mavotest.js"></script>
+<script>
+	function testRoutes(routes, script) {
+		var out = script.parentNode;
+		var appTd = out.previousElementSibling;
+		var app;
+
+		$.ready()
+		.then(() => Mavo.inited)
+		.then(() => Mavo.defer(1000))
+		.then(() => {
+			app = Mavo.get(appTd);
+			return app.dataLoaded;
+		}).then(() => {
+			var obj = app.root.liveData.data;
+			var test = [];
+			var ref = [];
+
+			for (var route in routes) {
+				var data = eval(route);
+				test.push(`${route} route: ${Test.format($.value(data, Mavo.route))}`);
+				ref.push(`${route} route: ${routes[route]}`);
+			}
+
+			out.innerHTML = test.join("<br> ");
+			out.nextElementSibling.innerHTML = ref.join("<br> ");
+		});
+	}
+</script>
 </head>
 <body>
 
@@ -24,7 +52,7 @@ td {
 	<h1>Mavo.Data.computeRoutes()</h1>
 
 	<table class="reftest">
-		<!-- <tr>
+		<tr>
 			<td>
 				<script>
 					let obj = {foo: [{ yolo: 3}, {yolo: 4}], bar: {baz: 5}};
@@ -49,39 +77,28 @@ td {
 			</td>
 		</tr>
 		<tr>
-			<td mv-app="testRoutes" mv-source='data:application/json,{"foo": [{ "yolo": 3}, {"yolo": 4}], "bar": {"baz": 5}}' mv-expressions-ignore="mv-source">
+			<td mv-app mv-source='data:application/json,{"foo": [{ "yolo": 3}, {"yolo": 4}], "bar": {"baz": 5}}' mv-expressions-ignore="mv-source">
 				<div property="foo" mv-multiple>
 					<span property="yolo">1</span>
 				</div>
 			</td>
 			<td>
 				<script>
-					{
-						let td = $("[mv-app=testRoutes]");
-						let out = document.currentScript.parentNode;
-						td.addEventListener("mv-load", evt => {
-							var obj = Mavo.all.testRoutes.root.liveData.data;
-
-							out.innerHTML = `obj route: ${Test.format(obj[Mavo.route])}<br>
-							foo route: ${Test.format(obj.foo[Mavo.route])}<br>
-							obj.foo[0] route: ${Test.format(obj.foo[0][Mavo.route])}<br>
-							obj.foo[0].yolo route: ${Test.format(obj.foo[0].yolo[Mavo.route])}<br>
-							obj.bar route: ${Test.format(obj.bar[Mavo.route])}
-							`;
-						});
-					}
+					testRoutes({
+						"obj": "foo yolo bar baz",
+						"obj.foo": "yolo",
+						"obj.foo[0]": "yolo",
+						"obj.foo[0].yolo": "undefined",
+						"obj.bar": "baz"
+					}, document.currentScript);
 				</script>
 			</td>
 			<td>
-				obj route: foo yolo bar baz<br>
-				foo route: yolo<br>
-				obj.foo[0] route: yolo<br>
-				obj.foo[0].yolo route: undefined<br>
-				obj.bar route: baz
+
 			</td>
-		</tr> -->
+		</tr>
 		<tr>
-			<td mv-app="creatures" mv-source='data/creatures.json' mv-expressions-ignore="mv-source">
+			<td mv-app="creatures" mv-source='data/creatures.json'>
 				<div property="person" mv-multiple mv-accepts="cat">
 					<strong property="name">John Doe</strong>
 					<span property="age">0</span>
@@ -100,35 +117,57 @@ td {
 			</td>
 			<td>
 				<script>
-					{
-						let td = $("[mv-app=creatures]");
-						let out = document.currentScript.parentNode;
-						td.addEventListener("mv-load", evt => {
-							var obj = Mavo.all.creatures.root.liveData.data;
-
-							out.innerHTML = `obj route: ${Test.format(obj[Mavo.route])}<br>
-							person route: ${Test.format(obj.person[Mavo.route])}<br>
-							cat route: ${Test.format(obj.cat[Mavo.route])}<br>
-							obj.person[0] route: ${Test.format(obj.person[0][Mavo.route])}<br>
-							obj.cat[0] route: ${Test.format(obj.cat[0][Mavo.route])}<br>
-							obj.cat[0].hobby route: ${Test.format(obj.cat[0].hobby[Mavo.route])}<br>
-							obj.cat[0].hobby[0] route: ${Test.format(obj.cat[0].hobby[0][Mavo.route])}
-							`;
-						});
-					}
+				testRoutes({
+					"obj": "person name age hobby cat",
+					"obj.person": "name age hobby",
+					"obj.cat": "name age hobby",
+					"obj.person[0]": "name age hobby",
+					"obj.cat[0]": "name age hobby",
+					"obj.cat[0].hobby": "(empty set)",
+					"obj.cat[0].hobby[0]": "undefined"
+				}, document.currentScript);
 				</script>
 			</td>
-			<td>obj route: person name age hobby cat<br>
-				person route: name age hobby<br>
-				cat route: name age hobby<br>
-				obj.person[0] route: name age hobby<br>
-				obj.cat[0] route: name age hobby<br>
-				obj.cat[0].hobby route: (empty set)<br>
-				obj.cat[0].hobby[0] route: undefined
+			<td>
+
+			</td>
+		</tr>
+		<tr title="Implicit collection of primitives">
+			<td mv-app="implicitCollection">
+				<div property="numbers" style="--prepend: '[numbers]'; --append: '[$index]';">11</div>
+				<div property="numbers" style="--prepend: '[numbers]'; --append: '[$index]';">12</div>
+				<div property="numbers" style="--prepend: '[numbers]'; --append: '[$index]';">13</div>
+			</td>
+			<td>
+				<script>
+					testRoutes({
+						"obj": "numbers",
+						"obj.numbers": "(empty set)",
+						"obj.numbers[0]": "undefined"
+					}, document.currentScript);
+				</script>
+			</td>
+			<td>
+
+			</td>
+		</tr>
+		<tr title="Rendering an object on a primitive">
+			<td mv-app mv-source='data:application/json,{"prop": [{"prop1": 1}, {"prop1": 2}]}' mv-expressions-ignore="mv-source">
+				<meta property="prop" />
+			</td>
+			<td>
+				<script>
+					testRoutes({
+						"obj": "prop prop1",
+						"obj.prop": "prop1"
+					}, document.currentScript);
+				</script>
+			</td>
+			<td>
+
 			</td>
 		</tr>
 	</table>
 </section>
-
 </body>
 </html>

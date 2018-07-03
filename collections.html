@@ -85,6 +85,7 @@
 	<h1>Nested collections</h1>
 	<p>Use this to test dragging, both within a collection and to different collections.
 	You should be able to drag across hobby lists or cats to people and vice versa, but not hobbies to people or people to hobbies.
+	Also, you should be able to drag people hobbies to cat hobbies but not vice versa.
 	For the last reftest, click Save without making any changes.</p>
 
 	<div class="side-by-side">
@@ -100,7 +101,7 @@
 				<strong property="name">John Doe</strong>
 				<span property="age">0</span>
 				<ul>
-					<li property="hobby" mv-multiple mv-related="hobby">Fishing</li>
+					<li property="hobby" mv-multiple mv-accepts="hobby">Fishing</li>
 				</ul>
 			</div>
 
@@ -120,11 +121,22 @@
 					<td>[count(hobby)]</td>
 					<td>9</td>
 				</tr>
-				<tr title="count(hobby where hobby = 'Cooking')">
+				<tr title="Verify that where is properly scoped">
+					<td>[count(cat where age > 2)]</td>
+					<td>1</td>
+				</tr>
+				<tr title="count(hobby where hobby = Cooking) / where for filtering primitives + unquoted strings in where">
 					<td>[count(hobby where hobby = 'Cooking')]</td>
 					<td>2</td>
 				</tr>
-
+				<tr title="scope(hobby, hobby = 'Cooking')">
+					<td>[scope(hobby, hobby = 'Cooking')]</td>
+					<td>[hobby = 'Cooking']</td>
+				</tr>
+				<tr title="get(hobby, 'hobby')">
+					<td>[get(hobby, 'hobby')]</td>
+					<td>[hobby]</td>
+				</tr>
 				<tr mv-expressions="none" class="interactive">
 					<td>
 						<pre id="people">{
@@ -531,9 +543,9 @@
 				</div>
 			</td>
 			<td>
-				<div mv-multiple><div class="mv-item-bar mv-ui">A</div> (Code) Online</div>
-				<div mv-multiple><div class="mv-item-bar mv-ui">A</div> us United States</div>
-				<div mv-multiple><div class="mv-item-bar mv-ui">A</div> gb United Kingdom </div>
+				<div class="bordered"><div class="mv-item-bar mv-ui">A</div> (Code) Online</div>
+				<div class="bordered"><div class="mv-item-bar mv-ui">A</div> us United States</div>
+				<div class="bordered"><div class="mv-item-bar mv-ui">A</div> gb United Kingdom </div>
 			</td>
 		</tr>
 	</table>
@@ -778,6 +790,17 @@
 				<div mv-multiple>1</div>
 			</td>
 		</tr>
+		<tr title="Without render, like before referenced element">
+			<td mv-app class="mv-autoedit">
+				<div property="prop3" mv-multiple mv-like="prop1"></div>
+				<div property="prop1" mv-multiple>
+					<span property=prop2>1</span>
+				</div>
+			</td>
+			<td>
+				<div mv-multiple>1</div>
+			</td>
+		</tr>
 		<tr>
 			<td><pre id="like-data">{
 	"prop1": [
@@ -962,9 +985,9 @@
 				</div>
 			</td>
 			<td>
-				1 0
-				2 1
-				3 2
+				<div class="bordered">1 0</div>
+				<div class="bordered">2 1</div>
+				<div class="bordered">3 2</div>
 			</td>
 		</tr>
 	</table>
