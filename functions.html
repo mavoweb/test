@@ -28,11 +28,67 @@ table.reftest td:first-child {
 
 	<table class="reftest" data-test="expressionEvaluation" data-columns="3">
 		<tr>
-			<td>search([34, "foobar"], [3, bar])</td>
-			<td>[true,true]</td>
+			<td>min([1,2,3])</td>
+			<td>1</td>
 		</tr>
 		<tr>
-			<td>search([34, "foobar"], [3, "bar"])</td>
+			<td>min(1,2,3)</td>
+			<td>1</td>
+		</tr>
+		<tr>
+			<td>min([3,4,0], [2,1], 2)</td>
+			<td>[2,1,0]</td>
+		</tr>
+		<tr>
+			<td>abs([-2,3])</td>
+			<td>[2,3]</td>
+		</tr>
+		<tr>
+			<td>floor([3.5,4.9])</td>
+			<td>[3,4]</td>
+		</tr>
+		<tr>
+			<td>sqrt([16,25])</td>
+			<td>[4,5]</td>
+		</tr>
+		<tr>
+			<td>atan2([0,5], [2,5])</td>
+			<td>[0,0.7853981633974483]</td>
+		</tr>
+		<tr>
+			<td>atan2([0,5], [2,5,6])</td>
+			<td>[0,0.7853981633974483,1.4056476493802699]</td>
+		</tr>
+		<tr>
+			<td>atan2([0,5,6], [2,5])</td>
+			<td>[0,0.7853981633974483,1.4056476493802699]</td>
+		</tr>
+		<tr>
+			<td>hypot([2,3], [3,2])</td>
+			<td>[8,9]</td>
+		</tr>
+		<tr>
+			<td>hypot([2,3], [3,2,2])</td>
+			<td>[8,9,1]</td>
+		</tr>
+		<tr>
+			<td>hypot([2,3,4], [3,2])</td>
+			<td>[8,9,4]</td>
+		</tr>
+		<tr>
+			<td>pow([2,3], [3,2])</td>
+			<td>[8,9]</td>
+		</tr>
+		<tr>
+			<td>pow([2,3], [3,2,2])</td>
+			<td>[8,9,1]</td>
+		</tr>
+		<tr>
+			<td>pow([2,3,4], [3,2])</td>
+			<td>[8,9,4]</td>
+		</tr>
+		<tr>
+			<td>search([34, "foobar"], [3, bar])</td>
 			<td>[0,3]</td>
 		</tr>
 		<tr>
