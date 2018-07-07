@@ -28,8 +28,16 @@ table.reftest td:first-child {
 
 	<table class="reftest" data-test="expressionEvaluation" data-columns="3">
 		<tr>
-			<td>min([1,2,3])</td>
-			<td>1</td>
+			<td>max(1,2,3)</td>
+			<td>3</td>
+		</tr>
+		<tr>
+			<td>max([1,2,3])</td>
+			<td>3</td>
+		</tr>
+		<tr>
+			<td>max([3,4,0], [2,1], 2)</td>
+			<td>[3,4,2]</td>
 		</tr>
 		<tr>
 			<td>min(1,2,3)</td>
