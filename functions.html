@@ -36,6 +36,10 @@ table.reftest td:first-child {
 			<td>1</td>
 		</tr>
 		<tr>
+			<td>min([1,2,3])</td>
+			<td>1</td>
+		</tr>
+		<tr>
 			<td>min([3,4,0], [2,1], 2)</td>
 			<td>[2,1,0]</td>
 		</tr>
@@ -64,16 +68,16 @@ table.reftest td:first-child {
 			<td>[0,0.7853981633974483,1.4056476493802699]</td>
 		</tr>
 		<tr>
-			<td>hypot([2,3], [3,2])</td>
-			<td>[8,9]</td>
+			<td>hypot(3,4)</td>
+			<td>5</td>
 		</tr>
 		<tr>
-			<td>hypot([2,3], [3,2,2])</td>
-			<td>[8,9,1]</td>
+			<td>hypot([-3, 4])</td>
+			<td>[3,4]</td>
 		</tr>
 		<tr>
-			<td>hypot([2,3,4], [3,2])</td>
-			<td>[8,9,4]</td>
+			<td>hypot([3,5,-4], [4,12])</td>
+			<td>[5,13,4]</td>
 		</tr>
 		<tr>
 			<td>pow([2,3], [3,2])</td>
