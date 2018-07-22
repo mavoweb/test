@@ -737,6 +737,34 @@ table.reftest td:first-child {
 </section>
 
 <section>
+	<h1>has()</h1>
+
+	<table class="reftest" data-test="expressionEvaluation" data-columns="3">
+		<tr>
+			<td>has(1, [1, 2, 3])</td>
+			<td>true</td>
+		</tr>
+		<tr>
+			<script>var numberObject1 = new Number(1)</script>
+			<td>has(1, [numberObject1, 2, 3])</td>
+			<td>true</td>
+		</tr>
+		<tr>
+			<td>has([1, 4], [1, 2, 3])</td>
+			<td>[true, false]</td>
+		</tr>
+		<tr>
+			<td>has('foo', {foo: 1})</td>
+			<td>true</td>
+		</tr>
+		<tr>
+			<td>has(['foo', 'bar'], {foo: 1})</td>
+			<td>[true, false]</td>
+		</tr>
+	</table>
+</section>
+
+<section>
 	<h1>replace()</h1>
 
 	<table class="reftest" data-test="expressionEvaluation" data-columns="3">
