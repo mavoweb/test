@@ -24,62 +24,6 @@ table.reftest td:first-child {
 <p>These tests test whether Mavo functions produce correct results.</p>
 
 <section>
-	<h1>Polynary Operations</h1>
-	<p>These functions take multiple array arguments and operate element-wise.</p>
-	
-	<table class="reftest" data-test="expressionEvaluation" data-columns="3">
-		<tr>
-			<td>max(1,2,3)</td>
-			<td>3</td>
-		</tr>
-		<tr>
-			<td>max([1,2,3])</td>
-			<td>3</td>
-		</tr>
-		<tr>
-			<td>max([3,4,0], [2,1], [10])</td>
-			<td>[10,4,0]</td>
-		</tr>
-		<tr>
-			<td>max([3,4,0], [2,1], 2)</td>
-			<td>[3,4,2]</td>
-		</tr>
-		<tr>
-			<td>min(1,2,3)</td>
-			<td>1</td>
-		</tr>
-		<tr>
-			<td>min([1,2,3])</td>
-			<td>1</td>
-		</tr>
-		<tr>
-			<td>min([3,4,2], [2,1], [0])</td>
-			<td>[0,1,2]</td>
-		</tr>
-		<tr>
-			<td>min([3,4,0], [2,1], 2)</td>
-			<td>[2,1,0]</td>
-		</tr>
-		<tr>
-			<td>hypot(3,4)</td>
-			<td>5</td>
-		</tr>
-		<tr>
-			<td>hypot([-3,4])</td>
-			<td>[3,4]</td>
-		</tr>
-		<tr>
-			<td>round(hypot([3,5,-4], [4,12], [1]), 3)</td>
-			<td>[5.099,13,4]</td>
-		</tr>
-		<tr>
-			<td>round(hypot([3,5,-4], [4,12], 1), 3)</td>
-			<td>[5.099,13.038,4.123]</td>
-		</tr>
-	</table>
-</section>
-
-<section>
 	<h1>Binary Operations</h1>
 
 	<table class="reftest" data-test="expressionEvaluation" data-columns="3">
