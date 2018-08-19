@@ -910,7 +910,11 @@ table.reftest td:first-child {
 		</tr>
 		<tr>
 			<td>groupBy([{n: "a", a: 20}, {n: "a", a: 10}, {n: "a", a: 20}, {n: "a", a: 30}], [1,2,3])</td>
-			<td>[{"$value":[1,2,3],"$items":[{"n":"a","a":20},{"n":"a","a":10},{"n":"a","a":20},{"n":"a","a":30}]}]</td>
+			<td>[{"$value":1,"$items":[{"n":"a","a":20}]},{"$value":2,"$items":[{"n":"a","a":10}]},{"$value":3,"$items":[{"n":"a","a":20}]},{"$value":null,"$items":[{"n":"a","a":30}]}]</td>
+		</tr>
+		<tr>
+			<td>groupBy([{n: "a", a: 20}, {n: "a", a: 10}, {n: "a", a: 20}, {n: "a", a: 30}], as([1,2,3],"num"))</td>
+			<td>[{"$value":1,"num":1,"$items":[{"n":"a","a":20}]},{"$value":2,"num":2,"$items":[{"n":"a","a":10}]},{"$value":3,"num":3,"$items":[{"n":"a","a":20}]},{"$value":null,"num":null,"$items":[{"n":"a","a":30}]}]</td>
 		</tr>
 		<tr>
 			<td>count( groupBy([{n: "a", a: 20}, {n: "a", a: 10}, {n: "a", a: 20}, {n: "a", a: 30}], [20, 10, 20, 30]) )</td>
