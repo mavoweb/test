@@ -24,6 +24,153 @@ table.reftest td:first-child {
 <p>These tests test whether Mavo functions produce correct results.</p>
 
 <section>
+	<h1>Binary Operations</h1>
+
+	<table class="reftest" data-test="expressionEvaluation" data-columns="3">
+		<tr>
+			<td>atan2([0,5], [2,5]) * 180 / PI</td>
+			<td>[0,45]</td>
+		</tr>
+		<tr>
+			<td>atan2([0,5], [2,5,0]) * 180 / PI</td>
+			<td>[0,45,0]</td>
+		</tr>
+		<tr>
+			<td>atan2([0,5,0], [2,5]) * 180 / PI</td>
+			<td>[0,45,0]</td>
+		</tr>
+		<tr>
+			<td>pow([2,3], [3,2])</td>
+			<td>[8,9]</td>
+		</tr>
+		<tr>
+			<td>pow([2,3], [3,2,2])</td>
+			<td>[8,9,1]</td>
+		</tr>
+		<tr>
+			<td>pow([2,3,4], [3,2])</td>
+			<td>[8,9,4]</td>
+		</tr>
+		<tr>
+			<td>search([34, "foobar"], [3, bar])</td>
+			<td>[0,3]</td>
+		</tr>
+		<tr>
+			<td>search([34, "foobar", "baz"], [3, "bar"])</td>
+			<td>[0,3,-1]</td>
+		</tr>
+		<tr>
+			<td>search([34, "foobar"], [3, bar, "baz"])</td>
+			<td>[0,3,-1]</td>
+		</tr>
+		<tr>
+			<td>starts([34, "foobar"], [3, bar])</td>
+			<td>[true,false]</td>
+		</tr>
+		<tr>
+			<td>starts([34, "foobar", "baz"], [3, "bar"])</td>
+			<td>[true,false,false]</td>
+		</tr>
+		<tr>
+			<td>starts([34, "foobar"], [3, bar, "baz"])</td>
+			<td>[true,false,false]</td>
+		</tr>
+		<tr>
+			<td>ends([34, "foobar"], [3, bar])</td>
+			<td>[false,true]</td>
+		</tr>
+		<tr>
+			<td>ends([34, "foobar", "baz"], [3, "bar"])</td>
+			<td>[false,true,false]</td>
+		</tr>
+		<tr>
+			<td>ends([34, "foobar"], [3, bar, "baz"])</td>
+			<td>[false,true,false]</td>
+		</tr>
+		<tr>
+			<td>round([5.85, -5.05], [1, 0])</td>
+			<td>[5.9,-5]</td>
+		</tr>
+		<tr>
+			<td>round([5.85, -5.05, 6.5], [1, 0])</td>
+			<td>[5.9,-5,7]</td>
+		</tr>
+		<tr>
+			<td>round([5.85, -5.05], [1, 0, 3])</td>
+			<td>[5.9,-5,3]</td>
+		</tr>
+		<tr>
+			<td>from(["foo.bar", "barbaz"], [".", "b"])</td>
+			<td>["bar","arbaz"]</td>
+		</tr>
+		<tr>
+			<td>from(["foo.bar", "barbaz", "foobar"], [".", "b"])</td>
+			<td>["bar","arbaz","foobar"]</td>
+		</tr>
+		<tr>
+			<td>from(["foo.bar", "barbaz"], [".", "b", "foobar"])</td>
+			<td>["bar","arbaz",""]</td>
+		</tr>
+		<tr>
+			<td>fromlast(["foo.bar", "barbaz"], [".", "b"])</td>
+			<td>["bar","az"]</td>
+		</tr>
+		<tr>
+			<td>fromlast(["foo.bar", "barbaz", "foobar"], [".", "b"])</td>
+			<td>["bar","az","foobar"]</td>
+		</tr>
+		<tr>
+			<td>fromlast(["foo.bar", "barbaz"], [".", "b", "foobar"])</td>
+			<td>["bar","az",""]</td>
+		</tr>
+		<tr>
+			<td>to(["foo.bar", "barbaz"], [".", "a"])</td>
+			<td>["foo","barb"]</td>
+		</tr>
+		<tr>
+			<td>to(["foo.bar", "barbaz", "foobar"], [".", "a"])</td>
+			<td>["foo","barb","foobar"]</td>
+		</tr>
+		<tr>
+			<td>to(["foo.bar", "barbaz"], [".", "a", "foobar"])</td>
+			<td>["foo","barb",""]</td>
+		</tr>
+		<tr>
+			<td>tofirst(["foo.bar", "barbaz"], [".", "a"])</td>
+			<td>["foo","b"]</td>
+		</tr>
+		<tr>
+			<td>tofirst(["foo.bar", "barbaz", "foobar"], [".", "a"])</td>
+			<td>["foo","b","foobar"]</td>
+		</tr>
+		<tr>
+			<td>tofirst(["foo.bar", "barbaz"], [".", "a", "foobar"])</td>
+			<td>["foo","b",""]</td>
+		</tr>
+	</table>
+</section>
+
+<section>
+	<h1>Unary Operations</h1>
+	<p>Primarily to check if unary Math functions are wrapped by unaryOperation() correctly.</p>
+
+	<table class="reftest" data-test="expressionEvaluation" data-columns="3">
+		<tr>
+			<td>abs([-2,3])</td>
+			<td>[2,3]</td>
+		</tr>
+		<tr>
+			<td>floor([3.5,4.9])</td>
+			<td>[3,4]</td>
+		</tr>
+		<tr>
+			<td>sqrt([16,25])</td>
+			<td>[4,5]</td>
+		</tr>
+	</table>
+</section>
+	
+<section>
 	<h1>Basic Operators</h1>
 
 	<table class="reftest" data-test="expressionEvaluation" data-columns="3">
@@ -62,6 +209,18 @@ table.reftest td:first-child {
 		<tr>
 			<td>minus(1)</td>
 			<td>-1</td>
+		</tr>
+		<tr>
+			<td>divide(4, 2)</td>
+			<td>2</td>
+		</tr>
+		<tr>
+			<td>divide([4,2], [2])</td>
+			<td>[2,2]</td>
+		</tr>
+		<tr>
+			<td>divide([4], [2,2])</td>
+			<td>[2,2]</td>
 		</tr>
 		<tr>
 			<td>and(0, true)</td>
