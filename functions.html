@@ -224,15 +224,15 @@ table.reftest td:first-child {
 		</tr>
 		<tr>
 			<td>and(0, true)</td>
-			<td>false</td>
+			<td>0</td>
 		</tr>
 		<tr>
 			<td>and([0, 1, 2, 3], [true, true, false])</td>
-			<td>[false, 1, false, false]</td>
+			<td>[0, true, false, false]</td>
 		</tr>
 		<tr>
 			<td>and([true, true, false], [0, 1, 2, 3])</td>
-			<td>[false, 1, false, false]</td>
+			<td>[0, 1, false, false]</td>
 		</tr>
 		<tr>
 			<td>or(true, false, false)</td>
