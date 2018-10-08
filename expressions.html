@@ -53,6 +53,22 @@
 			<td>[40 +]</td>
 			<td mv-expressions="none">[40 +]</td>
 		</tr>
+		<tr title="Empty expression ignored">
+			<td>[]</td>
+			<td mv-expressions="none">[]</td>
+		</tr>
+		<tr title="Space-only expression ignored">
+			<td>[  ]</td>
+			<td mv-expressions="none">[  ]</td>
+		</tr>
+		<tr title="Consecutive expressions">
+			<td>[2 + 2][1 + 1]</td>
+			<td mv-expressions="none">42</td>
+		</tr>
+		<tr title="Expression after empty expression still parsed">
+			<td>[][2 + 2]</td>
+			<td mv-expressions="none">[]4</td>
+		</tr>
 		<tr title="Multiline expression">
 			<td>[
 				40 + 2]</td>
