@@ -259,6 +259,52 @@ localStorage.localstoretest = `{
 	</table>
 </section>
 
+<section>
+	<h1>Empty element storage, mv-init=data URL</h1>
+
+	<table class="reftest">
+		<tr>
+			<td>
+				<pre id="data-empty"></pre>
+			</td>
+			<td>
+				<pre></pre>
+			</td>
+		</tr>
+		<tr>
+			<td mv-app mv-storage="#data-empty" mv-init='data:application/json,{"prop": 1}'>
+				<input property="prop" />
+			</td>
+			<td>
+				<input value="1" />
+			</td>
+		</tr>
+	</table>
+</section>
+
+<section>
+	<h1>Whitespace element storage, mv-init=data URL</h1>
+
+	<table class="reftest">
+		<tr>
+			<td>
+				<pre id="data-whitespace"> </pre>
+			</td>
+			<td>
+				<pre></pre>
+			</td>
+		</tr>
+		<tr>
+			<td mv-app mv-storage="#data-whitespace" mv-init='data:application/json,{"prop": 1}'>
+				<input property="prop" />
+			</td>
+			<td>
+				<input value="1" />
+			</td>
+		</tr>
+	</table>
+</section>
+
 <section mv-app="dropboxtest" mv-storage="https://www.dropbox.com/s/5djray22aj0v7le/countries.json?dl=0">
 	<h1>Dropbox</h1>
 
