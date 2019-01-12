@@ -287,7 +287,7 @@
 			</td>
 			<td>
 				<ul>
-					<li>{ "code": null, "name": "Online" } Online Online</li>
+					<li>{ "code": "", "name": "Online" } Online Online</li>
 					<li>{ "code": "us", "name": "United States" } us us United States United States</li>
 					<li>{ "code": "gb", "name": "United Kingdom" } gb gb United Kingdom United Kingdom</li>
 				</ul>
@@ -295,7 +295,7 @@
 		</tr>
 		<tr title="Modify the country data and make sure the output is updated" class="interactive">
 			<td>[country]</td>
-			<td mv-expressions="none">{ "code": null, "name": "Online" }, { "code": "us", "name": "United States" }, { "code": "gb", "name": "United Kingdom" }</td>
+			<td mv-expressions="none">{ "code": "", "name": "Online" }, { "code": "us", "name": "United States" }, { "code": "gb", "name": "United Kingdom" }</td>
 		</tr>
 		<tr>
 			<td>[count(code == us)]</td>
@@ -640,47 +640,6 @@
 		<tr title="Invalid delimiter (only space)">
 			<td mv-expressions=" ">[1 + 2]</td>
 			<td></td>
-		</tr>
-	</table>
-</section>
-
-<section mv-app="mvdefault">
-	<h1>Dynamic mv-default</h1>
-	<p>For collection test: Add one item.</p>
-	<table class="reftest">
-		<tr>
-			<td>
-				<input type="range" property="prop1" value="50">
-				<span property="prop2" mv-default="[prop1 + 1]"></span>
-			</td>
-			<td>[prop1] [prop1 + 1]</td>
-		</tr>
-		<tr>
-			<td>
-				<input type="number" property="prop3" value="0">
-				<input property="prop4" mv-default="[prop3 + 1]">
-			</td>
-			<td>[prop3 + 0] [prop3 + 1]</td>
-		</tr>
-		<tr title="In Collection" data-click=".mv-add-collection wait 3s">
-			<td>
-				<div mv-multiple mv-mode="edit">
-					<span property="prop_multiple" mv-default="[$index]"></span>
-					[prop_multiple]
-				</div>
-			</td>
-			<td>
-				<div>0 0</div>
-				<div>1 1</div>
-			</td>
-		</tr>
-		<tr>
-			<td>[prop_multiple]</td>
-			<td>0, 1</td>
-		</tr>
-		<tr>
-			<td><meta property="prop5" mv-default="[1 = 1]" />[Bliss.type(prop5)]</td>
-			<td>boolean</td>
 		</tr>
 	</table>
 </section>

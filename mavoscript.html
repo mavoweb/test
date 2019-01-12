@@ -172,7 +172,7 @@ td {
 	</table>
 </section>
 
-<section mv-app>
+<section mv-app mv-source='data:application/json,{"url": "https://mavo.io"}'>
 	<h1>Expression resolution</h1>
 
 	<script>
@@ -226,6 +226,12 @@ td {
 				[year($today)]
 			</td>
 			<td>2000 <script>document.write(new Date().getFullYear())</script></td>
+		</tr>
+		<tr title="Property in data with same name as function">
+			<td>
+				"[url('foo')]"
+			</td>
+			<td>""</td>
 		</tr>
 		<tr title="Member expressions should still work">
 			<td>[Math.pow(2,2)]</td>

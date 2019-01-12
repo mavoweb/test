@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>mv-default tests</title>
+	<link rel="stylesheet" href="https://dev.mavo.io/dist/mavo.css" />
+	<link rel="stylesheet" href="style.css" />
+	<script src="https://dev.mavo.io/dist/mavo.js"></script>
+	<script src="mavotest.js"></script>
+</head>
+<body>
+
+<h1>mv-default tests</h1>
+
+<section mv-app="mvdefault">
+	<h1>Dynamic mv-default</h1>
+	<p>For collection test: Add one item.</p>
+	<table class="reftest">
+		<tr>
+			<td>
+				<input type="range" property="prop1" value="50">
+				<span property="prop2" mv-default="[prop1 + 1]"></span>
+			</td>
+			<td>[prop1] [prop1 + 1]</td>
+		</tr>
+		<tr>
+			<td>
+				<input type="number" property="prop3" value="0">
+				<input property="prop4" mv-default="[prop3 + 1]">
+			</td>
+			<td>[prop3 + 0] [prop3 + 1]</td>
+		</tr>
+		<tr title="In Collection" data-click=".mv-add-collection wait 3s">
+			<td>
+				<div mv-multiple mv-mode="edit">
+					<span property="prop_multiple" mv-default="[$index]"></span>
+					[prop_multiple]
+				</div>
+			</td>
+			<td>
+				<div>0 0</div>
+				<div>1 1</div>
+			</td>
+		</tr>
+		<tr>
+			<td>[prop_multiple]</td>
+			<td>0, 1</td>
+		</tr>
+		<tr>
+			<td><meta property="prop5" mv-default="[1 = 1]" />[Bliss.type(prop5)]</td>
+			<td>boolean</td>
+		</tr>
+	</table>
+</section>
+
+<section>
+	<h1>mv-default</h1>
+
+	<table class="reftest">
+		<tr title="Defaults should not be saved" data-click=".mv-save wait 1s">
+			<td mv-app mv-storage="#mvdefault-data">
+				<div mv-multiple>
+					<span property="prop" mv-default="1"></span>
+				</div>
+				<span property="prop" mv-default="2"></span>
+			</td>
+			<td>
+				<pre id="mvdefault-data">{
+}</pre>
+			</td>
+
+			<td>{
+	"collection": [
+		{
+
+		}
+	]
+}</td>
+		</tr>
+		<tr title="Defaults should be applied on load">
+			<td>
+
+			</td>
+			<td mv-app mv-storage='data:application/json,{}' mv-expressions-ignore="mv-storage">
+				<span property="prop" mv-default="1"></span>
+			</td>
+			<td>
+				1
+			</td>
+		</tr>
+	</table>
+</section>
+
+</body>
+</html>

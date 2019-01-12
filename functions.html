@@ -24,6 +24,126 @@ table.reftest td:first-child {
 <p>These tests test whether Mavo functions produce correct results.</p>
 
 <section>
+	<h1>Basic Operators</h1>
+
+	<table class="reftest" data-test="expressionEvaluation" data-columns="3">
+		<tr>
+			<td>addition("1", 1)</td>
+			<td>2</td>
+		</tr>
+		<tr>
+			<td>addition("", "")</td>
+			<td>0</td>
+		</tr>
+		<tr>
+			<td>addition("3", "5")</td>
+			<td>8</td>
+		</tr>
+		<tr>
+			<td>addition([1, 2, 3])</td>
+			<td>6</td>
+		</tr>
+		<tr>
+			<td>addition([1, 2, 3], [4, 5])</td>
+			<td>[5, 7, 3]</td>
+		</tr>
+		<tr>
+			<td>subtract(1, 2)</td>
+			<td>-1</td>
+		</tr>
+		<tr>
+			<td>subtract(1, -2)</td>
+			<td>3</td>
+		</tr>
+		<tr>
+			<td>subtract(1, 0)</td>
+			<td>1</td>
+		</tr>
+		<tr>
+			<td>minus(1)</td>
+			<td>-1</td>
+		</tr>
+		<tr>
+			<td>divide(4, 2)</td>
+			<td>2</td>
+		</tr>
+		<tr>
+			<td>divide([4,2], [2])</td>
+			<td>[2,2]</td>
+		</tr>
+		<tr>
+			<td>divide([4], [2,2])</td>
+			<td>[2,2]</td>
+		</tr>
+		<tr>
+			<td>and(0, true)</td>
+			<td>0</td>
+		</tr>
+		<tr>
+			<td>and([0, 1, 2, 3], [true, true, false])</td>
+			<td>[0, true, false, false]</td>
+		</tr>
+		<tr>
+			<td>and([true, true, false], [0, 1, 2, 3])</td>
+			<td>[0, 1, false, false]</td>
+		</tr>
+		<tr>
+			<td>or(true, false, false)</td>
+			<td>true</td>
+		</tr>
+		<tr>
+			<td>or(false, false, false)</td>
+			<td>false</td>
+		</tr>
+		<tr>
+			<td>eq(3, 3, 3, 3)</td>
+			<td>true</td>
+		</tr>
+		<tr>
+			<td>eq("l","l")</td>
+			<td>true</td>
+		</tr>
+		<tr>
+			<td>gt(3, 2, 1)</td>
+			<td>true</td>
+		</tr>
+		<tr>
+			<td>lt(1, 2, 3)</td>
+			<td>true</td>
+		</tr>
+		<tr>
+			<td>lt(1, 2, 1)</td>
+			<td>false</td>
+		</tr>
+		<tr>
+			<td>gt(3, 2, 3)</td>
+			<td>false</td>
+		</tr>
+		<tr>
+			<td>gt("2090-06-13", $now)</td>
+			<td>true</td>
+		</tr>
+		<tr>
+			<td>gt("1990-06-13", $now)</td>
+			<td>false</td>
+		</tr>
+		<tr>
+			<td>neq(2, 2)</td>
+			<td>false</td>
+		</tr>
+		<tr>
+			<td>neq(foo, bar)</td>
+			<td>true</td>
+		</tr>
+		<tr>
+			<td>neq(2, 2, 3)</td>
+			<td>false</td>
+		</tr>
+	</table>
+</section>
+
+<!--
+<section>
 	<h1>Binary Operations</h1>
 
 	<table class="reftest" data-test="expressionEvaluation" data-columns="3">
@@ -169,122 +289,21 @@ table.reftest td:first-child {
 		</tr>
 	</table>
 </section>
-	
+-->
+
 <section>
-	<h1>Basic Operators</h1>
+	<h1>split()</h1>
 
 	<table class="reftest" data-test="expressionEvaluation" data-columns="3">
 		<tr>
-			<td>addition("1", 1)</td>
-			<td>2</td>
+			<td>split("afbfc", "f")</td>
+			<td>["a", "b", "c"]</td>
 		</tr>
-		<tr>
-			<td>addition("", "")</td>
-			<td>0</td>
-		</tr>
-		<tr>
-			<td>addition("3", "5")</td>
-			<td>8</td>
-		</tr>
-		<tr>
-			<td>addition([1, 2, 3])</td>
-			<td>6</td>
-		</tr>
-		<tr>
-			<td>addition([1, 2, 3], [4, 5])</td>
-			<td>[5, 7, 3]</td>
-		</tr>
-		<tr>
-			<td>subtract(1, 2)</td>
-			<td>-1</td>
-		</tr>
-		<tr>
-			<td>subtract(1, -2)</td>
-			<td>3</td>
-		</tr>
-		<tr>
-			<td>subtract(1, 0)</td>
-			<td>1</td>
-		</tr>
-		<tr>
-			<td>minus(1)</td>
-			<td>-1</td>
-		</tr>
-		<tr>
-			<td>divide(4, 2)</td>
-			<td>2</td>
-		</tr>
-		<tr>
-			<td>divide([4,2], [2])</td>
-			<td>[2,2]</td>
-		</tr>
-		<tr>
-			<td>divide([4], [2,2])</td>
-			<td>[2,2]</td>
-		</tr>
-		<tr>
-			<td>and(0, true)</td>
-			<td>0</td>
-		</tr>
-		<tr>
-			<td>and([0, 1, 2, 3], [true, true, false])</td>
-			<td>[0, true, false, false]</td>
-		</tr>
-		<tr>
-			<td>and([true, true, false], [0, 1, 2, 3])</td>
-			<td>[0, 1, false, false]</td>
-		</tr>
-		<tr>
-			<td>or(true, false, false)</td>
-			<td>true</td>
-		</tr>
-		<tr>
-			<td>or(false, false, false)</td>
-			<td>false</td>
-		</tr>
-		<tr>
-			<td>eq(3, 3, 3, 3)</td>
-			<td>true</td>
-		</tr>
-		<tr>
-			<td>eq("l","l")</td>
-			<td>true</td>
-		</tr>
-		<tr>
-			<td>gt(3, 2, 1)</td>
-			<td>true</td>
-		</tr>
-		<tr>
-			<td>lt(1, 2, 3)</td>
-			<td>true</td>
-		</tr>
-		<tr>
-			<td>lt(1, 2, 1)</td>
-			<td>false</td>
-		</tr>
-		<tr>
-			<td>gt(3, 2, 3)</td>
-			<td>false</td>
-		</tr>
-		<tr>
-			<td>gt("2090-06-13", $now)</td>
-			<td>true</td>
-		</tr>
-		<tr>
-			<td>gt("1990-06-13", $now)</td>
-			<td>false</td>
-		</tr>
-		<tr>
-			<td>neq(2, 2)</td>
-			<td>false</td>
-		</tr>
-		<tr>
-			<td>neq(foo, bar)</td>
-			<td>true</td>
-		</tr>
-		<tr>
-			<td>neq(2, 2, 3)</td>
-			<td>false</td>
+		<tr title="Line breaks">
+			<td>split("a
+b", "
+")</td>
+			<td>["a", "b"]</td>
 		</tr>
 	</table>
 </section>

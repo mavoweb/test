@@ -214,6 +214,20 @@
 				Chris Lilley 50
 			</td>
 		</tr>
+		<tr title="Set on collection" mv-app mv-source="data/creatures.json" class="mv-autoedit">
+			<td><button mv-action="set(person, list(group(name: 'First', age: 1), group(name: 'Second', age: 2)))">Set collection</button></td>
+			<td>
+				<div class="mv-bar mv-ui"></div>
+				<div property="person" mv-multiple>
+					<strong property="name">John Doe</strong>
+					<span property="age">0</span>
+				</div>
+			</td>
+			<td>
+				First 1
+				Second 2
+			</td>
+		</tr>
 	</table>
 </section>
 <section>
