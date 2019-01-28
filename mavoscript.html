@@ -69,43 +69,51 @@ td {
 		</tr>
 		<tr>
 			<td>if(foo >= 5, 1, 2)</td>
-			<td>iff(gte(foo, 5), 1, 2)</td>
+			<td>iff(compare(foo, "gte", 5), 1, 2)</td>
 		</tr>
 		<tr>
 			<td>foo == "bar"</td>
-			<td>eq(foo, "bar")</td>
+			<td>compare(foo, "eq", "bar")</td>
 		</tr>
 		<tr title="Single character equals">
 			<td>foo = 5</td>
-			<td>eq(foo, 5)</td>
+			<td>compare(foo, "eq", 5)</td>
 		</tr>
 		<tr>
 			<td>foo > bar</td>
-			<td>gt(foo, bar)</td>
+			<td>compare(foo, "gt", bar)</td>
 		</tr>
 		<tr title="3 operand comparison">
 			<td>foo > bar > baz</td>
-			<td>gt(foo, bar, baz)</td>
+			<td>compare(foo, "gt", bar, "gt", baz)</td>
 		</tr>
 		<tr title="3 operand equality">
 			<td>foo = bar = baz</td>
-			<td>eq(foo, bar, baz)</td>
+			<td>compare(foo, "eq", bar, "eq", baz)</td>
 		</tr>
 		<tr title="4 operand equality">
 			<td>foo = bar = baz = yolo</td>
-			<td>eq(foo, bar, baz, yolo)</td>
+			<td>compare(foo, "eq", bar, "eq", baz, "eq", yolo)</td>
 		</tr>
 		<tr title="4 operand equality">
 			<td>foo = bar = baz == yolo</td>
-			<td>eq(foo, bar, baz, yolo)</td>
+			<td>compare(foo, "eq", bar, "eq", baz, "eq", yolo)</td>
+		</tr>
+		<tr title="4 operand heterogeneous comparison">
+			<td>foo > bar >= baz < yolo</td>
+			<td>compare(foo, "gt", bar, "gte", baz, "lt", yolo)</td>
+		</tr>
+		<tr title="4 operand heterogeneous equality and comparison">
+			<td>foo > bar = baz <= yolo</td>
+			<td>compare(foo, "gt", bar, "eq", baz, "lte", yolo)</td>
 		</tr>
 		<tr>
 			<td>foo != bar</td>
-			<td>neq(foo, bar)</td>
+			<td>compare(foo, "neq", bar)</td>
 		</tr>
 		<tr>
 			<td>foo != bar != baz</td>
-			<td>neq(foo, bar, baz)</td>
+			<td>compare(foo, "neq", bar, "neq", baz)</td>
 		</tr>
 		<tr>
 			<td>foo & bar & baz</td>
