@@ -99,6 +99,14 @@ td {
 			<td>foo = bar = baz == yolo</td>
 			<td>eq(foo, bar, baz, yolo)</td>
 		</tr>
+		<tr title="4 operand heterogeneous comparison">
+			<td>foo > bar >= baz < yolo</td>
+			<td>compare(foo, "gt", bar, "gte", baz, "lt", yolo)</td>
+		</tr>
+		<tr title="4 operand heterogeneous equality and comparison">
+			<td>foo > bar = baz <= yolo</td>
+			<td>compare(foo, "gt", bar, "eq", baz, "lte", yolo)</td>
+		</tr>
 		<tr>
 			<td>foo != bar</td>
 			<td>neq(foo, bar)</td>
