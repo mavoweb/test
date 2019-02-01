@@ -1,0 +1,21 @@
+{
+	"person": [
+		{
+			"name": "Lea Verou",
+			"age": 32,
+			"hobby": [
+				"Coding",
+				"Design",
+				"Cooking"
+			]
+		},
+		{
+			"name": "David Karger",
+			"age": 50,
+			"hobby": [
+				"Dancing",
+				"Theory"
+			]
+		}
+	]
+}
