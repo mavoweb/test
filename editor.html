@@ -230,7 +230,7 @@ function checkAttribute(td) {
 	</select>
 </section>
 
-<section mv-app="mvmode" mv-storage="local" class="mv-debug-saving">
+<section mv-app="mvmode" mv-storage="local">
 	<h1>mv-mode</h1>
 
 	<p>Click on the cells in the first column.</p>
@@ -317,6 +317,18 @@ function checkAttribute(td) {
 				input:not(:checked) + [property]:not([mv-mode])
 			</td>
 		</tr>
+		<tr title="Interactive mv-mode inside fixed mv-mode">
+			<td>
+				<input type="checkbox" property="checkbox3">
+				<div property="group2" mv-mode="edit">
+					<span property="interactiveEdit" mv-mode="{if(checkbox3, edit, read)}">Edited when checkbox is checked</span>
+				</div>
+			</td>
+			<td>
+				:checked + [property] > [property=interactiveEdit][mv-mode^="edit"] input,
+				input:not(:checked) + [property] > [property=interactiveEdit][mv-mode="read"]
+			</td>
+		</tr>
 		<tr title="Inherited from group interactive mv-mode">
 			<td property="group1" mv-mode="{if(checkbox2, edit, read)}">
 				<input type="checkbox" property="checkbox2">
@@ -354,6 +366,50 @@ function checkAttribute(td) {
 				</ul>
 			</td>
 		</tr> -->
+	</table>
+</section>
+
+<section>
+	<h1>mv-mode on root</h1>
+
+	<table class="reftest" data-test="selector">
+		<tr title="read > edit">
+			<td mv-app mv-mode="read">
+				<span property="prop" mv-mode="edit">Always edited</span>
+			</td>
+			<td>
+				[property=prop] input
+			</td>
+		</tr>
+		<tr title="edit > read">
+			<td mv-app mv-mode="edit">
+				<span property="prop" mv-mode="read">Never edited</span>
+			</td>
+			<td class="not">
+				[property=prop] input
+			</td>
+		</tr>
+		<tr title="interactive > auto">
+			<td mv-app mv-mode="[if(checkbox, edit, read)]">
+				<input type="checkbox" property="checkbox">
+				<span property="prop">Edited if checkbox is checked</span>
+			</td>
+			<td>
+				<ul>
+					<li>:checked + [property=prop] input, :not(:checked) + [property=prop]:not([mv-mode])</li>
+					<li class="not">input[type=checkbox]:not(:checked) + [property=prop] input</li>
+				</ul>
+			</td>
+		</tr>
+		<tr title="interactive > read">
+			<td mv-app mv-mode="[if(checkbox, edit, read)]">
+				<input type="checkbox" property="checkbox">
+				<span property="prop" mv-mode="read">Never edited</span>
+			</td>
+			<td class="not">
+				[property=prop] input
+			</td>
+		</tr>
 	</table>
 </section>
 
