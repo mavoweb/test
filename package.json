@@ -15,7 +15,7 @@
   "bugs": {
     "url": "https://github.com/LeaVerou/mavo-test/issues"
   },
-  "homepage": "http://mavo.io",
+  "homepage": "https://mavo.io",
   "devDependencies": {
     "babel-eslint": "^5.0.0",
     "babel-preset-es2015": "^6.5.0",
