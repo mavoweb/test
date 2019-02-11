@@ -309,16 +309,43 @@ b", "
 </section>
 
 <section>
-	<h1>Objects</h1>
+	<h1>group()</h1>
 
 	<table class="reftest" data-test="expressionEvaluation" data-columns="3">
 		<tr>
 			<td>group(name: 'Lea', age: 32)</td>
 			<td>{"name":"Lea","age":32}</td>
 		</tr>
+	</table>
+</section>
+
+<section>
+	<h1>list()</h1>
+
+	<table class="reftest" data-test="expressionEvaluation" data-columns="3">
 		<tr>
 			<td>list(1, 2, 3)</td>
 			<td>[1, 2, 3]</td>
+		</tr>
+		<tr>
+			<td>list()</td>
+			<td>[]</td>
+		</tr>
+		<tr>
+			<td>list(0)</td>
+			<td>[0]</td>
+		</tr>
+		<tr title="With arrays">
+			<td>list([1, 2], [2, 3])</td>
+			<td>[1, 2, 2, 3]</td>
+		</tr>
+		<tr title="With arrays and numbers">
+			<td>list([1, 2], 2)</td>
+			<td>[1, 2, 2]</td>
+		</tr>
+		<tr title="With 1 array">
+			<td>list([1, 2])</td>
+			<td>[1, 2]</td>
 		</tr>
 	</table>
 </section>
