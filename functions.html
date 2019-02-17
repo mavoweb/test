@@ -747,13 +747,21 @@ b", "
 	<h1>filter()</h1>
 
 	<table class="reftest" data-test="expressionEvaluation" data-columns="3">
-		<tr>
+		<tr title="Scalars">
 			<td>filter(42, false)</td>
 			<td>null</td>
 		</tr>
-		<tr>
+		<tr title="Scalars">
 			<td>filter(42, true)</td>
 			<td>42</td>
+		</tr>
+		<tr title="Single argument, scalar">
+			<td>filter(42)</td>
+			<td>42</td>
+		</tr>
+		<tr title="Single argument">
+			<td>filter([1, 2])</td>
+			<td>[1, 2]</td>
 		</tr>
 		<tr>
 			<td>filter([1, 2, 3], [false, true, false])</td>
@@ -762,6 +770,26 @@ b", "
 		<tr>
 			<td>filter([1, 2, 3], [true, true, false], [false, true, false])</td>
 			<td>[null, 2, null]</td>
+		</tr>
+		<tr title="Filter by scalar">
+			<td>filter([1, 2, 3, 2], 2)</td>
+			<td>[null, 2, null, 2]</td>
+		</tr>
+		<tr title="More values than filters">
+			<td>filter([1, 2, 3, 4], [true, false, true])</td>
+			<td>[1, null, 3, null]</td>
+		</tr>
+		<tr title="Fewer values than filters">
+			<td>filter([1, 2, 3], [true, false, true, true])</td>
+			<td>[1, null, 3]</td>
+		</tr>
+		<tr title="Both scalars and array filters">
+			<td>filter([1, 2, 3, 4], [true, false, true], 3)</td>
+			<td>[null, null, 3, null]</td>
+		</tr>
+		<tr title="Both scalars and array filters">
+			<td>filter([1, 2, 3, 4], 3, [true, false, true])</td>
+			<td>[null, null, 3, null]</td>
 		</tr>
 	</table>
 </section>
