@@ -226,8 +226,10 @@
 			let tr = td.parentNode;
 
 			td.previousElementSibling.addEventListener("mv-change", Mavo.rr(function(evt) {
-				let controls = $$("input, select", tr);
-				td.textContent = controls.map(i => i.value).join(" ");
+				requestAnimationFrame(function(){
+					let controls = $$("input, select", tr);
+					td.textContent = controls.map(i => i.value).join(" ");
+				});
 			}));
 		}
 	</script>
@@ -353,7 +355,7 @@
 				<span property="prop1" datatype="boolean" mv-attribute="data-foo">Foo bar</span>
 				[prop1]
 			</td>
-			<td>false</td>
+			<td>Foo bar false</td>
 		</tr>
 		<tr title="Via checkbox editor">
 			<td mv-app="booleans">
