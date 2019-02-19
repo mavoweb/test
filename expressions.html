@@ -114,6 +114,10 @@
 			<td>[prop3 + 1]</td>
 			<td>45</td>
 		</tr>
+		<tr title="Comparison">
+			<td>[3 < 4] [3 = 4] [3 > 4]</td>
+			<td>true false false</td>
+		</tr>
 		<tr>
 			<td>[false]</td>
 			<td>false</td>
@@ -441,6 +445,88 @@
 				<br>
 				Areti
 				Areti Verou
+			</td>
+		</tr>
+
+	</table>
+</section>
+
+<section mv-app="broadcasting">
+	<h1>Broadcasting</h1>
+
+	<table class="reftest">
+		<tr>
+			<td>
+				<div property="a">1</div>
+				<div property="a">2</div>
+				<div property="a">3</div>
+				<div property="a">10</div>
+			</td>
+			<td>
+				<div>1</div>
+				<div>2</div>
+				<div>3</div>
+				<div>10</div>
+			</td>
+		</tr>
+		<tr>
+			<td>
+				<div property="b">3</div>
+				<div property="b">2</div>
+				<div property="b">1</div>
+			</td>
+			<td>
+				<div>3</div>
+				<div>2</div>
+				<div>1</div>
+			</td>
+		</tr>
+		<tr title="Broadcast addition">
+			<td>
+				[a + b]
+			</td>
+			<td>
+				4, 4, 4, 10
+			</td>
+		</tr>
+		<tr title="Broadcast equality">
+			<td>
+				[a = b]
+			</td>
+			<td>
+				false, true, false, false
+			</td>
+		</tr>
+		<tr title="Broadcast inequality">
+			<td>
+				[a != b]
+			</td>
+			<td>
+				true, false, true, true
+			</td>
+		</tr>
+		<tr title="Broadcast comparison">
+			<td>
+				[a &lt; b]
+			</td>
+			<td>
+				true, false, false, false
+			</td>
+		</tr>
+		<tr title="Chained homogeneous broadcast comparison">
+			<td>
+				[a &lt;= b &lt;= a]
+			</td>
+			<td>
+				false, true, false, false
+			</td>
+		</tr>
+		<tr title="Chained heterogeneous broadcast comparison">
+			<td>
+				[a &lt;= b != a]
+			</td>
+			<td>
+				true, false, false, false
 			</td>
 		</tr>
 
