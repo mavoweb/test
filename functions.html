@@ -143,8 +143,9 @@ table.reftest td:first-child {
 </section>
 
 <section>
-	<h1>Unary Operations</h1>
+	<h1>Multi-valued Arguments</h1>
 
+	<p>Unary Functions</p>
 	<table class="reftest" data-test="expressionEvaluation" data-columns="3">
 		<tr>
 			<td>ordinal([1,2,3,4])</td>
@@ -176,7 +177,7 @@ table.reftest td:first-child {
 		</tr>
 	</table>
 
-	<p>Tests for some unary Math functions</p>
+	<p>Unary Math Functions</p>
 	<table class="reftest" data-test="expressionEvaluation" data-columns="3">
 		<tr>
 			<td>abs([-2,3])</td>
@@ -191,11 +192,8 @@ table.reftest td:first-child {
 			<td>[4,5]</td>
 		</tr>
 	</table>
-</section>
 
-<section>
-	<h1>Binary Operations</h1>
-
+	<p>Binary Functions</p>
 	<table class="reftest" data-test="expressionEvaluation" data-columns="3">
 		<tr>
 			<td>atan2([0,5], [2,5]) * 180 / PI</td>
@@ -343,12 +341,8 @@ table.reftest td:first-child {
 			<td>[["foo", "bar"], ["bar", "baz"]]</td>
 		</tr>
 	</table>
-</section>
 
-<section>
-	<h1>Polynary Operations</h1>
-	<p>Test wrapping of multi-argument functions</p>
-
+	<p>Polynary Functions</p>
 	<table class="reftest" data-test="expressionEvaluation" data-columns="3">
 		<tr>
 			<td>random(1, 1, 1)</td>
