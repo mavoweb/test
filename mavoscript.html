@@ -261,6 +261,43 @@ td {
 	</script>
 </section>
 
+<section>
+	<h1>where</h1>
+
+<pre id="where-data">{
+	"col1": [{"name": "name1", "foo": "foobar1"}, {"name": "name2", "foo": "foo2"}],
+	"col2": [{"name": "name2", "bar": "foobar1"}, {"name": "name3", "bar": "bar2", "sub": {"prop": "foobar1"}}]
+}</pre>
+	<table class="reftest" mv-app mv-storage="#where-data">
+		<tr>
+			<td>
+				<div mv-multiple="col1">
+					<span property="name">Name Text</span>
+					<span property="foo">Foo Text</span>
+				</div>
+			</td>
+			<td>
+
+			</td>
+		</tr>
+		<tr mv-multiple="col2">
+			<td>
+				<span property="name">Name Text</span>
+				<span property="bar">Bar Text</span>
+				<span property="sub"><span property="prop">	</span></span>
+			</td>
+			<td>
+				<p>Test child: [json(col1 where foo = bar)]
+				<p>Test descendant: [json(col1 where foo = prop)]
+			</td>
+			<td>
+				<p>Test child: [json(filter(col1, col1.foo = bar))]
+				<p>Test descendant: [json(filter(col1, col1.foo = prop))]
+			</td>
+		</tr>
+	</table>
+</section>
+
 <script>
 function expressionRewrite(test, result, expected) {
 	var r = result.textContent = Mavo.Script.rewrite(test.textContent);
