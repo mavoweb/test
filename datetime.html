@@ -1,0 +1,310 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+
+<meta charset="UTF-8">
+<title>Function Tests</title>
+<link rel="stylesheet" href="https://dev.mavo.io/dist/mavo.css" />
+<link rel="stylesheet" href="style.css" />
+<style>
+td {
+	font: bold 100%/1.5 Consolas, Monaco, monospace;
+}
+table.reftest td:first-child {
+	flex: 2;
+}
+</style>
+<script src="https://dev.mavo.io/dist/mavo.js"></script>
+<script src="mavotest.js"></script>
+</head>
+<body>
+
+<h1>Date/Time Tests</h1>
+
+<p>These tests test whether Mavo date & time-related functions produce correct results.</p>
+
+<section>
+	<h1>Date units to ms</h1>
+
+	<table class="reftest" data-test="expressionEvaluation" data-columns="3">
+		<tr>
+			<td>second()</td>
+			<td>1000</td>
+		</tr>
+		<tr>
+			<td>minute()</td>
+			<td>60000</td>
+		</tr>
+		<tr>
+			<td>hour()</td>
+			<td>3600000</td>
+		</tr>
+		<tr>
+			<td>day()</td>
+			<td>86400000</td>
+		</tr>
+		<tr>
+			<td>week()</td>
+			<td>604800000</td>
+		</tr>
+		<tr>
+			<td>month()</td>
+			<td>2629739520</td>
+		</tr>
+		<tr>
+			<td>year()</td>
+			<td>31449600000</td>
+		</tr>
+		<tr>
+			<td>seconds()</td>
+			<td>1000</td>
+		</tr>
+		<tr>
+			<td>minutes()</td>
+			<td>60000</td>
+		</tr>
+		<tr>
+			<td>hours()</td>
+			<td>3600000</td>
+		</tr>
+		<tr>
+			<td>days()</td>
+			<td>86400000</td>
+		</tr>
+		<tr>
+			<td>weeks()</td>
+			<td>604800000</td>
+		</tr>
+		<tr>
+			<td>months()</td>
+			<td>2629739520</td>
+		</tr>
+		<tr>
+			<td>years()</td>
+			<td>31449600000</td>
+		</tr>
+	</table>
+</section>
+
+
+<section>
+	<h1>Date components</h1>
+
+	<table class="reftest" data-test="expressionEvaluation" data-columns="3">
+		<tr>
+			<td>day("1986-06-13")</td>
+			<td>13</td>
+		</tr>
+		<tr>
+			<td>weekday("1986-06-13")</td>
+			<td>5</td>
+		</tr>
+		<tr>
+			<td>month("1986-06-13")</td>
+			<td>6</td>
+		</tr>
+		<tr>
+			<td>year("1986-06-13")</td>
+			<td>"1986"</td>
+		</tr>
+		<tr title="Incomplete date">
+			<td>year("1986-")</td>
+			<td>"1986"</td>
+		</tr>
+		<tr>
+			<td>hour("1986-06-13 23:15:20")</td>
+			<td>23</td>
+		</tr>
+		<tr>
+			<td>minute("1986-06-13 23:15:20")</td>
+			<td>15</td>
+		</tr>
+		<tr>
+			<td>second("1986-06-13 23:15:20")</td>
+			<td>20</td>
+		</tr>
+	</table>
+</section>
+
+<section>
+	<h1>Date component formatting</h1>
+
+	<table class="reftest" data-test="expressionEvaluation" data-columns="3">
+		<tr>
+			<td>weekday("1986-06-13", "name")</td>
+			<td>"Friday"</td>
+		</tr>
+		<tr>
+			<td>weekday("1986-06-13", "shortname")</td>
+			<td>"Fri"</td>
+		</tr>
+		<tr>
+			<td>month("1986-06-13", "00")</td>
+			<td>"06"</td>
+		</tr>
+		<tr>
+			<td>month("1986-06-13", "numeric")</td>
+			<td>"6"</td>
+		</tr>
+		<tr>
+			<td>month("1986-06-13", "name")</td>
+			<td>"June"</td>
+		</tr>
+		<tr>
+			<td>month("1986-06-13", "shortname")</td>
+			<td>"Jun"</td>
+		</tr>
+		<tr>
+			<td>month("1986-06-13", "narrow")</td>
+			<td>"J"</td>
+		</tr>
+		<tr>
+			<td>year("1986-06-13", "00")</td>
+			<td>"86"</td>
+		</tr>
+		<tr>
+			<td>year("1900-06-13", "00")</td>
+			<td>"00"</td>
+		</tr>
+	</table>
+</section>
+
+<section>
+	<h1>date() and time()</h1>
+
+	<table class="reftest" data-test="expressionEvaluation" data-columns="3">
+		<tr>
+			<td>date("1986-06-03 23:15:20")</td>
+			<td>"1986-06-03"</td>
+		</tr>
+		<tr>
+			<td>time("1986-06-03 23:15:20")</td>
+			<td>"23:15:20"</td>
+		</tr>
+		<tr>
+			<td>time("1986-06-03 00:00:00")</td>
+			<td>"00:00:00"</td>
+		</tr>
+		<tr title="No argument">
+			<td>date()</td>
+			<td>""</td>
+		</tr>
+		<tr title="Empty argument">
+			<td>date("")</td>
+			<td>""</td>
+		</tr>
+		<tr title="Invalid argument">
+			<td>date("foobar")</td>
+			<td>""</td>
+		</tr>
+		<tr title="No argument">
+			<td>time()</td>
+			<td>""</td>
+		</tr>
+		<tr title="Empty argument">
+			<td>time("")</td>
+			<td>""</td>
+		</tr>
+		<tr title="Invalid argument">
+			<td>time("foobar")</td>
+			<td>""</td>
+		</tr>
+	</table>
+</section>
+
+<section>
+	<h1>Multi-valued</h1>
+
+	<table class="reftest" data-test="expressionEvaluation" data-columns="3">
+		<tr>
+			<td>date(["1986-06-03 23:15:20", "2019-07-02"])</td>
+			<td>["1986-06-03", "2019-07-02"]</td>
+		</tr>
+		<tr>
+			<td>month(["1986-06-13", "2019-07-02"], "name")</td>
+			<td>["June", "July"]</td>
+		</tr>
+		<tr>
+			<td>day(["1986-06-13", "2019-07-02"])</td>
+			<td>[13, 2]</td>
+		</tr>
+		<tr>
+			<td>weeks([2 * weeks(), month()])</td>
+			<td>[2, 4]</td>
+		</tr>
+	</table>
+</section>
+
+<section>
+	<h1>Subtract dates</h1>
+
+	<table class="reftest" data-test="expressionEvaluation" data-columns="3">
+		<tr>
+			<td>"1986-06-13" - "1986-06-10"</td>
+			<td>259200000</td>
+		</tr>
+		<tr>
+			<td>days("1986-06-13" - "1986-06-10")</td>
+			<td>3</td>
+		</tr>
+		<tr>
+			<td>months("1986-06-13" - "1985-01-01")</td>
+			<td>17</td>
+		</tr>
+	</table>
+</section>
+
+<section>
+	<h1>fixDateString()</h1>
+
+	<table class="reftest" data-test="expressionEvaluation" data-columns="3">
+		<tr>
+			<td>util.fixDateString("2017-11-10")</td>
+			<td>"2017-11-10T00:00:00"</td>
+		</tr>
+		<tr>
+			<td>util.fixDateString("2017-11")</td>
+			<td>"2017-11-01T00:00:00"</td>
+		</tr>
+		<tr>
+			<td>util.fixDateString("08:15")</td>
+			<td>"<script>document.write((new Date().toISOString().slice(0, 10)))</script>T08:15"</td>
+		</tr>
+		<tr>
+			<td>util.fixDateString("foobar")</td>
+			<td>null</td>
+		</tr>
+	</table>
+</section>
+
+<script>
+function expressionEvaluation(test, result, expected) {
+	var r = (new Mavo.Expression(test.textContent)).eval();
+	var json = JSON.stringify(r);
+	result.textContent = json;
+	var err;
+
+	try {
+		var evaluated = eval(expected.textContent);
+
+		if (Test.equals(r, evaluated)) {
+			return true;
+		}
+	}
+	catch(e) {err = e}
+
+	try {
+		var stringified = JSON.stringify(JSON.parse(expected.textContent));
+
+		if (json == stringified) {
+			return true;
+		}
+	}
+	catch(e) {err = e}
+
+	return err || false;
+}
+</script>
+
+</body>
+</html>
