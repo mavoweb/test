@@ -876,6 +876,58 @@
 	</table>
 </section>
 
+<section>
+	<h1>Rendering an array on Mavo root</h1>
+
+	<table class="reftest">
+		<tr title="With just one collection">
+			<td mv-app mv-source='data:application/json,[{"prop1": 1}, {"prop1": 2}]' mv-expressions-ignore="mv-source">
+				<div mv-multiple><span property="prop1"></span></div>
+			</td>
+			<td>
+				<div>1</div><div>2</div>
+			</td>
+		</tr>
+		<tr title="With two collections">
+			<td mv-app mv-source='data:application/json,[{"prop1": 1}, {"prop1": 2}]' mv-expressions-ignore="mv-source">
+				<div mv-multiple="col1"><span property="prop1"></span></div>
+				<div mv-multiple="col2"><span property="prop1"></span></div>
+			</td>
+			<td>
+				<div>1</div><div>2</div>
+			</td>
+		</tr>
+		<tr title="With two collections where the first one is dynamic">
+			<td mv-app mv-source='data:application/json,[{"prop1": 1}, {"prop1": 2}]' mv-expressions-ignore="mv-source">
+				<div mv-multiple="col1" mv-value="list(prop1: 3, prop1: 4)"><span property="prop1"></span></div>
+				<div mv-multiple="col2"><span property="prop1"></span></div>
+			</td>
+			<td>
+				<div>3</div><div>4</div>
+				<div>1</div><div>2</div>
+			</td>
+		</tr>
+		<tr title="With two collections where the data should go in the second one">
+			<td mv-app mv-source='data:application/json,[{"prop1": 1}, {"prop1": 2}]' mv-expressions-ignore="mv-source">
+				<div mv-multiple="col1"><span property="prop1">3</span></div>
+				<div mv-multiple="main"><span property="prop1"></span></div>
+			</td>
+			<td>
+				<div>3</div>
+				<div>1</div><div>2</div>
+			</td>
+		</tr>
+		<tr title="With no collections">
+			<td mv-app mv-source='data:application/json,[{"prop1": 1}, {"prop1": 2}]' mv-expressions-ignore="mv-source">
+				<div property="prop1"></div>
+			</td>
+			<td>
+				1
+			</td>
+		</tr>
+	</table>
+</section>
+
 <!-- <section>
 	<h1>Turning part of a group into a child group</h1>
 
