@@ -236,7 +236,7 @@ table.reftest td:first-child {
 </section>
 
 <section>
-	<h1>Subtract dates</h1>
+	<h1>Addition and subtraction</h1>
 
 	<table class="reftest" data-test="expressionEvaluation" data-columns="3">
 		<tr>
@@ -250,6 +250,22 @@ table.reftest td:first-child {
 		<tr>
 			<td>months("1986-06-13" - "1985-01-01")</td>
 			<td>17</td>
+		</tr>
+		<tr>
+			<td>date('2019-07-02' + 2 * days())</td>
+			<td>'2019-07-04'</td>
+		</tr>
+		<tr>
+			<td>date('2019-07-02' - 2 * days())</td>
+			<td>'2019-06-30'</td>
+		</tr>
+		<tr>
+			<td>time('01:00' + hour())</td>
+			<td>"02:00:00"</td>
+		</tr>
+		<tr>
+			<td>time('01:00' - hour())</td>
+			<td>"00:00:00"</td>
 		</tr>
 	</table>
 </section>
