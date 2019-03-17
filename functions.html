@@ -722,87 +722,81 @@ b", "
     <table class="reftest" data-test="expressionEvaluation" data-columns="3">
 		<tr>
             <td>
-                contains({name: "Kenneth", age: 17, state: "constant despair", work: "MIT", interest: ["coding", {food: "rice", quantity: 6}, "sleeping"]}, "rice")
+                contains({name: "Kenneth", work: "MIT", interests: [{food: "rice", type: "white"}, "coding"]}, "rice")
             </td>
             <td>true</td>
 		</tr>
         <tr>
             <td>
-                contains(["Lea", "Kenneth", "Amy", "Kenneth"], "Kenneth")
+                contains(["Lea", "Kenneth", "Amy",], "Kenneth")
             </td>
-            <td>[false,true,false,true]</td>
+            <td>[false, true, false]</td>
 		</tr>
 		<tr>
             <td>
-                contains(["Kenneth", "MIT", {name: "Kenneth", food: "rice", quantity: 6}, "sleeping"], "Kenneth")
+                contains(["Kenneth", "Amy", {name: "Kenneth"}], "Kenneth")
             </td>
-            <td>[true,false,true,false]</td>
+            <td>[true, false, true]</td>
 		</tr>
 		<tr>
 			<td>
-				contains(["Kenneth", "MIT", ["Kenneth", 6], "sleeping"], "Kenneth")
+				contains(["Kenneth", [6, "Kenneth"], "MIT"], "Kenneth")
 			</td>
-			<td>[true,false,true,false]</td>
+			<td>[true, true, false]</td>
 		</tr>
 		<tr>
             <td>
-                contains({name: "Kenneth", work: "MIT", interest: ["coding", {food: "rice", quantity: 6}, "sleeping"]}, {name: "Kenneth", work: "MIT"})
+                contains({name: "Kenneth", work: "MIT", interests: [{food: "rice"}, "coding"]}, {food: "rice"})
             </td>
-            <td>false</td>
+            <td>true</td>
 		</tr>
 		<tr>
             <td>
-                contains(["Kenneth", "MIT", {name: "Kenneth", food: "rice", quantity: 6}, "sleeping"], {name: "Kenneth", work: "MIT"})
+                contains(["Kenneth", "MIT", {food: "rice", type: "white"}], {food: "rice", type: "white"})
             </td>
-            <td>[false,false,false,false]</td>
+            <td>[false, false, true]</td>
 		</tr>
 		<tr>
 			<td>
 				contains("Kenneth", ["Kenneth", "Lea"])
 			</td>
-			<td>[true,false]</td>
+			<td>[true, false]</td>
 		</tr>
 		<tr>
 			<td>
 				contains(["Kenneth", "Verou"], ["Kenneth", "Lea"])
 			</td>
-			<td>[true,false]</td>
+			<td>[true, false]</td>
 		</tr>
 		<tr>
 			<td>
-				contains(["Kenneth", "Lea", "Amy", "Kenneth"], ["Kenneth", "Lea"])
+				contains(["Kenneth", "Lea", "Amy"], ["Kenneth", "Lea"])
 			</td>
-			<td>[true,true,false,false]</td>
+			<td>[true, true, false]</td>
 		</tr>
 		<tr>
 			<td>
-				contains(["Kenneth", "Lea"], ["Kenneth", "Lea", "Amy", "Kenneth"])
+				contains(["Kenneth", "Lea"], ["Kenneth", "Lea", "Amy"])
 			</td>
-			<td>[true,true,false,false]</td>
+			<td>[true, true, false]</td>
 		</tr>
 		<tr>
 			<td>
-				contains([["Kenneth", "Lea"], "Amy", "Kenneth"], ["Kenneth", "Lea"])
+				contains([["Kenneth", "Lea"], "Amy"], ["Kenneth", "Lea"])
 			</td>
-			<td>[true,false,false]</td>
-		</tr>
-		<tr>
-			<td>
-				contains(["Amy", ["Kenneth", "Lea"], "Kenneth"], ["Kenneth", "Lea"])
-			</td>
-			<td>[false,true,false]</td>
+			<td>[true, false]</td>
 		</tr>
 		<tr>
             <td>
-                contains({name: "Kenneth", work: "MIT", interest: ["coding", {food: "rice", quantity: 6}, "sleeping"]}, ["Kenneth", "MIT"])
+                contains({name: "Kenneth", work: "MIT", interest: ["coding", {food: "rice", quantity: 6}]}, ["Kenneth", "rice"])
             </td>
-            <td>[true,true]</td>
+            <td>[true, true]</td>
 		</tr>
 		<tr>
             <td>
-                contains(["Kenneth", "MIT", {name: "Kenneth", food: "rice", quantity: 6}, "sleeping"], ["Kenneth", "MIT"])
+                contains(["Kenneth", {food: "rice", quantity: 6}, "MIT"], ["Kenneth", "6"])
             </td>
-            <td>[true,true,false,false]</td>
+            <td>[true, true, false]</td>
         </tr>
         <tr>
             <td>
