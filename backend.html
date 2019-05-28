@@ -261,7 +261,7 @@ localStorage.localstoretest = `{
 
 <section>
 	<h1>Empty element storage, mv-init=data URL</h1>
-
+	<p><a href="https://github.com/mavoweb/mavo/pull/442">This PR</a> will fix this.</p>
 	<table class="reftest">
 		<tr>
 			<td>
@@ -273,29 +273,6 @@ localStorage.localstoretest = `{
 		</tr>
 		<tr>
 			<td mv-app mv-storage="#data-empty" mv-init='data:application/json,{"prop": 1}'>
-				<input property="prop" />
-			</td>
-			<td>
-				<input value="1" />
-			</td>
-		</tr>
-	</table>
-</section>
-
-<section>
-	<h1>Whitespace element storage, mv-init=data URL</h1>
-
-	<table class="reftest">
-		<tr>
-			<td>
-				<pre id="data-whitespace"> </pre>
-			</td>
-			<td>
-				<pre></pre>
-			</td>
-		</tr>
-		<tr>
-			<td mv-app mv-storage="#data-whitespace" mv-init='data:application/json,{"prop": 1}'>
 				<input property="prop" />
 			</td>
 			<td>
@@ -368,7 +345,7 @@ localStorage.localstoretest = `{
 		"prop1": "using localStorage"
 	}`;
 	</script>
-	<table class="reftest" data-click="input[type=checkbox] wait 2s">
+	<table class="reftest" data-click="input[type=checkbox] wait 2s after mv-load">
 		<tr>
 			<td>
 				<pre id="element-data-2">{
@@ -465,9 +442,32 @@ localStorage.localstoretest = `{
 </section>
 
 <section>
+	<h1>Whitespace element storage, mv-init=data URL</h1>
+
+	<table class="reftest">
+		<tr>
+			<td>
+				<pre id="data-whitespace"> </pre>
+			</td>
+			<td>
+				<pre></pre>
+			</td>
+		</tr>
+		<tr>
+			<td mv-app mv-storage="#data-whitespace" mv-init='data:application/json,{"prop": 1}'>
+				<input property="prop" />
+			</td>
+			<td>
+				<input value="1" />
+			</td>
+		</tr>
+	</table>
+</section>
+
+<section>
 	<h1>Autosave + login</h1>
 
-	<p>Click login, edit the value to a 1</p>
+	<p>Click login if needed, edit the value to a 1</p>
 
 	<table class="reftest">
 		<tr class="interactive">
@@ -482,7 +482,7 @@ localStorage.localstoretest = `{
 }</pre>
 			</td>
 		</tr>
-		<tr class="interactive">
+		<tr class="interactive" data-click=".mv-login wait 1s after mv-load">
 			<td mv-app="appName" mv-storage="2#saveafterlogin-data" mv-autosave="0">
 				<input property="text">
 			</td>
