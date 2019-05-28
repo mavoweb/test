@@ -570,7 +570,10 @@ document.addEventListener("DOMContentLoaded", function(){
 						{
 							tag: "a",
 							href: "#",
-							onclick: evt => location.reload(),
+							onclick: evt => {
+								location.hash = "#";
+								location.reload();
+							},
 							textContent: "Show all tests"
 						}
 					],
