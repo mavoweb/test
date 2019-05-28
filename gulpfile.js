@@ -11,8 +11,8 @@ var sourcemaps = require("gulp-sourcemaps");
 var concat = require("gulp-concat");
 var notify = require("gulp-notify");
 
-gulp.task("sass", function() {
-	gulp.src(["src-css/*.scss", "!**/_*.scss"])
+gulp.task("sass", function () {
+	return gulp.src(["src-css/*.scss", "!**/_*.scss"])
 		.pipe(sourcemaps.init())
 		.pipe(sass().on("error", sass.logError))
 		.pipe(autoprefixer({
@@ -21,17 +21,6 @@ gulp.task("sass", function() {
 		}))
 		.pipe(rename({ extname: ".css" }))
 		.pipe(sourcemaps.write("maps"))
-		.pipe(gulp.dest("dist"));
-
-	return gulp.src(["**/*.scss", "!node_modules/**", "!src-css/*.scss"])
-		.pipe(sourcemaps.init())
-		.pipe(sass().on("error", sass.logError))
-		.pipe(autoprefixer({
-			browsers: ["last 2 versions"],
-			cascade: false
-		}))
-		.pipe(rename({ extname: ".css" }))
-		.pipe(sourcemaps.write("."))
 		.pipe(gulp.dest("."))
 		.pipe(notify({
 			message: "Sass done!",
@@ -46,8 +35,8 @@ gulp.task("concat", function () {
 });
 
 gulp.task("watch", function() {
-	gulp.watch(["**/*.scss"], ["sass"]);
-	gulp.watch(["sw.js", "test.js", "mavo-specific.js"], ["concat"]);
+	gulp.watch(["**/*.scss"], gulp.series("sass"));
+	gulp.watch(["sw.js", "test.js", "mavo-specific.js"], gulp.series("concat"));
 });
 
-gulp.task("default", ["sass"]);
+gulp.task("default", gulp.parallel(gulp.series("concat"), gulp.series("sass")));
