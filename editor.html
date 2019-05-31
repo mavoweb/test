@@ -214,7 +214,7 @@ function checkAttribute(td) {
 			</td>
 			<td>United States us</td>
 		</tr>
-		<tr title="Exposed, add one">
+		<tr title="Exposed, add one" data-click=".mv-add-exposed wait 1s after mv-load">
 			<td mv-app="select" class="mv-autoedit">
 				<select property="exposed" mv-multiple>
 					<option value="us">United States</option>
@@ -277,7 +277,7 @@ function checkAttribute(td) {
 				[property][mv-mode^="edit"] textarea
 			</td>
 		</tr>
-		<tr title='Inherited mv-mode="edit"'>
+		<tr title='Inherited mv-mode="edit" (currently failing, see #166)'>
 			<td>
 				<div mv-mode="edit">
 					<div property="inheritEdit">Always edited</div>

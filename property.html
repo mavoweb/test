@@ -90,20 +90,6 @@
 				<time style="--prepend-on-edit: '(No Date3)'"></time>
 			</td>
 		</tr>
-		<tr title="Collection with dates">
-			<td>
-				<div property="collection" mv-multiple>
-					<time property="date4" datetime="1986-06-13"></time>
-				</div>
-				<div property="collection" mv-multiple>
-					<time property="date4" datetime="1959-12-31"></time>
-				</div>
-			</td>
-			<td>
-				13 Jun 1986 <br>
-				31 Dec 1959
-			</td>
-		</tr>
 	</table>
 </section>
 
@@ -333,7 +319,7 @@
 <section>
 	<h1>Booleans</h1>
 
-	<p>For the last one, click Edit and check it.</p>
+	<p>For the last one, edit and check it.</p>
 
 	<table class="reftest">
 		<tr>
@@ -379,7 +365,7 @@
 				<script>document.write($$("td pre").pop().outerHTML)</script>
 			</td>
 		</tr>
-		<tr title="Via render" class="interactive">
+		<tr title="Via render" class="interactive" data-click=".mv-edit wait 2s after mv-load">
 			<td mv-app="booleans" mv-storage="#boolean-data">
 				<span property="prop1">
 					Foo bar

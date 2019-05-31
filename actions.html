@@ -41,12 +41,10 @@
 	</table>
 </section>
 
-<button onclick="$$('td:first-of-type > button[mv-action]').forEach(b => b.click())">Trigger all actions</button>
 <section>
 	<h1>Delete / clear</h1>
-	<p>Click the buttons in the first column</p>
 
-	<table class="reftest">
+	<table class="reftest" data-click="td:first-child > button[mv-action] wait 1s after mv-load">
 		<tr title="Delete one item" mv-app mv-source="data/creatures.json" class="mv-autoedit">
 			<td><button mv-action="delete(person where name = 'Lea Verou')">Delete Lea</button></td>
 			<td>
@@ -92,11 +90,11 @@
 				<div class="mv-bar mv-ui"></div>
 				<div property="cat" mv-multiple>
 					<strong property="name">John Doe</strong>
-					<span property="age">0</span>
+					<span property="age">1</span>
 				</div>
 			</td>
 			<td>
-
+				 (Name) (Age) (Name) (Age) (Name) (Age)
 			</td>
 		</tr>
 	</table>
@@ -105,7 +103,7 @@
 	<h1>Add</h1>
 	<p>Click the buttons in the first column</p>
 
-	<table class="reftest">
+	<table class="reftest" data-click="td:first-child > button[mv-action] wait 1s after mv-load">
 		<tr title="Add one item" mv-app mv-source="data/creatures.json" class="mv-autoedit">
 			<td><button mv-action="add(group(name: 'Tarfah Alrashed', age: 30), person)">Add Tarfah</button></td>
 			<td>
@@ -121,17 +119,18 @@
 				Tarfah Alrashed 30
 			</td>
 		</tr>
-		<tr title="Duplicate item" mv-app mv-source="data/creatures.json" class="mv-autoedit">
+		<tr title="Duplicate item" mv-app mv-source="data/creatures.json" class="mv-autoedit" data-click=".duplicate wait 1s after mv-load">
 			<td></td>
 			<td>
 				<div class="mv-bar mv-ui"></div>
 				<div property="person" mv-multiple>
 					<strong property="name">John Doe</strong>
 					<span property="age">0</span>
-					<button mv-action="add(person, person)">Duplicate [name]</button>
+					<button class="duplicate test-content-ignore" mv-action="add(person, person)">Duplicate [name]</button>
 				</div>
 			</td>
 			<td>
+				Lea Verou 32
 				Lea Verou 32
 				David Karger 50
 				David Karger 50
@@ -143,7 +142,7 @@
 	<h1>Set</h1>
 	<p>Click the buttons in the first column</p>
 
-	<table class="reftest">
+	<table class="reftest" data-click="td:first-child > button[mv-action] wait 1s after mv-load">
 		<tr title="Set one property across multiple items" mv-app mv-source="data/creatures.json" class="mv-autoedit">
 			<td><button mv-action="set(name, 'Chris Lilley')">Set all names to Chris Lilley</button></td>
 			<td>
@@ -234,7 +233,7 @@
 	<h1>Move</h1>
 	<p>Click the buttons in the first column</p>
 
-	<table class="reftest">
+	<table class="reftest" data-click="td:first-child > button[mv-action] wait 1s after mv-load">
 		<tr title="Move item" mv-app mv-source="data/creatures.json" class="mv-autoedit">
 			<td><button mv-action="move(first(person), cat)">Move first person to cats</button></td>
 			<td>
@@ -242,20 +241,20 @@
 				<div property="person" mv-multiple>
 					<strong property="name">John Doe</strong>
 					<span property="age">0</span>
-					<button mv-action="move(person, cat)">Move to cats</button>
+					<button mv-action="move(person, cat)" class="test-content-ignore">Move to cats</button>
 				</div>
 				<div property="cat" mv-multiple>
 					<strong property="name">John Doe</strong>
 					<span property="age">0</span>
-					<button mv-action="move(cat, 0)">Move to top</button>
+					<button mv-action="move(cat, 0)" class="test-content-ignore">Move to top</button>
 				</div>
 			</td>
 			<td>
-				David Karger 50  Move to cats
-				Vector 12  Move to people
-				Adam Catlace 4  Move to people
-				Çiki 1  Move to people
-				Lea Verou 32  Move to people
+				David Karger 50
+				Vector 12
+				Adam Catlace 4
+				Çiki 1
+				Lea Verou 32
 			</td>
 		</tr>
 	</table>
@@ -268,7 +267,7 @@
 		<tr>
 			<td mv-app>
 				<span property="prop1"></span>
-				<button mv-action="set(prop1, add)" class="test-content-ignore">Set prop1 to add</button>
+				<button data-click="wait 1s" mv-action="set(prop1, add)" class="test-content-ignore">Set prop1 to add</button>
 			</td>
 			<td>
 				add
