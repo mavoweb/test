@@ -555,7 +555,7 @@ var _ = self.RefTest = $.Class({
 });
 
 document.addEventListener("DOMContentLoaded", function(){
-	var page = location.pathname.match(/\/([a-z]+)(?:\.html|\/$)/)[1];
+	var page = location.pathname.match(/\/([a-z]+)(?:\.html|\/?$)/)[1];
 
 	if (page !== "index") {
 		// Create link to home and to remote version
@@ -728,7 +728,7 @@ self.$$ = $$;
 })(self.Bliss, Bliss.$)
 
 document.addEventListener("DOMContentLoaded", function(){
-	var page = location.pathname.match(/\/([a-z]+)(?:\.html|\/$)/)[1];
+	var page = location.pathname.match(/\/([a-z]+)(?:\.html|\/?$)/)[1];
 
 	if (page !== "index") {
 		// Create link to home and to remote version
