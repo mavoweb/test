@@ -173,7 +173,7 @@
 <section>
 	<h1>mv-multiple-path</h1>
 
-	<table class="reftest" data-click=".mv-bar .mv-save after mv-load">
+	<table class="reftest" data-click=".mv-bar .mv-save wait 1s after mv-load">
 		<tr>
 			<td>
 				<pre id="data-mvmultiplepathbasic">{
@@ -511,7 +511,7 @@
 <section>
 	<h1>Rendering primitives on groups</h1>
 
-	<table class="reftest" data-click=".mv-bar .mv-save after mv-load">
+	<table class="reftest" data-click=".mv-bar .mv-save wait 1s after mv-load">
 		<tr>
 			<td>
 				<pre id="data-primitive">5</pre>
@@ -553,8 +553,12 @@
 
 <section>
 	<h1>mv-alias</h1>
-
-	<table class="reftest" data-click=".mv-bar .mv-save after mv-load">
+<script>
+	document.addEventListener("mv-load", evt => {
+		console.log(evt, evt.target)
+	});
+</script>
+	<table class="reftest" data-click=".mv-bar .mv-save wait 10s after mv-load">
 		<tr>
 			<td>
 				<pre id="data-alias">{
