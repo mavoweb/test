@@ -32,11 +32,11 @@
 	<table class="reftest" data-test="expressionRewrite" data-columns="3">
 		<tr>
 			<td>if(age > 40, set(name, Chris))</td>
-			<td>iff(gt(age, 40), setif(gt(age, 40), name, Chris))</td>
+			<td>$fn.iff($fn.gt(age, 40), $fn.setif($fn.gt(age, 40), name, Chris))</td>
 		</tr>
 		<tr>
 			<td>if(age > 40, set(name, Gandalf), set(name, Sauron))</td>
-			<td>iff(gt(age, 40), setif(gt(age, 40), name, Gandalf), setif(not(gt(age, 40)), name, Sauron))</td>
+			<td>$fn.iff($fn.gt(age, 40), $fn.setif($fn.gt(age, 40), name, Gandalf), $fn.setif($fn.not($fn.gt(age, 40)), name, Sauron))</td>
 		</tr>
 	</table>
 </section>

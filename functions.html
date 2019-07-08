@@ -21,7 +21,8 @@ table.reftest td:first-child {
 
 <h1>Function Tests</h1>
 
-<p>These tests test whether Mavo functions produce correct results.</p>
+<p>These tests test whether Mavo functions produce correct results.
+	Remember, MavoScript doesn't support {} for object literals, either use <code>group()</code> or <code>$fn.</code> in front of every function you call.</p>
 
 <section>
 	<h1>Basic Operators</h1>
@@ -516,51 +517,51 @@ b", "
 
 	<table class="reftest" data-test="expressionEvaluation" data-columns="3">
 		<tr>
-			<td>get({bar: 4}, "bar")</td>
+			<td>$fn.get({bar: 4}, "bar")</td>
 			<td>4</td>
 		</tr>
 		<tr>
-			<td>get({}, "bar")</td>
+			<td>$fn.get({}, "bar")</td>
 			<td>null</td>
 		</tr>
 		<tr>
-			<td>get(null, "bar")</td>
+			<td>$fn.get(null, "bar")</td>
 			<td>null</td>
 		</tr>
 		<tr title="Case insensitive lookup">
-			<td>get({foo: 1, foO: 2}, "FOO")</td>
+			<td>$fn.get({foo: 1, foO: 2}, "FOO")</td>
 			<td>1</td>
 		</tr>
 		<tr title="Case insensitive lookup, priority to correct case">
-			<td>get({foo: 1, foO: 2}, "foO")</td>
+			<td>$fn.get({foo: 1, foO: 2}, "foO")</td>
 			<td>2</td>
 		</tr>
 		<tr title="undefined">
-			<td>get({foo: undefined}, "foo")</td>
+			<td>$fn.get({foo: undefined}, "foo")</td>
 			<td>undefined</td>
 		</tr>
 		<tr title="undefined and case insensitive">
-			<td>get({foo: undefined, foO: 1}, "foo")</td>
+			<td>$fn.get({foo: undefined, foO: 1}, "foo")</td>
 			<td>undefined</td>
 		</tr>
 		<tr title="Get collection item by id">
-			<td>get([{id: "foo", name: "fooname"}, {id: "bar", name: "barname"}], "id=foo").name</td>
+			<td>$fn.get([{id: "foo", name: "fooname"}, {id: "bar", name: "barname"}], "id=foo").name</td>
 			<td>"fooname"</td>
 		</tr>
 		<tr title="Get collection item by id">
-			<td>get([{id: "foo", name: "fooname"}, {id: "bar", name: "barname"}], "id=bar").name</td>
+			<td>$fn.get([{id: "foo", name: "fooname"}, {id: "bar", name: "barname"}], "id=bar").name</td>
 			<td>"barname"</td>
 		</tr>
 		<tr title="Get collection item by name">
-			<td>get([{id: "foo", name: "fooname"}, {id: "bar", name: "barname"}], "name=fooname")</td>
+			<td>$fn.get([{id: "foo", name: "fooname"}, {id: "bar", name: "barname"}], "name=fooname")</td>
 			<td>[{"id":"foo","name":"fooname"}]</td>
 		</tr>
 		<tr title="Get collection item property">
-			<td>get([{id: "foo", name: "fooname"}, {id: "bar", name: "barname"}], "name")</td>
+			<td>$fn.get([{id: "foo", name: "fooname"}, {id: "bar", name: "barname"}], "name")</td>
 			<td>["fooname", "barname"]</td>
 		</tr>
 		<tr title="Get collection item by name and then by property">
-			<td>get(get([{id: "foo", name: "fooname"}, {id: "bar", name: "barname"}], "name=barname"), "id")</td>
+			<td>$fn.get($fn.get([{id: "foo", name: "fooname"}, {id: "bar", name: "barname"}], "name=barname"), "id")</td>
 			<td>["bar"]</td>
 		</tr>
 	</table>
@@ -722,55 +723,55 @@ b", "
     <table class="reftest" data-test="expressionEvaluation" data-columns="3">
 		<tr>
             <td>
-                contains({name: "Kenneth", work: "MIT", interests: [{food: "rice", type: "white"}, "coding"]}, "rice")
+                $fn.contains({name: "Kenneth", work: "MIT", interests: [{food: "rice", type: "white"}, "coding"]}, "rice")
             </td>
             <td>true</td>
 		</tr>
         <tr>
             <td>
-                contains(["Lea", "Kenneth", "Amy",], "Kenneth")
+                $fn.contains(["Lea", "Kenneth", "Amy",], "Kenneth")
             </td>
             <td>[false, true, false]</td>
 		</tr>
 		<tr>
             <td>
-                contains(["Kenneth", "Amy", {name: "Kenneth"}], "Kenneth")
+                $fn.contains(["Kenneth", "Amy", {name: "Kenneth"}], "Kenneth")
             </td>
             <td>[true, false, true]</td>
 		</tr>
 		<tr>
 			<td>
-				contains(["Kenneth", [6, "Kenneth"], "MIT"], "Kenneth")
+				$fn.contains(["Kenneth", [6, "Kenneth"], "MIT"], "Kenneth")
 			</td>
 			<td>[true, true, false]</td>
 		</tr>
 		<tr>
             <td>
-                contains({name: "Kenneth", work: "MIT", interests: [{food: "rice"}, "coding"]}, {food: "rice"})
+                $fn.contains({name: "Kenneth", work: "MIT", interests: [{food: "rice"}, "coding"]}, {food: "rice"})
             </td>
             <td>true</td>
 		</tr>
 		<tr>
             <td>
-                contains(["Kenneth", "MIT", {food: "rice", type: "white"}], {food: "rice", type: "white"})
+                $fn.contains(["Kenneth", "MIT", {food: "rice", type: "white"}], {food: "rice", type: "white"})
             </td>
             <td>[false, false, true]</td>
 		</tr>
 		<tr>
 			<td>
-				contains("Kenneth", ["Kenneth", "Lea"])
+				$fn.contains("Kenneth", ["Kenneth", "Lea"])
 			</td>
 			<td>[true, false]</td>
 		</tr>
 		<tr>
 			<td>
-				contains(["Kenneth", "Verou"], ["Kenneth", "Lea"])
+				$fn.contains(["Kenneth", "Verou"], ["Kenneth", "Lea"])
 			</td>
 			<td>[true, false]</td>
 		</tr>
 		<tr>
 			<td>
-				contains(["Kenneth", "Lea", "Amy"], ["Kenneth", "Lea"])
+				$fn.contains(["Kenneth", "Lea", "Amy"], ["Kenneth", "Lea"])
 			</td>
 			<td>[true, true, false]</td>
 		</tr>
@@ -782,19 +783,19 @@ b", "
 		</tr>
 		<tr>
 			<td>
-				contains([["Kenneth", "Lea"], "Amy"], ["Kenneth", "Lea"])
+				$fn.contains([["Kenneth", "Lea"], "Amy"], ["Kenneth", "Lea"])
 			</td>
 			<td>[true, false]</td>
 		</tr>
 		<tr>
             <td>
-                contains({name: "Kenneth", work: "MIT", interest: ["coding", {food: "rice", quantity: 6}]}, ["Kenneth", "rice"])
+                $fn.contains({name: "Kenneth", work: "MIT", interest: ["coding", {food: "rice", quantity: 6}]}, ["Kenneth", "rice"])
             </td>
             <td>[true, true]</td>
 		</tr>
 		<tr>
             <td>
-                contains(["Kenneth", {food: "rice", quantity: 6}, "MIT"], ["Kenneth", "6"])
+                $fn.contains(["Kenneth", {food: "rice", quantity: 6}, "MIT"], ["Kenneth", "6"])
             </td>
             <td>[true, true, false]</td>
         </tr>
@@ -900,21 +901,33 @@ b", "
 			<td>has(1, [1, 2, 3])</td>
 			<td>true</td>
 		</tr>
-		<tr>
+		<tr title="Object as needle">
+			<td>$fn.has({foo: 1}, [{foo: 1}, 2, 3])</td>
+			<td>true</td>
+		</tr>
+		<tr title="Primitive haystack">
+			<td>has(1, 1)</td>
+			<td>true</td>
+		</tr>
+		<tr title="Primitive haystack">
+			<td>has(1, 2)</td>
+			<td>false</td>
+		</tr>
+		<tr title="Comparision with primitive-like object">
 			<script>var numberObject1 = new Number(1)</script>
 			<td>has(1, [numberObject1, 2, 3])</td>
 			<td>true</td>
 		</tr>
-		<tr>
+		<tr title="Array of needles">
 			<td>has([1, 4], [1, 2, 3])</td>
 			<td>[true, false]</td>
 		</tr>
-		<tr>
-			<td>has('foo', {foo: 1})</td>
+		<tr title="Object haystack">
+			<td>$fn.has('foo', {foo: 1})</td>
 			<td>true</td>
 		</tr>
-		<tr>
-			<td>has(['foo', 'bar'], {foo: 1})</td>
+		<tr title="Array of needles with object haystack">
+			<td>$fn.has(['foo', 'bar'], {foo: 1})</td>
 			<td>[true, false]</td>
 		</tr>
 	</table>
@@ -1118,7 +1131,7 @@ b", "
 			<td>"a"</td>
 		</tr>
 		<tr>
-			<td>first([{"prop": 1}, {"prop": 2}])</td>
+			<td>$fn.first([{"prop": 1}, {"prop": 2}])</td>
 			<td>{"prop": 1}</td>
 		</tr>
 		<tr>
@@ -1154,7 +1167,7 @@ b", "
 			<td>[0,1]</td>
 		</tr>
 		<tr>
-			<td>first({"prop1": 1, "prop2": 2})</td>
+			<td>$fn.first({"prop1": 1, "prop2": 2})</td>
 			<td>{"prop1": 1, "prop2": 2}</td>
 		</tr>
 		<tr>
@@ -1210,7 +1223,7 @@ b", "
 			<td>"c"</td>
 		</tr>
 		<tr>
-			<td>last([{"prop": 1}, {"prop": 2}])</td>
+			<td>$fn.last([{"prop": 1}, {"prop": 2}])</td>
 			<td>{"prop": 2}</td>
 		</tr>
 		<tr>
@@ -1246,7 +1259,7 @@ b", "
 			<td>[0,3]</td>
 		</tr>
 		<tr>
-			<td>last({"prop1": 1, "prop2": 2})</td>
+			<td>$fn.last({"prop1": 1, "prop2": 2})</td>
 			<td>{"prop1": 1, "prop2": 2}</td>
 		</tr>
 		<tr>
@@ -1285,27 +1298,27 @@ b", "
 
 	<table class="reftest" data-test="expressionEvaluation" data-columns="3">
 		<tr>
-			<td>groupBy([{n: "a", a: 20}, {n: "a", a: 10}, {n: "a", a: 20}, {n: "a", a: 30}], as([20, 10, 20, 30], age))</td>
+			<td>$fn.groupBy([{n: "a", a: 20}, {n: "a", a: 10}, {n: "a", a: 20}, {n: "a", a: 30}], $fn.as([20, 10, 20, 30], age))</td>
 			<td>[{"$value":20,"age":20,"$items":[{"n":"a","a":20},{"n":"a","a":20}]},{"$value":10,"age":10,"$items":[{"n":"a","a":10}]},{"$value":30,"age":30,"$items":[{"n":"a","a":30}]}]</td>
 		</tr>
 		<tr>
-			<td>groupBy([{n: "a", a: 20}, {n: "a", a: 10}, {n: "a", a: 20}, {n: "a", a: 30}], as([20, 10, 20, 30, 40, 50], age))</td>
+			<td>$fn.groupBy([{n: "a", a: 20}, {n: "a", a: 10}, {n: "a", a: 20}, {n: "a", a: 30}], $fn.as([20, 10, 20, 30, 40, 50], age))</td>
 			<td>[{"$value":20,"age":20,"$items":[{"n":"a","a":20},{"n":"a","a":20}]},{"$value":10,"age":10,"$items":[{"n":"a","a":10}]},{"$value":30,"age":30,"$items":[{"n":"a","a":30}]}]</td>
 		</tr>
 		<tr>
-			<td>groupBy([{n: "a", a: 20}, {n: "a", a: 10}, {n: "a", a: 20}, {n: "a", a: 30}], [1,2,3])</td>
+			<td>$fn.groupBy([{n: "a", a: 20}, {n: "a", a: 10}, {n: "a", a: 20}, {n: "a", a: 30}], [1,2,3])</td>
 			<td>[{"$value":1,"$items":[{"n":"a","a":20}]},{"$value":2,"$items":[{"n":"a","a":10}]},{"$value":3,"$items":[{"n":"a","a":20}]},{"$value":null,"$items":[{"n":"a","a":30}]}]</td>
 		</tr>
 		<tr>
-			<td>groupBy([{n: "a", a: 20}, {n: "a", a: 10}, {n: "a", a: 20}, {n: "a", a: 30}], as([1,2,3],"num"))</td>
+			<td>$fn.groupBy([{n: "a", a: 20}, {n: "a", a: 10}, {n: "a", a: 20}, {n: "a", a: 30}], $fn.as([1,2,3],"num"))</td>
 			<td>[{"$value":1,"num":1,"$items":[{"n":"a","a":20}]},{"$value":2,"num":2,"$items":[{"n":"a","a":10}]},{"$value":3,"num":3,"$items":[{"n":"a","a":20}]},{"$value":null,"num":null,"$items":[{"n":"a","a":30}]}]</td>
 		</tr>
 		<tr>
-			<td>count( groupBy([{n: "a", a: 20}, {n: "a", a: 10}, {n: "a", a: 20}, {n: "a", a: 30}], [20, 10, 20, 30]) )</td>
+			<td>$fn.count( $fn.groupBy([{n: "a", a: 20}, {n: "a", a: 10}, {n: "a", a: 20}, {n: "a", a: 30}], [20, 10, 20, 30]) )</td>
 			<td>[2,1,1]</td>
 		</tr>
 		<tr>
-			<td>sum( as([20, 10, 20, 30]) )</td>
+			<td>$fn.sum( $fn.as([20, 10, 20, 30]) )</td>
 			<td>80</td>
 		</tr>
 	</table>

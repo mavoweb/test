@@ -275,19 +275,19 @@ table.reftest td:first-child {
 
 	<table class="reftest" data-test="expressionEvaluation" data-columns="3">
 		<tr>
-			<td>util.fixDateString("2017-11-10")</td>
+			<td>Mavo.Functions.util.fixDateString("2017-11-10")</td>
 			<td>"2017-11-10T00:00:00"</td>
 		</tr>
 		<tr>
-			<td>util.fixDateString("2017-11")</td>
+			<td>Mavo.Functions.util.fixDateString("2017-11")</td>
 			<td>"2017-11-01T00:00:00"</td>
 		</tr>
 		<tr>
-			<td>util.fixDateString("08:15")</td>
+			<td>Mavo.Functions.util.fixDateString("08:15")</td>
 			<td>"<script>document.write((new Date().toISOString().slice(0, 10)))</script>T08:15"</td>
 		</tr>
 		<tr>
-			<td>util.fixDateString("foobar")</td>
+			<td>Mavo.Functions.util.fixDateString("foobar")</td>
 			<td>null</td>
 		</tr>
 	</table>
