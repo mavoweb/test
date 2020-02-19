@@ -1,3 +1,1 @@
-# Heading
-
-Paragraph **bold** *italic*
+# Heading Paragraph **bold** *italic*
