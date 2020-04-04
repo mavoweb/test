@@ -121,6 +121,15 @@
 			<td>[country]</td>
 			<td>us</td>
 		</tr>
+		<tr title="&lt;select multiple>">
+			<td><select property="foo" multiple>
+				<option value="us" selected>United States
+				<option value="gb">United Kingdom
+				<option value="jp" selected>Japan
+			</select></td>
+			<td>[foo]</td>
+			<td>us, jp</td>
+		</tr>
 		<tr title="Dynamic select">
 			<td>
 				<select property="select" id="select">
@@ -274,6 +283,37 @@
 			</td>
 			<td>
 				10
+			</td>
+		</tr>
+		<tr title="&lt;select multiple> with one value">
+			<td>
+				<select property="foo5" multiple mv-value="[5 + 5]">
+					<option value="1">One</option>
+					<option value="10">Ten</option>
+				</select>
+			</td>
+			<td>
+				<script>
+					testFormGet(document.currentScript);
+				</script>
+			</td>
+			<td>
+				10
+			</td>
+		</tr>
+		<tr title="&lt;select multiple> with multiple values">
+			<td>
+				<select property="foo6" multiple mv-value="list(1, '3')">
+					<option>1</option>
+					<option>2</option>
+					<option>3</option>
+				</select>
+			</td>
+			<td>
+				[foo6]
+			</td>
+			<td>
+				1, 3
 			</td>
 		</tr>
 	</table>
