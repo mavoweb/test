@@ -284,7 +284,9 @@ var _ = self.RefTest = $.Class({
 	},
 
 	test: function() {
-		$$(this.table.tBodies[0].rows).forEach(tr => this.testRow(tr));
+		for (let tbody of this.table.tBodies) {
+			$$(tbody.rows).forEach(tr => this.testRow(tr));
+		}
 	},
 
 	testRow: function(tr) {
