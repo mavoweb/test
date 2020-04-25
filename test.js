@@ -94,6 +94,7 @@ self.Test = {
 
 		if (obj && obj[Symbol.iterator] && type != "string") {
 			var arr = [...obj];
+
 			if (obj && arr.length > 1) {
 				return arr.map(o => Test.format(o)).join(" ");
 			}
@@ -101,7 +102,7 @@ self.Test = {
 				obj = arr[0];
 			}
 			else {
-				return `(empty ${type})`
+				return `(empty ${type})`;
 			}
 		}
 
@@ -129,19 +130,26 @@ self.Test = {
 		}, "\t");
 	},
 
-	print: function print(...text) {
+	print: async function print(...texts) {
 		var script = this instanceof HTMLElement && this.matches("script")? this : document.currentScript;
 
-		text = Test.format(text);
+		for (let text of texts) {
+			if (typeof text === "function") {
+				await $.ready();
+				text = text();
+			}
 
-		if (document.readyState == "loading") {
-			document.write(text);
-		}
-		else if (script && script.parentNode) {
-			script.insertAdjacentHTML("afterend", text);
-		}
-		else {
-			console.log("Test print", text);
+			text = Test.format(text);
+
+			if (document.readyState == "loading") {
+				document.write(text);
+			}
+			else if (script && script.parentNode) {
+				script.insertAdjacentHTML("afterend", text);
+			}
+			else {
+				console.log("Test print", text);
+			}
 		}
 	},
 
