@@ -401,7 +401,7 @@ var _ = self.RefTest = $.Class({
 			fuzzyNumbers: function(decimals, ...cells) {
 
 				let comparator = (...cells) => {
-					let contents = cells.map(c => c.textContent.trim().replace(/-?\d*\.?\d+/g, n => {
+					let contents = cells.map(c => c.textContent.trim().replace(/\s+/g, " ").replace(/-?\d*\.?\d+/g, n => {
 						let factor = 10 ** decimals;
 						return Math.round(n * factor) / factor;
 					}));
