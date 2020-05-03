@@ -426,6 +426,34 @@ var _ = self.RefTest = $.Class({
 				return pass;
 			},
 
+			// Compares numbers to 3 decimal points if no argument is passed,
+			// If argument is passed, returns a comparison function for that number of decimals
+			fuzzyNumbers: function(decimals, ...cells) {
+
+				let comparator = (...cells) => {
+					let contents = cells.map(c => c.textContent.trim().replace(/-?\d*\.?\d+/g, n => {
+						let factor = 10 ** decimals;
+						return Math.round(n * factor) / factor;
+					}));
+
+					let ref = contents.pop();
+					let test = contents.pop();
+
+					return ref === test;
+				};
+
+				if (typeof decimals === "number") {
+					// Decimals passed, return function
+					return comparator;
+				}
+				else {
+					cells.unshift(decimals);
+					// No decimals passed, do comparison with decimals = 3
+					decimals = 3;
+					return comparator(...cells);
+				}
+			},
+
 			attribute: function(attribute, td, ref) {
 				var actual = $$("*", td).map(el => el[attribute]);
 				var expected = $$("*", ref).map(el => el[attribute]);
