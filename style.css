@@ -13,6 +13,9 @@ body {
   body > h1 {
     font: 300 350%/1 Helvetica Neue, Helvetica, sans-serif;
     color: orange; }
+    @media (max-height: 10rem) {
+      body > h1 {
+        margin: 0; } }
     body > h1 .home, body > h1 .remote {
       display: inline-block;
       vertical-align: middle;
