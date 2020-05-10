@@ -31,6 +31,46 @@ if ("serviceWorker" in navigator && new URL("sw.js", location).origin === locati
 (function($, $$){
 
 self.Test = {
+	runSelected: function(names) {
+		let tests = names.map(name => {
+			return $.create("iframe", {
+				inside: iframes,
+				src: name,
+				events: {
+					load: evt => {
+						updateTotals();
+
+						evt.target.contentWindow.document.addEventListener("testresultsupdate", evt => {
+							console.log("got event", evt);
+							updateTotals();
+						});
+					}
+				}
+			});
+		});
+
+		function updateTotals() {
+			let totals = {pass: 0, fail: 0};
+
+			tests.forEach(iframe => {
+				let doc = iframe.contentDocument;
+
+				if (doc.readyState !== "complete" || !$("body > nav", doc)) {
+					return;
+				}
+
+				totals.pass += +$("body > nav .count-pass .count", doc).textContent;
+				totals.fail += +$("body > nav .count-fail .count", doc).textContent;
+			});
+
+			let totalsEl = $("h1 + .totals") || $.create({className: "totals", after: $("h1")});
+
+			totalsEl.innerHTML = `<strong>${totals.pass}</strong> passing, <strong>${totals.fail}</strong> failing of ${totals.pass + totals.fail} total`
+		}
+
+
+	},
+
 	pseudo: (element, pseudo) => {
 		var content = getComputedStyle(element, ":" + pseudo).content;
 
@@ -514,14 +554,22 @@ var _ = self.RefTest = $.Class({
 				// interactive: $$("table.reftest tr.interactive")
 			};
 
-			$(".count-fail .count", _.nav).textContent = _.results.fail.length;
-			$(".count-pass .count", _.nav).textContent = _.results.pass.length;
+			var detail = {
+				pass: _.results.pass.length,
+				fail: _.results.fail.length
+			};
+
+			$(".count-pass .count", _.nav).textContent = detail.pass;
+			$(".count-fail .count", _.nav).textContent = detail.fail;
+
 			$.style(_.nav, {
-				"--pass": _.results.pass.length,
-				"--fail": _.results.fail.length
+				"--pass": detail.pass,
+				"--fail": detail.fail
 			});
 
 			// $(".count-interactive", _.nav).textContent = _.results.interactive.length;
+
+			document.dispatchEvent(new CustomEvent("testresultsupdate", {detail}));
 		},
 
 		// Navigate tests
@@ -595,11 +643,15 @@ var _ = self.RefTest = $.Class({
 });
 
 document.addEventListener("DOMContentLoaded", function(){
-	var page = (location.pathname.match(/\/([a-z]+)(?:\.html|\/?$)/) || [, "index"])[1];
+	if (/\/$/.test(location.pathname)) {
+		var page = "index";
+	}
+	else {
+		var page = (location.pathname.match(/\/([a-z-]+)(?:\.html|\/?$)/) || [, "index"])[1];
+	}
 
-	if (page !== "index") {
-		// Create link to home and to remote version
-		let h1 = $("body > h1");
+	if (page == "index") {
+		return;
 	}
 
 	// Add ids to section headers and make them links
