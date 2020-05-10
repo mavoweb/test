@@ -12,7 +12,7 @@ var concat = require("gulp-concat");
 var notify = require("gulp-notify");
 
 gulp.task("sass", function () {
-	return gulp.src(["src-css/*.scss", "!**/_*.scss"])
+	return gulp.src(["**/*.scss", "!node_modules/**/*.scss"])
 		.pipe(sourcemaps.init())
 		.pipe(sass().on("error", sass.logError))
 		.pipe(autoprefixer({
