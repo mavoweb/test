@@ -460,16 +460,13 @@ var _ = self.RefTest = $.Class({
 					return ref === test;
 				};
 
-				if (Number.isInteger(precision)) {
-					// Decimals passed, return function
-					return comparator;
-				}
-				else {
+				if (!Number.isInteger(precision)) {
 					cells.unshift(precision);
-					// No precision passed, do comparison with precision = 3
+					// No precision passed, do comparison with precision = 4
 					precision = 4;
-					return comparator(...cells);
 				}
+
+				return comparator(...cells);
 			},
 
 			attribute: function(attribute, td, ref) {
@@ -619,6 +616,10 @@ var _ = self.RefTest = $.Class({
 		}
 	}
 });
+
+for (let i = 3; i < 7; i++) {
+	RefTest.compare["fuzzyNumbers" + i] = RefTest.compare.fuzzyNumbers.bind(RefTest.compare, i);
+}
 
 document.addEventListener("DOMContentLoaded", function(){
 	if (/\/$/.test(location.pathname)) {
