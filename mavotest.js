@@ -652,7 +652,7 @@ var _ = self.RefTest = $.Class({
 	}
 });
 
-for (let i = 3; i < 7; i++) {
+for (let i = 0; i < 10; i++) {
 	RefTest.compare["fuzzyNumbers" + i] = RefTest.compare.fuzzyNumbers.bind(RefTest.compare, i);
 }
 
