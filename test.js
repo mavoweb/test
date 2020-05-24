@@ -225,7 +225,7 @@ var _ = self.RefTest = $.Class({
 		var cells = $$(this.table.rows[0].cells);
 
 		if (!$("thead", this.table) && this.columns > 1) {
-			var header = ["Test", "Actual", "Expected"].slice(-this.columns);
+			var header = [...Array(Math.max(0, this.columns - 2)).fill("Test"), "Actual", "Expected"].slice(-this.columns);
 
 			$.create("thead", {
 				contents: [
