@@ -436,15 +436,23 @@ var _ = self.RefTest = $.Class({
 				return pass;
 			},
 
-			// Compares numbers to 3 decimal points if no argument is passed,
-			// If argument is passed, returns a comparison function for that number of decimals
-			fuzzyNumbers: function(decimals, ...cells) {
-
+			// Compares numbers to 3 significant digits if no argument is passed,
+			// If argument is passed, returns a comparison function for that number of significant digits
+			fuzzyNumbers: function(precision, ...cells) {
 				let comparator = (...cells) => {
-					let contents = cells.map(c => c.textContent.trim().replace(/\s+/g, " ").replace(/-?\d*\.?\d+/g, n => {
-						let factor = 10 ** decimals;
-						return Math.round(n * factor) / factor;
-					}));
+					let round = n => {
+						let factor = 10 ** precision;
+						return (+n).toLocaleString("en-us", {maximumFractionDigits: precision})
+						// return Math.round(n * factor) / factor;
+					};
+
+					let contents;
+					if (cells[0] instanceof Node) {
+						contents = cells.map(c => c.textContent.trim().replace(/\s+/g, " ").replace(/-?\d*\.?\d+/g, round));
+					}
+					else {
+						contents = cells.map(round);
+					}
 
 					let ref = contents.pop();
 					let test = contents.pop();
@@ -452,14 +460,14 @@ var _ = self.RefTest = $.Class({
 					return ref === test;
 				};
 
-				if (typeof decimals === "number") {
+				if (Number.isInteger(precision)) {
 					// Decimals passed, return function
 					return comparator;
 				}
 				else {
-					cells.unshift(decimals);
-					// No decimals passed, do comparison with decimals = 3
-					decimals = 3;
+					cells.unshift(precision);
+					// No precision passed, do comparison with precision = 3
+					precision = 4;
 					return comparator(...cells);
 				}
 			},
