@@ -332,6 +332,8 @@ var _ = self.RefTest = $.Class({
 	},
 
 	test: function() {
+		RefTest.hooks.run("reftest-test", this);
+
 		for (let tr of this.table.rows) {
 			if (tr !== this.table.tHead.rows[0]) {
 				this.testRow(tr);
@@ -340,45 +342,46 @@ var _ = self.RefTest = $.Class({
 	},
 
 	testRow: function(tr) {
-		var cells = $$(tr.cells);
+		let env = {context: this, tr, cells: $$(tr.cells)};
+		RefTest.hooks.run("reftest-testrow", env);
 
-		if (!tr.compare) {
-			tr.compare = _.getTest(tr.getAttribute("data-test"), this.compare);
+		if (!env.tr.compare) {
+			env.tr.compare = _.getTest(env.tr.getAttribute("data-test"), this.compare);
 		}
 
 		var resultCell;
 
-		if (cells.length) {
+		if (env.cells.length) {
 			if (this.columns == 3) {
 				// Test, actual, expected
-				if (cells.length == 1) {
+				if (env.cells.length == 1) {
 					// expected is the same as test
-					resultCell = $.create("td", {after: cells[0]});
-					cells.push(resultCell);
+					resultCell = $.create("td", {after: env.cells[0]});
+					env.cells.push(resultCell);
 				}
 
-				if (cells.length == 2) {
+				if (env.cells.length == 2) {
 					// missing actual
-					resultCell = $.create("td", {after: cells[0]})
-					cells.splice(1, 0, resultCell);
+					resultCell = $.create("td", {after: env.cells[0]})
+					env.cells.splice(1, 0, resultCell);
 				}
 
-				if (!cells[2].textContent) {
-					cells[2].textContent = cells[0].textContent;
+				if (!env.cells[2].textContent) {
+					env.cells[2].textContent = env.cells[0].textContent;
 				}
 			}
-			else if (this.columns == 2 && !cells[0].innerHTML) {
-				let previous = tr;
+			else if (this.columns == 2 && !env.cells[0].innerHTML) {
+				let previous = env.tr;
 				while (previous = previous.previousElementSibling) {
 					if (previous.cells[0].innerHTML) {
-						cells[0] = previous.cells[0];
+						env.cells[0] = previous.cells[0];
 						break;
 					}
 				}
 			}
 
 			try {
-				var ret = this.sneak(() => tr.compare(...cells));
+				var ret = this.sneak(() => tr.compare(...env.cells));
 			}
 			catch (e) {
 				ret = e;
@@ -417,6 +420,8 @@ var _ = self.RefTest = $.Class({
 	},
 
 	static: {
+		hooks: new $.Hooks(),
+
 		// Retrieve the comparator function based on a data-test string
 		getTest: function(test, fallback) {
 			if (test) {
