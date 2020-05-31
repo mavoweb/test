@@ -79,8 +79,8 @@ h1 {
 
 html:not(.index) {
 	body {
-		width: calc(100vw - 25em);
-		max-width: 100em;
+		width: 80em;
+		max-width: calc(100vw - 5em);
 		padding-top: 2em;
 	}
 
