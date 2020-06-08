@@ -305,7 +305,7 @@ var _ = self.RefTest = $.Class({
 		RefTest.hooks.run("reftest-test", this);
 
 		for (let tr of this.table.rows) {
-			if (tr !== this.table.tHead.rows[0]) {
+			if (!this.table.tHead || tr !== this.table.tHead.rows[0]) {
 				this.testRow(tr);
 			}
 		}
@@ -332,7 +332,7 @@ var _ = self.RefTest = $.Class({
 
 				if (env.cells.length == 2) {
 					// missing actual
-					resultCell = $.create("td", {after: env.cells[0]})
+					resultCell = $.create("td", {after: env.cells[0]});
 					env.cells.splice(1, 0, resultCell);
 				}
 
