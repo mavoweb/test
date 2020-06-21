@@ -447,5 +447,21 @@
 		</tr>
 	</table>
 </section>
+
+<section>
+	<h1>Updating property via JS</h1>
+
+	<table class="reftest">
+		<tr>
+			<td mv-app>
+				<span property="prop" id="propproperty">1</span>
+				[prop]
+				<script>setTimeout(() => propproperty.textContent = 2, 1000)</script>
+			</td>
+			<td>2 2</td>
+		</tr>
+	</table>
+</section>
+
 </body>
 </html>
