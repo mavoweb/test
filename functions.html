@@ -1324,6 +1324,76 @@ b", "
 	</table>
 </section>
 
+<section>
+	<h1>duration()</h1>
+
+	<table class="reftest" data-test="expressionEvaluation" data-columns="3">
+		<tr>
+			<td>duration(0)</td>
+			<td>"0 ms"</td>
+		</tr>
+		<tr>
+			<td>duration(0,1)</td>
+			<td>["0 ms"]</td>
+		</tr>
+		<tr>
+			<td>duration(0,2)</td>
+			<td>["0 ms"]</td>
+		</tr>
+		<tr>
+			<td>duration(1)</td>
+			<td>"1 ms"</td>
+		</tr>
+		<tr>
+			<td>duration(3600000)</td>
+			<td>"1 hour"</td>
+		</tr>
+		<tr>
+			<td>duration(1814400000)</td>
+			<td>"3 weeks"</td>
+		</tr>
+		<tr>
+			<td>duration(1814400000,1)</td>
+			<td>["3 weeks"]</td>
+		</tr>
+		<tr>
+			<td>duration(1814400000,4)</td>
+			<td>["3 weeks"]</td>
+		</tr>
+		<tr>
+			<td>duration(3600001,1)</td>
+			<td>["1 hour"]</td>
+		</tr>
+		<tr>
+			<td>duration(3600001,2)</td>
+			<td>["1 hour", "1 ms"]</td>
+		</tr>
+		<tr>
+			<td>duration(3600001,5)</td>
+			<td>["1 hour", "1 ms"]</td>
+		</tr>
+		<tr>
+			<td>duration(86401000)</td>
+			<td>"1 week"</td>
+		</tr>
+		<tr>
+			<td>duration(86402000,2)</td>
+			<td>["1 week", "2 seconds"]</td>
+		</tr>
+		<tr>
+			<td>duration(2160001000,3)</td>
+			<td>["3 weeks", "4 days", "1 second"]</td>
+		</tr>
+		<tr>
+			<td>duration(194064353282)</td>
+			<td>"5 years"</td>
+		</tr>
+		<tr>
+			<td>duration(194064353282,4)</td>
+			<td>["5 years", "2 months", "2 ms"]</td>
+		</tr>
+	</table>
+</section>
 <script>
 function expressionEvaluation(test, result, expected) {
 	var r = (new Mavo.Expression(test.textContent)).eval();
