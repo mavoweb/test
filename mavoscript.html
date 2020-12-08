@@ -137,6 +137,10 @@ table[data-test="expressionRewrite"][data-columns="3"] td:nth-child(n + 2) {
 			<td>$fn.get(foo, "bar")</td>
 		</tr>
 		<tr>
+			<td>foo.bar + 1</td>
+			<td>$fn.addition($fn.get(foo, "bar"), 1)</td>
+		</tr>
+		<tr>
 			<td>foo: "bar"</td>
 			<td>$fn.keyvalue("foo", "bar")</td>
 		</tr>
@@ -168,7 +172,26 @@ table[data-test="expressionRewrite"][data-columns="3"] td:nth-child(n + 2) {
 			<td>1 .. 5</td>
 			<td>$fn.range(1, 5)</td>
 		</tr>
+		<tr title="Pass-through to JS">
+			<td>foo.filter(a => a + 5)</td>
+		</tr>
+		<tr title="Pass-through to JS">
+			<td>/* js */ 5+5</td>
+		</tr>
+	</table>
+</section>
+
+<section>
+	<h1>Function Rewrite</h1>
+
+	<p>These tests check if functions are rewritten to JS correctly</p>
+
+	<table class="reftest" data-test="expressionRewrite" data-columns="3">
 		<tr title="Normal function">
+			<td>count(foo)</td>
+			<td>$fn.count(foo)</td>
+		</tr>
+		<tr title="Normal function, explicit $fn">
 			<td>$fn.range(1, 5)</td>
 			<td>$fn.range(1, 5)</td>
 		</tr>
@@ -176,11 +199,14 @@ table[data-test="expressionRewrite"][data-columns="3"] td:nth-child(n + 2) {
 			<td>split(solution)</td>
 			<td>$fn.split(solution)</td>
 		</tr>
-		<tr title="Pass-through to JS">
-			<td>foo.filter(a => a + 5)</td>
+		<tr title="Member">
+			<td>foo.slice()</td>
 		</tr>
-		<tr title="Pass-through to JS">
-			<td>/* js */ 5+5</td>
+		<tr title="Global">
+			<td>CSS.supports("filter")</td>
+		</tr>
+		<tr title="Multiple levels">
+			<td>document.body.firstChild.contains(foo)</td>
 		</tr>
 	</table>
 </section>
