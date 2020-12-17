@@ -29,14 +29,14 @@ gulp.task("sass", function () {
 });
 
 gulp.task("concat", function () {
-	return gulp.src(["sw.js", "test.js", "mavo-specific.js"])
+	return gulp.src(["test.js", "mavo-specific.js"])
 		.pipe(concat("mavotest.js"))
 		.pipe(gulp.dest("."));
 });
 
 gulp.task("watch", function() {
 	gulp.watch(["**/*.scss"], gulp.series("sass"));
-	gulp.watch(["sw.js", "test.js", "mavo-specific.js"], gulp.series("concat"));
+	gulp.watch(["test.js", "mavo-specific.js"], gulp.series("concat"));
 });
 
 gulp.task("default", gulp.parallel(gulp.series("concat"), gulp.series("sass")));

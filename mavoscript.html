@@ -4,7 +4,7 @@
 
 <meta charset="UTF-8">
 <title>MavoScript Tests</title>
-<link rel="stylesheet" href="https://dev.mavo.io/dist/mavo.css" />
+<link rel="stylesheet" href="https://get.mavo.io/mavo.css" />
 <link rel="stylesheet" href="style.css" />
 <style>
 td {
@@ -16,7 +16,7 @@ table[data-test="expressionRewrite"][data-columns="3"] td:nth-child(n + 2) {
 	overflow: auto;
 }
 </style>
-<script src="https://dev.mavo.io/dist/mavo.js"></script>
+<script src="https://get.mavo.io/mavo.js"></script>
 <script src="mavotest.js"></script>
 </head>
 <body>
@@ -129,6 +129,10 @@ table[data-test="expressionRewrite"][data-columns="3"] td:nth-child(n + 2) {
 			<td>$fn.get(foo, "bar")</td>
 		</tr>
 		<tr>
+			<td>foo.bar()</td>
+			<td>foo.bar()</td>
+		</tr>
+		<tr>
 			<td>foo[bar]</td>
 			<td>$fn.get(foo, bar)</td>
 		</tr>
@@ -177,6 +181,10 @@ table[data-test="expressionRewrite"][data-columns="3"] td:nth-child(n + 2) {
 		</tr>
 		<tr title="Pass-through to JS">
 			<td>/* js */ 5+5</td>
+		</tr>
+		<tr title="Context-sensitive functions">
+			<td>duration(1)</td>
+			<td>$fn.duration.call($this, 1)</td>
 		</tr>
 	</table>
 </section>
