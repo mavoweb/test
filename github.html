@@ -8,7 +8,8 @@
 	<script src="https://get.mavo.io/mavo.js"></script>
 	<script src="mavotest.js"></script>
 	<style>
-	[data-test="testParseURL"] td + td {
+	[data-test="testParseURL"] td + td,
+	[data-test="testParams"] td {
 		white-space: pre-line
 	}
 
@@ -124,6 +125,54 @@
 		catch(e) {
 			console.error(e);
 			result.textContent = "ERROR";
+			return false;
+		}
+	}
+	</script>
+</section>
+
+<section>
+	<h1>Metadata via attributes</h1>
+
+	<table class="reftest" data-test="testParams" data-columns="2">
+		<tr mv-app mv-bar="none" mv-source="https://github.com/">
+			<td></td>
+			<td>{
+
+			}</td>
+		</tr>
+	</table>
+
+	<script>
+	function testParams(actual, expected) {
+		try {
+			const props = [
+				"username",
+				"repo",
+				"branch",
+				"filepath",
+				"filename",
+				"path"
+			];
+
+			const m = Mavo.get(actual.parentNode);
+			const b = m.primaryBackend;
+			const r = {};
+
+			props.forEach(p => {
+				if (b[p]) {
+					r[p] = b[p];
+				}
+			});
+
+			actual.textContent = Mavo.toJSON(r);
+			eval("var exp = " + expected.textContent);
+
+			return Test.equals(r, exp);
+		}
+		catch (e) {
+			console.error(e);
+			test.textContent = "ERROR";
 			return false;
 		}
 	}
