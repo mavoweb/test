@@ -74,12 +74,35 @@
 		<tr>
 			<td>https://api.github.com/repos/mavoweb/test/contents/data</td>
 			<td>{
-				apiCall: "repos/mavoweb/test/contents/data"
+				apiCall: "repos/mavoweb/test/contents/data",
+				apiParams: "",
+				apiData: "",
+				username: "mavoweb",
+				repo: "test",
+				resources: "contents",
+				filepath: "data",
+				filename: "",
+				path: "data",
+			}</td>
+		</tr>
+		<tr>
+			<td>https://api.github.com/repos/mavoweb/mavo/issues?state=closed&sort=updated&per_page=100</td>
+			<td>{
+				apiCall: "repos/mavoweb/mavo/issues?state=closed&sort=updated&per_page=100",
+				apiParams: "?state=closed&sort=updated&per_page=100",
+				apiData: "",
+				username: "mavoweb",
+				repo: "mavo",
+				resources: "issues",
+				filepath: "",
+				filename: "",
+				path: "",
 			}</td>
 		</tr>
 		<tr>
 			<td>https://api.github.com/graphql#query{}</td>
 			<td>{
+				apiParams: "",
 				apiCall: "graphql",
 				apiData: {query: "query{}"}
 			}</td>
@@ -283,7 +306,9 @@
 		</tr>
 		<tr>
 			<td>
-				<pre id="data-csv">prop1,prop21,foo2,bar</pre>
+				<pre id="data-csv">prop1,prop2
+1,foo
+2,bar</pre>
 			</td>
 			<td>
 				<script>document.write($$("td pre").pop().outerHTML)</script>
