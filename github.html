@@ -144,7 +144,7 @@
 	</table>
 
 	<script>
-	function testParams(actual, expected) {
+	function testParams(url, actual, expected) {
 		try {
 			const props = [
 				"username",
@@ -155,16 +155,22 @@
 				"path"
 			];
 
-			const m = Mavo.get(actual.parentNode);
+			const row = actual.parentNode;
+			const m = Mavo.get(row);
 			const b = m.primaryBackend;
-			const r = {};
 
+			// Add a title to the row so we could see what params were specified.
+			const o = Object.keys(b.options).filter(o => !["format", "mavo"].includes(o));
+			row.title = o.join(", ");
+
+			const r = {};
 			props.forEach(p => {
 				if (b[p]) {
 					r[p] = b[p];
 				}
 			});
 
+			url.textContent = b.source;
 			actual.textContent = Mavo.toJSON(r);
 			eval("var exp = " + expected.textContent);
 
@@ -172,7 +178,7 @@
 		}
 		catch (e) {
 			console.error(e);
-			test.textContent = "ERROR";
+			actual.textContent = "ERROR";
 			return false;
 		}
 	}
