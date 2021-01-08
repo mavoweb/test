@@ -133,12 +133,63 @@
 
 <section>
 	<h1>Metadata via attributes</h1>
+	<h2>Specifying params that are present in the URL</h2>
 
-	<table class="reftest" data-test="testParams" data-columns="2">
-		<tr mv-app mv-bar="none" mv-source="https://github.com/">
+	<table class="reftest" data-test="testParams" data-columns="3">
+		<thead>
+			<tr>
+				<th>URL</th>
+				<th>Actual</th>
+				<th>Expected</th>
+			</tr>
+		</thead>
+		<tr mv-app mv-bar="none" mv-source="https://github.com/someuser/somerepo/path/to/file/source.json" mv-source-username="leaverou" mv-source-repo="bliss">
 			<td></td>
 			<td>{
-
+				username: "leaverou",
+				repo: "bliss",
+				filepath: "path/to/file",
+				filename: "source.json",
+				path: "path/to/file/source.json"
+			}</td>
+		</tr>
+		<tr mv-app mv-bar="none" mv-source="https://github.com/someuser/somerepo/path/to/file/source.json" mv-source-path="countries.json">
+			<td></td>
+			<td>{
+				username: "someuser",
+				repo: "somerepo",
+				filepath: "path/to/file",
+				filename: "source.json",
+				path: "countries.json"
+			}</td>
+		</tr>
+		<tr mv-app mv-bar="none" mv-source="https://github.com/mavoweb/mavo/source.json" mv-source-filename="countries.json">
+			<td></td>
+			<td>{
+				username: "mavoweb",
+				repo: "mavo",
+				filename: "countries.json",
+				path: "countries.json"
+			}</td>
+		</tr>
+		<tr mv-app mv-bar="none" mv-source="https://github.com/mavoweb/mavo/path/to/file/source.json" mv-source-filepath="" mv-source-filename="countries.json">
+			<td></td>
+			<td>{
+				username: "mavoweb",
+				repo: "mavo",
+				filename: "countries.json",
+				path: "countries.json"
+			}</td>
+		</tr>
+		<tr mv-app mv-bar="none" mv-source="https://github.com/leaverou/bliss/blob/somebranch/data/countries.json" mv-source-branch="master">
+			<td></td>
+			<td>{
+				username: "leaverou",
+				repo: "bliss",
+				branch: "master",
+				filepath: "data",
+				filename: "countries.json",
+				path: "data/countries.json"
 			}</td>
 		</tr>
 	</table>
