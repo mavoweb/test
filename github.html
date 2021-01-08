@@ -179,14 +179,14 @@
 	</table>
 </section>
 
-<section mv-app="githubupload" mv-storage="https://github.com/LeaVerou/mv-data" class="mv-autoedit">
+<section mv-app="githubupload" mv-storage="https://github.com/LeaVerou/mv-data" mv-storage-branch="master" class="mv-autoedit">
 	<h1>Github upload</h1>
 
 	<p>Try to upload an image below. Try pasting an image, or drag & drop too.</p>
 	<img property="image" src="https://mavo.io/logo.svg" style="max-width: 100%">
 </section>
 
-<section mv-app="githubtest" mv-storage="https://github.com/LeaVerou">
+<section mv-app="githubtest" mv-storage="https://github.com/LeaVerou" mv-storage-branch="master">
 	<h1>Github with profile URL</h1>
 
 	<table class="reftest">
@@ -258,7 +258,7 @@
 	</table>
 </section>
 
-<section mv-app="githubapi" mv-storage="https://api.github.com/repos/mavoweb/test/contents/data">
+<section mv-app="githubapi" mv-storage="https://api.github.com/repos/mavoweb/test/contents/data" mv-storage-branch="master">
 	<h1>Github API</h1>
 
 	<p>Need to login to Github for this test to pass.</p>
@@ -293,7 +293,7 @@
 
 	<table class="reftest">
 		<tr>
-			<td mv-app="implicitmvformat" mv-storage="https://github.com/mavoweb/test/data/markdown.md" mv-format="text">
+			<td mv-app="implicitmvformat" mv-storage="https://github.com/mavoweb/test/data/markdown.md" mv-storage-branch="master" mv-format="text">
 				<div property="content"></div>
 			</td>
 			<td>
@@ -327,7 +327,7 @@
 			</td>
 		</tr>
 		<tr title="CSV from Github, implicit mv-format">
-			<td mv-app="csvgithub" mv-storage="https://github.com/mavoweb/test/data/csv.csv">
+			<td mv-app="csvgithub" mv-storage="https://github.com/mavoweb/test/data/csv.csv" mv-storage-branch="master">
 				<div property="row" mv-multiple>
 					<span property="prop1"></span>
 					<span property="prop2"></span>
