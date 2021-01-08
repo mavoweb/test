@@ -194,6 +194,55 @@
 		</tr>
 	</table>
 
+	<h2>Specifying params that <em>aren't</em> present in the URL</h2>
+	<table class="reftest" data-test="testParams" data-columns="3">
+		<thead>
+			<tr>
+				<th>URL</th>
+				<th>Actual</th>
+				<th>Expected</th>
+			</tr>
+		</thead>
+		<tr mv-app="testparams1" mv-bar="none" mv-storage="https://github.com" mv-storage-username="leaverou" mv-storage-repo="mavoweb" mv-storage-path="data.json">
+			<td></td>
+			<td>{
+				username: "leaverou",
+				repo: "mavoweb",
+				filename: "testparams1.json",
+				path: "data.json"
+			}</td>
+		</tr>
+		<tr mv-app="testparams2" mv-bar="none" mv-storage="https://github.com" mv-storage-username="leaverou" mv-storage-path="data.json">
+			<td></td>
+			<td>{
+				username: "leaverou",
+				repo: "mv-data",
+				filename: "testparams2.json",
+				path: "data.json"
+			}</td>
+		</tr>
+		<tr mv-app mv-bar="none" mv-storage="https://github.com/mavoweb" mv-storage-path="path/to/file/data.json" mv-storage-filename="countries.json">
+			<td></td>
+			<td>{
+				username: "mavoweb",
+				repo: "mv-data",
+				filename: "countries.json",
+				path: "path/to/file/data.json"
+			}</td>
+		</tr>
+		<tr mv-app mv-bar="none" mv-storage="https://github.com/dmitrysharabin" mv-storage-filepath="data" mv-storage-filename="countries.json" mv-storage-branch="master">
+			<td></td>
+			<td>{
+				username: "dmitrysharabin",
+				repo: "mv-data",
+				branch: "master",
+				filepath: "data",
+				filename: "countries.json",
+				path: "data/countries.json"
+			}</td>
+		</tr>
+	</table>
+
 	<script>
 	function testParams(url, actual, expected) {
 		try {
