@@ -192,6 +192,22 @@
 				path: "data/countries.json"
 			}</td>
 		</tr>
+		<tr mv-app mv-bar="none" mv-source="https://api.github.com/repos/someuser/somerepo/issues?state=closed&sort=updated&per_page=100" mv-source-username="mavoweb" mv-source-repo="mavo">
+			<td></td>
+			<td>{
+				username: "mavoweb",
+				repo: "mavo"
+			}</td>
+		</tr>
+		<tr mv-app mv-bar="none" mv-source="https://api.github.com/repos/mavoweb/test/contents/somefolder" mv-source-path="data">
+			<td></td>
+			<td>{
+				username: "mavoweb",
+				repo: "test",
+				filepath: "somefolder",
+				path: "data"
+			}</td>
+		</tr>
 	</table>
 
 	<h2>Specifying params that <em>aren't</em> present in the URL</h2>
@@ -239,6 +255,14 @@
 				filepath: "data",
 				filename: "countries.json",
 				path: "data/countries.json"
+			}</td>
+		</tr>
+		<tr mv-app mv-bar="none" mv-storage="https://api.github.com/repos" mv-storage-username="mavoweb" mv-storage-repo="test" mv-storage-path="data">
+			<td></td>
+			<td>{
+				username: "mavoweb",
+				repo: "test",
+				path: "data"
 			}</td>
 		</tr>
 	</table>
