@@ -8,11 +8,12 @@
 	<script src="https://get.mavo.io/mavo.js"></script>
 	<script src="mavotest.js"></script>
 	<style>
-	[data-test="testParseURL"] td + td {
+	[data-test] td + td {
 		white-space: pre-line
 	}
 
-	[data-test="testParseURL"] td:first-of-type {
+	[data-test] td:first-of-type,
+	[data-test] th:first-of-type {
 		word-wrap: break-word;
 		flex: none;
 		width: 20%;
@@ -74,12 +75,35 @@
 		<tr>
 			<td>https://api.github.com/repos/mavoweb/test/contents/data</td>
 			<td>{
-				apiCall: "repos/mavoweb/test/contents/data"
+				apiCall: "repos/mavoweb/test/contents/data",
+				apiParams: "",
+				apiData: "",
+				username: "mavoweb",
+				repo: "test",
+				resources: "contents",
+				filepath: "data",
+				filename: "",
+				path: "data",
+			}</td>
+		</tr>
+		<tr>
+			<td>https://api.github.com/repos/mavoweb/mavo/issues?state=closed&sort=updated&per_page=100</td>
+			<td>{
+				apiCall: "repos/mavoweb/mavo/issues?state=closed&sort=updated&per_page=100",
+				apiParams: "?state=closed&sort=updated&per_page=100",
+				apiData: "",
+				username: "mavoweb",
+				repo: "mavo",
+				resources: "issues",
+				filepath: "",
+				filename: "",
+				path: "",
 			}</td>
 		</tr>
 		<tr>
 			<td>https://api.github.com/graphql#query{}</td>
 			<td>{
+				apiParams: "",
 				apiCall: "graphql",
 				apiData: {query: "query{}"}
 			}</td>
@@ -101,6 +125,184 @@
 		catch(e) {
 			console.error(e);
 			result.textContent = "ERROR";
+			return false;
+		}
+	}
+	</script>
+</section>
+
+<section>
+	<h1>Metadata via attributes</h1>
+	<h2>Specifying params that are present in the URL</h2>
+
+	<table class="reftest" data-test="testParams" data-columns="3">
+		<thead>
+			<tr>
+				<th>URL</th>
+				<th>Actual</th>
+				<th>Expected</th>
+			</tr>
+		</thead>
+		<tr mv-app mv-bar="none" mv-source="https://github.com/someuser/somerepo/path/to/file/source.json" mv-source-username="leaverou" mv-source-repo="bliss">
+			<td></td>
+			<td>{
+				username: "leaverou",
+				repo: "bliss",
+				filepath: "path/to/file",
+				filename: "source.json",
+				path: "path/to/file/source.json"
+			}</td>
+		</tr>
+		<tr mv-app mv-bar="none" mv-source="https://github.com/someuser/somerepo/path/to/file/source.json" mv-source-path="countries.json">
+			<td></td>
+			<td>{
+				username: "someuser",
+				repo: "somerepo",
+				filepath: "path/to/file",
+				filename: "source.json",
+				path: "countries.json"
+			}</td>
+		</tr>
+		<tr mv-app mv-bar="none" mv-source="https://github.com/mavoweb/mavo/source.json" mv-source-filename="countries.json">
+			<td></td>
+			<td>{
+				username: "mavoweb",
+				repo: "mavo",
+				filename: "countries.json",
+				path: "countries.json"
+			}</td>
+		</tr>
+		<tr mv-app mv-bar="none" mv-source="https://github.com/mavoweb/mavo/path/to/file/source.json" mv-source-filepath="" mv-source-filename="countries.json">
+			<td></td>
+			<td>{
+				username: "mavoweb",
+				repo: "mavo",
+				filename: "countries.json",
+				path: "countries.json"
+			}</td>
+		</tr>
+		<tr mv-app mv-bar="none" mv-source="https://github.com/leaverou/bliss/blob/somebranch/data/countries.json" mv-source-branch="master">
+			<td></td>
+			<td>{
+				username: "leaverou",
+				repo: "bliss",
+				branch: "master",
+				filepath: "data",
+				filename: "countries.json",
+				path: "data/countries.json"
+			}</td>
+		</tr>
+		<tr mv-app mv-bar="none" mv-source="https://api.github.com/repos/someuser/somerepo/issues?state=closed&sort=updated&per_page=100" mv-source-username="mavoweb" mv-source-repo="mavo">
+			<td></td>
+			<td>{
+				username: "mavoweb",
+				repo: "mavo"
+			}</td>
+		</tr>
+		<tr mv-app mv-bar="none" mv-source="https://api.github.com/repos/mavoweb/test/contents/somefolder" mv-source-path="data">
+			<td></td>
+			<td>{
+				username: "mavoweb",
+				repo: "test",
+				filepath: "somefolder",
+				path: "data"
+			}</td>
+		</tr>
+	</table>
+
+	<h2>Specifying params that <em>aren't</em> present in the URL</h2>
+	<table class="reftest" data-test="testParams" data-columns="3">
+		<thead>
+			<tr>
+				<th>URL</th>
+				<th>Actual</th>
+				<th>Expected</th>
+			</tr>
+		</thead>
+		<tr mv-app="testparams1" mv-bar="none" mv-storage="https://github.com" mv-storage-username="leaverou" mv-storage-repo="mavoweb" mv-storage-path="data.json">
+			<td></td>
+			<td>{
+				username: "leaverou",
+				repo: "mavoweb",
+				filename: "testparams1.json",
+				path: "data.json"
+			}</td>
+		</tr>
+		<tr mv-app="testparams2" mv-bar="none" mv-storage="https://github.com" mv-storage-username="leaverou" mv-storage-path="data.json">
+			<td></td>
+			<td>{
+				username: "leaverou",
+				repo: "mv-data",
+				filename: "testparams2.json",
+				path: "data.json"
+			}</td>
+		</tr>
+		<tr mv-app mv-bar="none" mv-storage="https://github.com/mavoweb" mv-storage-path="path/to/file/data.json" mv-storage-filename="countries.json">
+			<td></td>
+			<td>{
+				username: "mavoweb",
+				repo: "mv-data",
+				filename: "countries.json",
+				path: "path/to/file/data.json"
+			}</td>
+		</tr>
+		<tr mv-app mv-bar="none" mv-storage="https://github.com/dmitrysharabin" mv-storage-filepath="data" mv-storage-filename="countries.json" mv-storage-branch="master">
+			<td></td>
+			<td>{
+				username: "dmitrysharabin",
+				repo: "mv-data",
+				branch: "master",
+				filepath: "data",
+				filename: "countries.json",
+				path: "data/countries.json"
+			}</td>
+		</tr>
+		<tr mv-app mv-bar="none" mv-storage="https://api.github.com/repos" mv-storage-username="mavoweb" mv-storage-repo="test" mv-storage-path="data">
+			<td></td>
+			<td>{
+				username: "mavoweb",
+				repo: "test",
+				path: "data"
+			}</td>
+		</tr>
+	</table>
+
+	<script>
+	function testParams(url, actual, expected) {
+		try {
+			const props = [
+				"username",
+				"repo",
+				"branch",
+				"filepath",
+				"filename",
+				"path"
+			];
+
+			const row = actual.parentNode;
+			const m = Mavo.get(row);
+			const b = m.primaryBackend;
+
+			// Add a title to the row so we could see what params were specified.
+			const o = Object.keys(b.options).filter(o => !["format", "mavo"].includes(o));
+			row.title = o.join(", ");
+
+			const r = {};
+			props.forEach(p => {
+				if (b[p]) {
+					r[p] = b[p];
+				}
+			});
+
+			url.textContent = b.source;
+			actual.textContent = Mavo.toJSON(r);
+			eval("var exp = " + expected.textContent);
+
+			return Test.equals(r, exp);
+		}
+		catch (e) {
+			console.error(e);
+			actual.textContent = "ERROR";
 			return false;
 		}
 	}
@@ -156,14 +358,14 @@
 	</table>
 </section>
 
-<section mv-app="githubupload" mv-storage="https://github.com/LeaVerou/mv-data" class="mv-autoedit">
+<section mv-app="githubupload" mv-storage="https://github.com/LeaVerou/mv-data" mv-storage-branch="master" class="mv-autoedit">
 	<h1>Github upload</h1>
 
 	<p>Try to upload an image below. Try pasting an image, or drag & drop too.</p>
 	<img property="image" src="https://mavo.io/logo.svg" style="max-width: 100%">
 </section>
 
-<section mv-app="githubtest" mv-storage="https://github.com/LeaVerou">
+<section mv-app="githubtest" mv-storage="https://github.com/LeaVerou" mv-storage-branch="master">
 	<h1>Github with profile URL</h1>
 
 	<table class="reftest">
@@ -235,7 +437,7 @@
 	</table>
 </section>
 
-<section mv-app="githubapi" mv-storage="https://api.github.com/repos/mavoweb/test/contents/data">
+<section mv-app="githubapi" mv-storage="https://api.github.com/repos/mavoweb/test/contents/data" mv-storage-branch="master">
 	<h1>Github API</h1>
 
 	<p>Need to login to Github for this test to pass.</p>
@@ -270,7 +472,7 @@
 
 	<table class="reftest">
 		<tr>
-			<td mv-app="implicitmvformat" mv-storage="https://github.com/mavoweb/test/data/markdown.md" mv-format="text">
+			<td mv-app="implicitmvformat" mv-storage="https://github.com/mavoweb/test/data/markdown.md" mv-storage-branch="master" mv-format="text">
 				<div property="content"></div>
 			</td>
 			<td>
@@ -283,7 +485,9 @@
 		</tr>
 		<tr>
 			<td>
-				<pre id="data-csv">prop1,prop21,foo2,bar</pre>
+				<pre id="data-csv">prop1,prop2
+1,foo
+2,bar</pre>
 			</td>
 			<td>
 				<script>document.write($$("td pre").pop().outerHTML)</script>
@@ -302,7 +506,7 @@
 			</td>
 		</tr>
 		<tr title="CSV from Github, implicit mv-format">
-			<td mv-app="csvgithub" mv-storage="https://github.com/mavoweb/test/data/csv.csv">
+			<td mv-app="csvgithub" mv-storage="https://github.com/mavoweb/test/data/csv.csv" mv-storage-branch="master">
 				<div property="row" mv-multiple>
 					<span property="prop1"></span>
 					<span property="prop2"></span>
