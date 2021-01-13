@@ -176,10 +176,10 @@ table[data-test="expressionRewrite"][data-columns="3"] td:nth-child(n + 2) {
 			<td>1 .. 5</td>
 			<td>$fn.range(1, 5)</td>
 		</tr>
-		<tr title="Pass-through to JS">
+		<tr title="Regular JS" data-error>
 			<td>foo.filter(a => a + 5)</td>
 		</tr>
-		<tr title="Pass-through to JS">
+		<tr title="Regular JS" data-error>
 			<td>/* js */ 5+5</td>
 		</tr>
 		<tr title="Context-sensitive functions">

@@ -363,7 +363,12 @@ var _ = self.RefTest = $.Class({
 
 			var previousClass = tr.classList.contains("pass")? "pass" : "fail";
 			tr.classList.remove("pass", "fail");
-			var className = ret && !error? "pass" : "fail";
+			let pass = ret;
+			if (error) {
+				pass = tr.hasAttribute("data-error");
+			}
+
+			var className = pass? "pass" : "fail";
 			tr.classList.add(className);
 
 			if (className == "pass" && className != previousClass && !tr.classList.contains("interactive")) {

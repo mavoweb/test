@@ -52,6 +52,11 @@ Examples:
 - `data-click="wait 1s after load"`: Clicks the element it's specified on 1 second after the `load` event fires.
 - `data-click="wait 1s after load 2 times"`: Same as above, but clicks twice.
 
+## `data-error` attribute
+
+Use on tests that *should* produce an error to pass.
+In future versions of the test harness the value will allow you to specify a specific error class (e.g. `TypeError`).
+
 ## `print()` and `println()` functions
 
 Sometimes what is tested is actual JS output. In that case, use `<script>` tags and the `print()` or `println()` functions.
