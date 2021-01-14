@@ -450,24 +450,50 @@ var _ = self.RefTest = $.Class({
 			// If argument is passed, returns a comparison function for that number of significant digits
 			fuzzyNumbers: function(precision, ...cells) {
 				let comparator = (...cells) => {
-					let round = n => {
-						let factor = 10 ** precision;
-						return (+n).toLocaleString("en-us", {maximumFractionDigits: precision})
-						// return Math.round(n * factor) / factor;
-					};
+					let rNumber = /-?\d*\.?\d+(e-?\d+)?|NaN/g
 
 					let contents;
 					if (cells[0] instanceof Node) {
-						contents = cells.map(c => c.textContent.trim().replace(/\s+/g, " ").replace(/-?\d*\.?\d+/g, round));
+						contents = cells.map(c => c.textContent);
 					}
 					else {
-						contents = cells.map(round);
+						contents = cells;
 					}
 
 					let ref = contents.pop();
 					let test = contents.pop();
 
-					return ref === test;
+					let refNumbers = [];
+					ref = ref.replace(rNumber, n => {
+						refNumbers.push(+n);
+						return "";
+					});
+
+					let testNumbers = [];
+					test = test.replace(rNumber, n => {
+						testNumbers.push(+n);
+						return "";
+					});
+
+					ref = ref.trim().replace(/\s+/g, " ");
+					test = test.trim().replace(/\s+/g, " ");
+
+					if (ref !== test || refNumbers.length !== testNumbers.length) {
+						return false;
+					}
+
+					// Pairwise subtract numbers
+					let ε = .1 ** precision;
+					let ret = refNumbers.every((n, i) => {
+						let n_t = testNumbers[i];
+						if (Number.isNaN(n_t)) {
+							return Number.isNaN(n);
+						}
+
+						return Math.abs(n - n_t) < ε;
+					});
+
+					return ret;
 				};
 
 				if (!Number.isInteger(precision)) {
@@ -628,7 +654,7 @@ var _ = self.RefTest = $.Class({
 });
 
 for (let i = 0; i < 10; i++) {
-	RefTest.compare["fuzzyNumbers" + i] = RefTest.compare.fuzzyNumbers.bind(RefTest.compare, i);
+	RefTest.compare["fuzzyNumbers" + i] = RefTest.compare.fuzzyNumbers//.bind(RefTest.compare, i);
 }
 
 document.addEventListener("DOMContentLoaded", function(){
