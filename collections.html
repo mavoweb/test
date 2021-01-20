@@ -6,6 +6,11 @@
 	<link rel="stylesheet" href="https://get.mavo.io/mavo.css" />
 	<link rel="stylesheet" href="style.css" />
 	<style>
+		* {
+			 --prepend: initial;
+			 --append: initial;
+		}
+
 		::after {
 			content: " " var(--append);
 		}
@@ -18,7 +23,7 @@
 				flex: 1;
 			}
 
-		[mv-app="customitemcontrols"] .mv-item-bar {
+		[mv-app="customitemcontrols"] .mv-item-bar.mv-item-bar {
 			position: static;
 			opacity: 1;
 			border: 0;
@@ -547,7 +552,7 @@
 				</div>
 			</td>
 			<td>
-				<div class="bordered"><div class="mv-item-bar mv-ui">A</div> (Code) Online</div>
+				<div class="bordered"><div class="mv-item-bar mv-ui">A</div>  Online</div>
 				<div class="bordered"><div class="mv-item-bar mv-ui">A</div> us United States</div>
 				<div class="bordered"><div class="mv-item-bar mv-ui">A</div> gb United Kingdom </div>
 			</td>
