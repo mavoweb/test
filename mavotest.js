@@ -632,7 +632,7 @@ var _ = self.RefTest = $.Class({
 			var ret = {times: 1};
 
 			click = click.replace(/wait ([\d.]+)s/i, ($0, $1) => {
-				ret.delay = $1;
+				ret.delay = $1 * 1000;
 				return "";
 			});
 

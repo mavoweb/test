@@ -332,20 +332,20 @@
 
 	<p>Mutation observers won't fire here, so just click to trigger them.</p>
 
-	<table class="reftest" data-test="selector">
+	<table class="reftest" data-test="selector" data-click=".mv-login wait .1s, .mv-bar wait .2s">
 		<tr>
 			<td mv-app mv-storage="local2" style="width: 600px; flex: none">
 				<div property="prop1"></div>
 			</td>
 			<td>.mv-bar:not(.mv-compact):not(.mv-tiny)</td>
 		</tr>
-		<tr data-click="after mv-load">
-			<td mv-app mv-storage="local2" style="width: 400px; flex: none">
+		<tr>
+			<td mv-app mv-storage="local2" style="width: 450px; flex: none">
 				<div property="prop1"></div>
 			</td>
 			<td>.mv-bar.mv-compact:not(.mv-tiny)</td>
 		</tr>
-		<tr data-click="after mv-load">
+		<tr>
 			<td mv-app mv-storage="local2" style="width: 120px; flex: none">
 				<div property="prop1"></div>
 			</td>
@@ -364,7 +364,7 @@
 					this.user = {
 						name: "username",
 						username: "username",
-						avatar: 'data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" width="100" viewBox="0 0 100 100"><circle cx="50" cy="50" r="50" fill="red" /></svg>',
+						avatar: 'data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" width="100" height="100" viewBox="0 0 100 100"><circle cx="50" cy="50" r="50" fill="red" /></svg>',
 						url: "https://github.com/username"
 					};
 				});
