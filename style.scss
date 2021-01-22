@@ -268,13 +268,24 @@ table.reftest {
 		}
 	}
 
-	tr[title] {
+	&.ignore tr,
+	tr.ignore {
+		--append: " (Ignored)";
+
+		&.fail {
+			--append: " (Known failure, ignored)"
+		}
+	}
+
+	tr[title],
+	&.ignore tr,
+	tr.ignore {
 		td {
 			padding-top: 1.5em;
 		}
 
 		&::before {
-			content: attr(title);
+			content: attr(title) var(--append, "");
 			position: absolute;
 			top: 0; left: 0; right: 0;
 			padding: .4em;

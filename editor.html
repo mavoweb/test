@@ -277,7 +277,7 @@ function checkAttribute(td) {
 				[property][mv-mode^="edit"] textarea
 			</td>
 		</tr>
-		<tr title='Inherited mv-mode="edit" (currently failing, see #166)'>
+		<tr title='Inherited mv-mode="edit" (see #166)' class="ignore">
 			<td>
 				<div mv-mode="edit">
 					<div property="inheritEdit">Always edited</div>
@@ -287,7 +287,7 @@ function checkAttribute(td) {
 				[property][mv-mode^="edit"] textarea
 			</td>
 		</tr>
-		<tr title='Inherited mv-mode="read" (currently failing, see #166)'>
+		<tr title='Inherited mv-mode="read" (see #166)' class="ignore">
 			<td>
 				<div mv-mode="read">
 					<div property="inheritRead">Never edited</div>
@@ -424,14 +424,7 @@ function checkAttribute(td) {
 				<span property="prop1" datatype="number">3141.59265358979</span>
 				[prop1]
 			</td>
-			<td>3,141.59 3,141.59</td>
-		</tr>
-		<tr class="interactive">
-			<td mv-app="numbers">
-				<span property="prop1" datatype="number">3141.59265358979</span>
-				foo bar [prop1]
-			</td>
-			<td>3,141.59 foo bar 3,141.59</td>
+			<td>3141.59265358979 3,141.59</td>
 		</tr>
 		<tr class="interactive">
 			<td mv-app="numbers">

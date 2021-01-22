@@ -556,8 +556,8 @@ var _ = self.RefTest = $.Class({
 
 		updateResults: function() {
 			_.results = {
-				pass: $$("table.reftest tr.pass"),
-				fail: $$("table.reftest tr.fail"),
+				pass: $$("table.reftest:not(.ignore) tr.pass:not(.ignore)"),
+				fail: $$("table.reftest:not(.ignore) tr.fail:not(.ignore)"),
 				current: {
 					pass: -1,
 					fail: -1

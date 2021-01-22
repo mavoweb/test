@@ -218,10 +218,21 @@ table.reftest {
       color: var(--dark-color);
       font: bold 75%/1 sans-serif;
       text-shadow: 0 0 1px white, 0 0 2px white; }
-  table.reftest tr[title] td {
+  table.reftest.ignore tr,
+  table.reftest tr.ignore {
+    --append: " (Ignored)"; }
+    table.reftest.ignore tr.fail,
+    table.reftest tr.ignore.fail {
+      --append: " (Known failure, ignored)"
+		; }
+  table.reftest tr[title] td,
+  table.reftest.ignore tr td,
+  table.reftest tr.ignore td {
     padding-top: 1.5em; }
-  table.reftest tr[title]::before {
-    content: attr(title);
+  table.reftest tr[title]::before,
+  table.reftest.ignore tr::before,
+  table.reftest tr.ignore::before {
+    content: attr(title) var(--append, "");
     position: absolute;
     top: 0;
     left: 0;
