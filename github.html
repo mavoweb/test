@@ -332,7 +332,7 @@
 		</tr>
 	</table>
 </section>
-<section mv-app="dynamic" mv-storage="https://github.com/mavoweb/test/blob/master/data/[flip? 'countries' : 'people'].json">
+<section mv-app="dynamic" mv-storage="https://github.com/mavoweb/test/blob/master/data/[if(flip, 'countries' , 'people')].json">
 	<h1>Dynamic</h1>
 
 	<p><input type="checkbox" property="flip"> Check me</p>
