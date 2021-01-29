@@ -185,7 +185,7 @@
 			<td>NaN</td>
 		</tr>
 		<tr title="Object printing">
-			<td property="obj">[{foo: 1}]</td>
+			<td property="obj">[foo: 1]</td>
 			<td>{ "foo": 1 }</td>
 		</tr>
 		<tr title="Object value">
@@ -193,7 +193,7 @@
 			<td>1</td>
 		</tr>
 		<tr title="Recursive Object printing">
-			<td property="obj2" mv-expressions="( )">([{foo: 1}, {bar: {baz: 2}}])</td>
+			<td property="obj2">[list(foo: 1, bar: (baz: 2))]</td>
 			<td>{ "foo": 1 }, { "bar": { "baz": 2 } }</td>
 		</tr>
 		<tr title="Recursive object value">
