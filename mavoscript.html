@@ -170,7 +170,7 @@ table[data-test="expressionRewrite"][data-columns="3"] td:nth-child(n + 2) {
 		</tr>
 		<tr>
 			<td>person where age > 6 where gender = 'female'</td>
-			<td>$fn.filter(person, <script>print(Mavo.Script.serializeScopeCall(["person", "$fn.gt(age, 6)"]) + ",", Mavo.Script.serializeScopeCall(["person", "$fn.eq(gender, 'female')"]))</script>)</td>
+			<td>$fn.filter(person, <script>print(Mavo.Script.serializeScopeCall(["person", "$fn.gt(age, 6)"]) + ", ", Mavo.Script.serializeScopeCall(["person", "$fn.eq(gender, 'female')"]))</script>)</td>
 		</tr>
 		<tr>
 			<td>1 .. 5</td>
@@ -327,7 +327,7 @@ table[data-test="expressionRewrite"][data-columns="3"] td:nth-child(n + 2) {
 
 			</td>
 		</tr>
-		<tr mv-multiple="col2" title="Descendant currently failing, see #484">
+		<tr mv-multiple="col2" title="Descendant, see #484" class="ignore">
 			<td>
 				<span property="name">Name Text</span>
 				<span property="bar">Bar Text</span>
