@@ -66,7 +66,7 @@
 				23 Dec 2017 08:00
 			</td>
 		</tr>
-		<tr title="Date and time, default formatting, no data">
+		<tr title="Date and time, default formatting, no data" class="ignore">
 			<td>
 				<time property="datetime2" datetime="YYYY-MM-DD HH:ii"></time>
 			</td>
@@ -253,8 +253,8 @@
 		<tr title="Via mv-value on parent">
 			<td id="with-mv-value">
 				<div property="foo3" mv-multiple mv-value="[
-						{max: 800, value: 750},
-						{max: 900}
+						group(max: 800, value: 750),
+						group(max: 900)
 					]">
 					<input type="range" property="value" min="0" max="[max]" mv-default="[max / 2]">
 					[value]
