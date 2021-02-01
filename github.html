@@ -332,14 +332,15 @@
 		</tr>
 	</table>
 </section>
-<section mv-app="dynamic" mv-storage="https://github.com/mavoweb/test/blob/master/data/[if(flip, 'countries' , 'people')].json">
+<section>
 	<h1>Dynamic</h1>
 
-	<p><input type="checkbox" property="flip"> Check me</p>
-
-	<table class="reftest">
+	<table class="reftest" data-click='input[property=flip] wait .1s after mv-load'>
 		<tr>
-			<td>
+			<td mv-app="dynamic" mv-storage="https://github.com/mavoweb/test/blob/master/data/[if(flip, 'countries' , 'people')].json">
+				<div class="test-content-ignore">
+					<input type="checkbox" property="flip"> Check me
+				</div>
 				<ul>
 					<li property="country" mv-multiple>
 						<span property="code">Code</span>
