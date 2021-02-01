@@ -95,6 +95,18 @@ html:not(.index) {
 		color: white;
 		font: bold 150%/1 Helvetica Neue, sans-serif;
 
+		@media (max-height: 5em) {
+			&::after {
+				content: var(--page) " tests";
+				position: absolute;
+				top: 0;
+				right: 0;
+				padding: .2em;
+				opacity: .5;
+				pointer-events: auto;
+			}
+		}
+
 		.home {
 			padding: .4em .3em;
 			font-size: 80%;

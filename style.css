@@ -74,6 +74,15 @@ html:not(.index) body > nav {
   background: black;
   color: white;
   font: bold 150%/1 Helvetica Neue, sans-serif; }
+  @media (max-height: 5em) {
+    html:not(.index) body > nav::after {
+      content: var(--page) " tests";
+      position: absolute;
+      top: 0;
+      right: 0;
+      padding: .2em;
+      opacity: .5;
+      pointer-events: auto; } }
   html:not(.index) body > nav .home {
     padding: .4em .3em;
     font-size: 80%; }

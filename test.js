@@ -576,7 +576,8 @@ var _ = self.RefTest = $.Class({
 
 			$.style(_.nav, {
 				"--pass": detail.pass,
-				"--fail": detail.fail
+				"--fail": detail.fail,
+				"--page": `"${Test.currentPage}"`
 			});
 
 			// $(".count-interactive", _.nav).textContent = _.results.interactive.length;
@@ -660,13 +661,13 @@ for (let i = 0; i < 10; i++) {
 
 document.addEventListener("DOMContentLoaded", function(){
 	if (/\/$/.test(location.pathname)) {
-		var page = "index";
+		Test.currentPage = "index";
 	}
 	else {
-		var page = (location.pathname.match(/\/([a-z-]+)(?:\.html|\/?$)/) || [, "index"])[1];
+		Test.currentPage = (location.pathname.match(/\/([a-z-]+)(?:\.html|\/?$)/) || [, "index"])[1];
 	}
 
-	if (page == "index") {
+	if (Test.currentPage == "index") {
 		return;
 	}
 
