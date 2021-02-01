@@ -2,6 +2,8 @@
 
 self.Test = {
 	runSelected: function(names) {
+		iframes.innerHTML = "";
+		
 		let tests = names.map(name => {
 			return $.create("iframe", {
 				inside: iframes,
