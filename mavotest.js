@@ -11,7 +11,6 @@ self.Test = {
 						updateTotals();
 
 						evt.target.contentWindow.document.addEventListener("testresultsupdate", evt => {
-							console.log("got event", evt);
 							updateTotals();
 						});
 					}

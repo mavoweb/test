@@ -16,18 +16,30 @@
 
 	<section>
 		<ul>
+			<li>
+				<label>
+					<input type="checkbox" property="selectAll" mv-action="set(toRun, selectAll)"
+					indeterminate="[0 < count(toRun) < count(file.name)]"
+					checked="[count(toRun) = count(file.name)]">
+					Select/unselect all
+				</label>
+			</li>
 			<li property="file" mv-multiple mv-if="ends(name, '.html') and name != 'index.html'" class="[if(name = selected, 'selected')]">
+				<input type="checkbox" property="toRun">
 				<meta property="id" content="[to(name, '.html')]">
 				<a target="test" property="name" mv-action="set(selected, name)">[id]</a>
 				<a href="[name]" class="new-tab" title="Open in new Tab" target="_blank">↗️</a>
 			</li>
 		</ul>
+		<button mv-action="Test.runSelected(condense(name where toRun))">Run selected</button>
 	</section>
 </section>
+<div id="iframes"></div>
 <iframe name="test" src="[first(name)]"></iframe>
 <meta property="selected" />
 
 <script src="https://get.mavo.io/mavo.js"></script>
+<script src="test.js"></script>
 
 </body>
 </html>
