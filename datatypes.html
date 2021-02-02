@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+
+<meta charset="UTF-8">
+<title>Datatype Tests</title>
+<link rel="stylesheet" href="https://get.mavo.io/mavo.css" />
+<link rel="stylesheet" href="style.css" />
+
+<script src="https://get.mavo.io/mavo.js"></script>
+<script src="mavotest.js"></script>
+</head>
+<body>
+
+<h1>Datatype Tests</h1>
+
+<p>These tests test how certain data types behave, both in expressions, as well as rendered data.</p>
+
+<section mv-app="promises" mv-storage="#data">
+	<h1>Promises</h1>
+
+	<table class="reftest">
+		<tr>
+			<td>
+				<pre id="data"></pre>
+			</td>
+		</tr>
+		<tr title="Async data">
+			<td>
+				<span property="promise"></span>
+			</td>
+			<td>1</td>
+		</tr>
+		<tr title="Async expression">
+			<td>[getPromise(1000, 2)]</td>
+			<td>2</td>
+		</tr>
+		<tr title="Rejected promise">
+			<td>[getRejectedPromise()]</td>
+			<td>Error: hi</td>
+		</tr>
+		<tr title="New promises should override previous ones">
+			<td>
+				<span property="promise2" mv-default="[getPromise(2000, 3)]"></span>
+			</td>
+			<td>
+				4
+			</td>
+		</tr>
+		<tr title="Show fallback while promise is pending">
+			<td mv-value="getPromise(1 * days(), 5)">Loading…</td>
+			<td>Loading…</td>
+		</tr>
+		<tr title="Promise returning entire object">
+			<td property="group">
+				<span property="child"></span>
+			</td>
+			<td>
+				6
+			</td>
+		</tr>
+	</table>
+	<script>
+		Mavo.hooks.add("render-start", function(env) {
+			if (this.id !== "promises") {
+				return;
+			}
+
+			env.data = env.data || {};
+			env.data.promise = getPromise(1000, 1);
+			env.data.promise2 = getPromise(500, 4);
+			env.data.group = getPromise(1000, {child: 6});
+		});
+
+		function getPromise(s, v) {
+			return new Promise(resolve => setTimeout(() => resolve(v), s));
+		}
+
+		function getRejectedPromise() {
+			return Promise.reject(Error("hi"));
+		}
+	</script>
+</section>
+
+</body>
+</html>
