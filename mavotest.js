@@ -222,6 +222,11 @@ var _ = self.RefTest = $.Class({
 			$.remove(script);
 		}
 
+		if (this.table.rows.length === 0) {
+			console.warn("Empty reftest:", this.table);
+			return;
+		}
+
 		// Add table header if not present
 		var cells = $$(this.table.rows[0].cells);
 
