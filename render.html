@@ -378,12 +378,6 @@
 				<script>document.write($$("td pre").pop().outerHTML)</script>
 			</td>
 		</tr>
-		<tr>
-			<td mv-app="mvpath7" mv-storage="#data-mvpath-6">
-				<span property="prop1"></span>
-			</td>
-			<td>2</td>
-		</tr>
 	</table>
 </section>
 
@@ -548,6 +542,53 @@
 			</td>
 			<td>2 2</td>
 		</tr>
+	</table>
+</section>
+
+<section>
+	<h1>Rendering objects on primitives</h1>
+
+	<table class="reftest" data-click=".mv-bar .mv-save wait 1s after mv-load">
+		<tr>
+			<td>
+				<pre id="data-object">{
+	"prop1": {
+		"foo": 5
+	}
+}</pre>
+			</td>
+		</tr>
+		<tr title="Plain object">
+			<td mv-app="objectonprimitive" mv-storage="#data-object">
+				<span property="prop1"></span>
+				<span property="prop2"></span>
+			</td>
+			<td>{ "foo": 5 }</td>
+		</tr>
+		<tbody mv-app mv-source='data:application/json,{
+			"prop": [{"prop1": 1}, {"prop1": 2}]
+		}' mv-expressions-ignore="mv-source">
+			<tr>
+				<td>
+					<meta property="prop" />
+				</td>
+				<td></td>
+			</tr>
+			<tr title="Array of objects on a helper variable">
+				<td>
+					[prop]
+				</td>
+				<td>
+					{ "prop1": 1 }, { "prop1": 2 }
+				</td>
+			</tr>
+			<tr title="Property from inside a helper variable">
+				<td>
+					[prop1]
+				</td>
+				<td>1, 2</td>
+			</tr>
+		</tbody>
 	</table>
 </section>
 
@@ -847,35 +888,6 @@
 			<td>
 				<div>1</div><div>2</div>
 			</td>
-		</tr>
-	</table>
-</section>
-
-<section mv-app mv-source='data:application/json,{
-	"prop": [{"prop1": 1}, {"prop1": 2}]
-}' mv-expressions-ignore="mv-source">
-	<h1>Rendering an object on a helper property</h1>
-
-	<table class="reftest">
-		<tr>
-			<td>
-				<meta property="prop" />
-			</td>
-			<td></td>
-		</tr>
-		<tr>
-			<td>
-				[prop]
-			</td>
-			<td>
-				{ "prop1": 1 }, { "prop1": 2 }
-			</td>
-		</tr>
-		<tr>
-			<td>
-				[prop1]
-			</td>
-			<td>1, 2</td>
 		</tr>
 	</table>
 </section>
