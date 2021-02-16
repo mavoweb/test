@@ -183,37 +183,6 @@ function checkAttribute(td) {
 	<p>Try toggling Edit and verify the test still passes.</p>
 
 	<table class="reftest">
-		<tr class="interactive">
-			<td mv-app="select" class="mv-autoedit">
-				<span property="country">
-					<select>
-						<option value="us">United States</option>
-						<option value="gb">United Kingdom</option>
-					</select>
-				</span>
-				[country]
-			</td>
-			<td>United States us</td>
-		</tr>
-		<tr class="interactive">
-			<td mv-app="select">
-				<span property="country">
-					<select>
-						<option value="us">United States</option>
-						<option value="gb">United Kingdom</option>
-					</select>
-				</span>
-				[country]
-			</td>
-			<td>United States us</td>
-		</tr>
-		<tr title="Linked &lt;select>" class="interactive">
-			<td mv-app="select">
-				<span property="country" mv-edit="#countries-select"></span>
-				[country]
-			</td>
-			<td>United States us</td>
-		</tr>
 		<tr title="Exposed, add one" data-click=".mv-add-exposed wait 1s after mv-load">
 			<td mv-app="select" class="mv-autoedit">
 				<select property="exposed" mv-multiple>
@@ -224,9 +193,53 @@ function checkAttribute(td) {
 			<td>United StatesUnited States</td>
 		</tr>
 	</table>
+</section>
+
+<section>
+	<h1>mv-edit</h1>
+
+	<p>Try toggling Edit and verify the test still passes.</p>
+
+	<table class="reftest">
+		<tr title="Linked &lt;select>" class="interactive">
+			<td mv-app="select">
+				<span property="country" mv-edit="#countries-select"></span>
+				[country]
+			</td>
+			<td>United States us</td>
+		</tr>
+		<tr title="Not found editor" class="interactive">
+			<td mv-app="select" class="mv-autoedit">
+				<span property="country" mv-edit="#foo-select"></span>
+				[country]
+			</td>
+			<td></td>
+		</tr>
+		<tr title="Dynamic mv-edit" class="interactive" data-click="input[type=checkbox] wait 1s">
+			<td mv-app="select" class="mv-autoedit">
+				<input type="checkbox" property="showName" class="test-content-ignore">
+				<span property="country" mv-edit="#[if(showName, 'name', 'countries')]-select"></span>
+				[country]
+			</td>
+			<td>Lea Lea</td>
+		</tr>
+		<tr title="Dynamic mv-edit with not found editor" class="interactive" data-click="input[type=checkbox] wait 1s">
+			<td mv-app="select" class="mv-autoedit">
+				<input type="checkbox" property="showName" class="test-content-ignore">
+				<span property="country" mv-edit="#[if(showName, 'foo', 'countries')]-select"></span>
+				[country]
+			</td>
+			<td></td>
+		</tr>
+	</table>
 	<select id="countries-select">
 		<option value="us">United States</option>
 		<option value="gb">United Kingdom</option>
+	</select>
+	<select id="name-select">
+		<option>Lea</option>
+		<option>Chris</option>
+		<option>Zoe</option>
 	</select>
 </section>
 
