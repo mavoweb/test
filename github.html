@@ -208,6 +208,14 @@
 				path: "data"
 			}</td>
 		</tr>
+		<tr mv-app mv-bar="none" mv-source="https://api.github.com/graphql#query{}" mv-source-query="query { viewer { login } }">
+			<td></td>
+			<td>{
+				apiData: {
+					query: "query { viewer { login } }"
+				}
+			}</td>
+		</tr>
 	</table>
 
 	<h2>Specifying params that <em>aren't</em> present in the URL</h2>
@@ -265,6 +273,14 @@
 				path: "data"
 			}</td>
 		</tr>
+		<tr mv-app mv-bar="none" mv-source="https://api.github.com/graphql" mv-source-query="query { viewer { login } }">
+			<td></td>
+			<td>{
+				apiData: {
+					query: "query { viewer { login } }"
+				}
+			}</td>
+		</tr>
 	</table>
 
 	<script>
@@ -276,7 +292,8 @@
 				"branch",
 				"filepath",
 				"filename",
-				"path"
+				"path",
+				"apiData"
 			];
 
 			const row = actual.parentNode;
