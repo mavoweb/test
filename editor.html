@@ -525,6 +525,69 @@ function checkAttribute(td) {
 	</table>
 </section>
 
+<section mv-app class="mv-autoedit" mv-init='data:application/json,{"col1":[{"slider":5, "date":"1986-06-13"}, {"slider":15, "date":"2020-06-13"}]}' mv-expressions-ignore="mv-init">
+	<h1>Editor attributes</h1>
+
+	<p>These tests aren't really automated, one needs to check if the correct edit type is applied, and if the UI reverts correctly out of edit mode.</p>
+
+	<table class="reftest" data-test="selector">
+		<tr title="Slider auto">
+			<td>
+				<span property="slider" mv-editor-type="range"></span>
+			</td>
+			<td mv-expressions="none">
+				span > input[type=range]
+			</td>
+		</tr>
+		<tr title='Slider in popup via mv-edit-type="popup"'>
+			<td>
+				<span property="slider2" mv-edit-type="popup" mv-editor-type="range" >1</span>
+			</td>
+			<td mv-expressions="none" class="not">
+				span > input[type=range]
+			</td>
+		</tr>
+		<tr title="Time auto">
+			<td>
+				<time datetime="15:00" property="time"></time>
+			</td>
+			<td mv-expressions="none" class="not">
+				time > input[type=time]
+			</td>
+		</tr>
+		<tr title='Time inline via mv-edit-type="inline"'>
+			<td>
+				<time datetime="15:00" property="time2" mv-edit-type="inline"></time>
+			</td>
+			<td mv-expressions="none">
+				time > input[type=time]
+			</td>
+		</tr>
+		<tr title='In collection with initial data'>
+			<td>
+				<div mv-multiple="col1">
+					<span property="slider" mv-edit-type="popup" mv-editor-type="range">1</span>
+					<time datetime="2020-05-21" property="date" mv-edit-type="inline"></time>
+				</div>
+			</td>
+			<td mv-expressions="none">
+				time > input[type=time]
+			</td>
+		</tr>
+		<tr title='In collection with no initial data'>
+			<td>
+				<div mv-multiple="col2">
+					<span property="slider" mv-edit-type="popup" mv-editor-type="range">1</span>
+					<time datetime="2020-05-21" property="date" mv-edit-type="inline"></time>
+				</div>
+			</td>
+			<td mv-expressions="none">
+				time > input[type=time]
+			</td>
+		</tr>
+	</table>
+</section>
+
 <section>
 	<h1>&lt;ul> root</h1>
 
