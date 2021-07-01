@@ -88,6 +88,181 @@
 	</table>
 </section>
 
+<section>
+	<h1>mv-list rewriting</h1>
+
+	<table class="reftest" data-test="selector">
+		<tr title="mv-list only, without value">
+			<td mv-app>
+				<div mv-list>
+					hello
+				</div>
+			</td>
+			<td>
+				<ul>
+					<li>div[mv-list][property="item"]</li>
+					<li>div[mv-list] > [mv-list-item]</li>
+					<li>[mv-list-item][property="item"]</li>
+				</ul>
+			</td>
+		</tr>
+		<tr title="mv-list only, with value">
+			<td mv-app>
+				<div mv-list="foo">
+					hello
+				</div>
+			</td>
+			<td>
+				<ul>
+					<li>div[mv-list][property="foo"]</li>
+					<li>div[mv-list] > [mv-list-item]</li>
+					<li>[mv-list-item][property="foo"]</li>
+				</ul>
+			</td>
+		</tr>
+		<tr title="mv-list-item only, without value">
+			<td mv-app>
+				<div mv-list-item>
+					hello
+				</div>
+			</td>
+			<td>
+				<ul>
+					<li>div[mv-list][property="item"]</li>
+					<li>div[mv-list] > [mv-list-item]</li>
+					<li>[mv-list-item][property="item"]</li>
+				</ul>
+			</td>
+		</tr>
+		<tr title="mv-list-item only, with value">
+			<td mv-app>
+				<div mv-list-item="foo">
+					hello
+				</div>
+			</td>
+			<td>
+				<ul>
+					<li>div[mv-list][property="foo"]</li>
+					<li>div[mv-list] > [mv-list-item]</li>
+					<li>[mv-list-item][property="foo"]</li>
+				</ul>
+			</td>
+		</tr>
+		<tr title="mv-multiple">
+			<td mv-app>
+				<div mv-multiple>
+					hello
+				</div>
+			</td>
+			<td>
+				<ul>
+					<li>div[mv-list][property="collection"]</li>
+					<li>div[mv-list] > [mv-list-item][mv-multiple]</li>
+					<li>[mv-list-item][property="collection"]</li>
+				</ul>
+			</td>
+		</tr>
+		<tr title="Both mv-list and mv-list-item, with different property names">
+			<td mv-app>
+				<div mv-list="foo">
+					<div mv-list-item="bar"></div>
+				</div>
+			</td>
+			<td>
+				<ul>
+					<li>div[mv-list][property="foo"]</li>
+					<li>div[mv-list] > [mv-list-item]</li>
+					<li>[mv-list-item][property="foo"]</li>
+				</ul>
+			</td>
+		</tr>
+		<tr title="Property name is specified on the item, via mv-list-item">
+			<td mv-app>
+				<div mv-list>
+					<div mv-list-item="foo"></div>
+				</div>
+			</td>
+			<td>
+				<ul>
+					<li>div[mv-list][property="foo"]</li>
+					<li>div[mv-list] > [mv-list-item]</li>
+					<li>[mv-list-item][property="foo"]</li>
+				</ul>
+			</td>
+		</tr>
+		<tr title="Property name is specified on the item, implicitly">
+			<td mv-app>
+				<div mv-list>
+					<div mv-list-item class="foo"></div>
+				</div>
+			</td>
+			<td>
+				<ul>
+					<li>div[mv-list][property="foo"]</li>
+					<li>div[mv-list] > [mv-list-item]</li>
+					<li>[mv-list-item][property="foo"]</li>
+				</ul>
+			</td>
+		</tr>
+		<tr title="Property name is specified on the item, via property">
+			<td mv-app>
+				<div mv-list>
+					<div mv-list-item property="foo"></div>
+				</div>
+			</td>
+			<td>
+				<ul>
+					<li>div[mv-list][property="foo"]</li>
+					<li>div[mv-list] > [mv-list-item]</li>
+					<li>[mv-list-item][property="foo"]</li>
+				</ul>
+			</td>
+		</tr>
+		<tr title="Property name is specified on the list, via mv-list">
+			<td mv-app>
+				<div mv-list="foo">
+					<div mv-list-item></div>
+				</div>
+			</td>
+			<td>
+				<ul>
+					<li>div[mv-list][property="foo"]</li>
+					<li>div[mv-list] > [mv-list-item]</li>
+					<li>[mv-list-item][property="foo"]</li>
+				</ul>
+			</td>
+		</tr>
+		<tr title="Property name is specified on the list, implicitly">
+			<td mv-app>
+				<div mv-list class="foo">
+					<div mv-list-item></div>
+				</div>
+			</td>
+			<td>
+				<ul>
+					<li>div[mv-list][property="foo"]</li>
+					<li>div[mv-list] > [mv-list-item]</li>
+					<li>[mv-list-item][property="foo"]</li>
+				</ul>
+			</td>
+		</tr>
+		<tr title="Property name is specified on the list, via property">
+			<td mv-app>
+				<div mv-list property="foo">
+					<div mv-list-item></div>
+				</div>
+			</td>
+			<td>
+				<ul>
+					<li>div[mv-list][property="foo"]</li>
+					<li>div[mv-list] > [mv-list-item]</li>
+					<li>[mv-list-item][property="foo"]</li>
+				</ul>
+			</td>
+		</tr>
+	</table>
+</section>
+
 <section data-mv-app data-mv-storage="#countries">
 	<h1>data-mv-* attributes</h1>
 	<table class="reftest">
