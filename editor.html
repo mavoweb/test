@@ -525,7 +525,7 @@ function checkAttribute(td) {
 	</table>
 </section>
 
-<section mv-app class="mv-autoedit" mv-init='data:application/json,{"col1":[{"slider":5, "date":"1986-06-13"}, {"slider":15, "date":"2020-06-13"}]}' mv-expressions-ignore="mv-init">
+<section mv-app class="mv-autoedit" mv-init='data:application/json,{"col1":[{"slider":5}, {"slider":15, "date":"2020-06-13"}]}' mv-expressions-ignore="mv-init">
 	<h1>Editor attributes</h1>
 
 	<p>These tests aren't really automated, one needs to check if the correct edit type is applied, and if the UI reverts correctly out of edit mode.</p>
@@ -545,6 +545,14 @@ function checkAttribute(td) {
 			</td>
 			<td mv-expressions="none" class="not">
 				span > input[type=range]
+			</td>
+		</tr>
+		<tr title="Time auto">
+			<td>
+				<time datetime="15:00" property="time"></time>
+			</td>
+			<td mv-expressions="none" class="not">
+				time > input[type=time]
 			</td>
 		</tr>
 		<tr title="Time auto">

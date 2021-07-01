@@ -92,7 +92,9 @@ self.Test = {
 
 	contentSpecial: {
 		"input, textarea": e => e.value,
-		"select": e => e.selectedOptions[0] && e.selectedOptions[0].textContent
+		"select": e => {
+			return [...e.selectedOptions].map(o => o.textContent).join("\n");
+		}
 	},
 
 	contentIgnore: [".mv-ui", "script", ".test-content-ignore"],

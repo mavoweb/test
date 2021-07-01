@@ -30,12 +30,13 @@
 			pointer-events: auto;
 		}
 
-		[property="hobby"] {
+		li[property="hobby"] {
 			padding: .5em;
 			background: rgba(0,0,0,.1);
 		}
 
-		div[mv-multiple], .bordered {
+		div[mv-multiple],
+		.bordered {
 			border: 1px solid rgba(0,0,0,.2);
 			background: rgba(0,0,0,.1);
 			padding: .5em;
@@ -197,6 +198,54 @@
 	</div>
 </section>
 
+<section>
+	<h1>Weird elements</h1>
+	<table class="reftest">
+		<tr title="Select menu">
+			<td mv-app mv-storage="#numbers">
+				<select multiple>
+						<option value="">Empty</option>
+						<option mv-list-item property="numbers" selected></option>
+				</select>
+			</td>
+			<td>
+				-1 0 1 2 3 4 5 6 7 8 9 10
+			</td>
+		</tr>
+		<tr title="Table row">
+			<td mv-app mv-storage="#numbers">
+				<table>
+						<thead>
+							<tr>
+								<th>Number</th>
+							</tr>
+						</thead>
+						<tr mv-list-item property="numbers">
+							<td>[$index]</td>
+							<td property="numbers"></td>
+						</tr>
+				</table>
+			</td>
+			<td>
+				Number 0 -1 1 2 1 3 2 4 3 5 4 6 5 7 6 8 7 9 8 10 9 11 10
+			</td>
+		</tr>
+		<tr title="Table cell">
+			<td mv-app mv-storage="#numbers">
+				<table>
+						<tr>
+							<th>Numbers:</th>
+							<td mv-list-item property="numbers" property="numbers"></td>
+						</tr>
+				</table>
+			</td>
+			<td>
+				Numbers: -1012345678910
+			</td>
+		</tr>
+	</table>
+</section>
+
 <section mv-app="primitives" mv-storage="#numbers">
 	<h1>Collection of primitives</h1>
 	<table class="reftest">
@@ -284,7 +333,7 @@
 	<h1>Implicit collection of primitives</h1>
 
 	<table class="reftest">
-		<tr mv-expressions="none">
+		<tr mv-expressions="none" class="ignore">
 			<td>
 				<pre id="numbers-2">{
 	"numbers": [
