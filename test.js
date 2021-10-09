@@ -666,6 +666,16 @@ for (let i = 0; i < 10; i++) {
 	RefTest.compare["fuzzyNumbers" + i] = RefTest.compare.fuzzyNumbers//.bind(RefTest.compare, i);
 }
 
+document.addEventListener("dblclick", evt => {
+	if (evt.altKey) {
+		let test = evt.target.closest(".reftest > tbody > tr");
+
+		if (test) {
+			location.hash = test.id;
+		}
+	}
+})
+
 document.addEventListener("DOMContentLoaded", function(){
 	if (/\/$/.test(location.pathname)) {
 		Test.currentPage = "index";
@@ -690,6 +700,13 @@ document.addEventListener("DOMContentLoaded", function(){
 		});
 	}
 
+	// Add ids to all tests
+	$$(`.reftest > tbody > tr`).forEach((test, i) => {
+		if (!test.id) {
+			test.id = Test.idify(test.title) || "test-" + (i + 1);
+		}
+	});
+
 	var hashchanged = evt => {
 		if (location.hash) {
 			var target = $(location.hash);
@@ -698,15 +715,32 @@ document.addEventListener("DOMContentLoaded", function(){
 				return;
 			}
 
-			if (target.matches("body > section")) {
+			let isSection = target.matches("body > section");
+			let isTest = target.matches(".reftest > tbody > tr");
+
+			if (isSection || isTest) {
 				if (evt) {
+					// Hash was changed manually, reload to resolve properly
 					location.reload();
 					return true;
 				}
 
+				let targetSection = isSection ? target : target.closest("section");
+				let targetSectionId = targetSection.id;
+
 				// Isolate this test
-				for (let section of $$(`body > section:not(${location.hash})`)) {
-					section.remove();
+				for (let section of $$(`body > section`)) {
+					if (section.id !== targetSection.id) {
+						section.remove();
+					}
+				}
+
+				if (isTest) {
+					for (let test of $$(`.reftest > tbody > tr`)) {
+						if (test.id !== target.id) {
+							test.remove();
+						}
+					}
 				}
 
 				$.create("p", {
