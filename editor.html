@@ -210,7 +210,7 @@ function checkAttribute(td) {
 		</tr>
 		<tr title="Linked dynamic &lt;select>">
 			<td mv-app="select">
-				<span property="prop" mv-editor="#dynamic-select"></span>
+				<span property="prop" mv-editor="#dynamic-select">1</span>
 				[prop]
 			</td>
 			<td>Option 1 0</td>
@@ -228,6 +228,11 @@ function checkAttribute(td) {
 				[prop]
 			</td>
 			<td>Gamma c</td>
+		</tr><tr title="Order of mv-options should not change">
+			<td mv-app>
+				<span property="prop" mv-options="default, 1, 2, 3"></span>
+			</td>
+			<td>default</td>
 		</tr>
 		<tr title="Dynamic mv-editor attribute pointing to different select" data-click="input[type=checkbox] wait 1s">
 			<td mv-app="select" class="mv-autoedit">
