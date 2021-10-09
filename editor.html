@@ -196,26 +196,40 @@ function checkAttribute(td) {
 </section>
 
 <section>
-	<h1>mv-editor</h1>
+	<h1>Editing via select menu</h1>
 
 	<p>Try toggling Edit and verify the test still passes.</p>
 
 	<table class="reftest">
-		<tr title="Linked &lt;select>" class="interactive">
+		<tr title="Linked &lt;select>">
 			<td mv-app="select">
 				<span property="country" mv-editor="#countries-select"></span>
 				[country]
 			</td>
 			<td>United States us</td>
 		</tr>
-		<tr title="Not found editor" class="interactive">
-			<td mv-app="select" class="mv-autoedit">
-				<span property="country" mv-editor="#foo-select"></span>
-				[country]
+		<tr title="Linked dynamic &lt;select>">
+			<td mv-app="select">
+				<span property="prop" mv-editor="#dynamic-select"></span>
+				[prop]
 			</td>
-			<td></td>
+			<td>Option 1 0</td>
 		</tr>
-		<tr title="Dynamic mv-editor" class="interactive" data-click="input[type=checkbox] wait 1s">
+		<tr title="mv-options">
+			<td mv-app>
+				<span property="prop" mv-options="a: Alpha, Beta, c: Gamma"></span>
+				[prop]
+			</td>
+			<td>Alpha a</td>
+		</tr>
+		<tr title="mv-options with mv-default">
+			<td mv-app>
+				<span property="prop" mv-options="a: Alpha, Beta, c: Gamma" mv-default="c"></span>
+				[prop]
+			</td>
+			<td>Gamma c</td>
+		</tr>
+		<tr title="Dynamic mv-editor attribute pointing to different select" data-click="input[type=checkbox] wait 1s">
 			<td mv-app="select" class="mv-autoedit">
 				<input type="checkbox" property="showName" class="test-content-ignore">
 				<span property="country" mv-editor="#[if(showName, 'name', 'countries')]-select"></span>
@@ -223,24 +237,67 @@ function checkAttribute(td) {
 			</td>
 			<td>Lea Lea</td>
 		</tr>
-		<tr title="Dynamic mv-editor with not found editor" class="interactive" data-click="input[type=checkbox] wait 1s">
-			<td mv-app="select" class="mv-autoedit">
-				<input type="checkbox" property="showName" class="test-content-ignore">
-				<span property="country" mv-editor="#[if(showName, 'foo', 'countries')]-select"></span>
-				[country]
-			</td>
-			<td></td>
-		</tr>
 	</table>
+	<div mv-app="">
+		<select id="dynamic-select" mv-list mv-value="list(1, 2, 3)" class="test-content-ignore">
+			<option value="[$index]" mv-list-item datatype="string">Option [$index + 1]</option>
+		</select>
+	</div>
 	<select id="countries-select">
 		<option value="us">United States</option>
 		<option value="gb">United Kingdom</option>
 	</select>
+
 	<select id="name-select">
 		<option>Lea</option>
 		<option>Chris</option>
 		<option>Zoe</option>
 	</select>
+</section>
+
+<section>
+	<h1>mv-editor</h1>
+
+	<p>Try toggling Edit and verify the test still passes.</p>
+
+	<table class="reftest" data-test="selector">
+		<tr title="Linked &lt;input type=number>" class="interactive">
+			<td mv-app="select" class="mv-autoedit">
+				<span property="prop" mv-editor="#spinner-input">1</span>
+			</td>
+			<td>
+				span[property] > input[type=number]
+			</td>
+		</tr>
+		<tr title="Not found editor" class="interactive">
+			<td mv-app="select" class="mv-autoedit">
+				<span property="country" mv-editor="#foo-input"></span>
+			</td>
+			<td>
+				span[property] > input:is([type=text], :not([type]))
+			</td>
+		</tr>
+		<tr title="Dynamic mv-editor attribute" class="interactive" data-click="input[type=checkbox] wait 1s">
+			<td mv-app="select" class="mv-autoedit">
+				<input type="checkbox" property="showName" class="test-content-ignore">
+				<span property="prop" mv-editor="#[if(showName, 'range', 'spinner')]-input"></span>
+			</td>
+			<td>
+				span[property] > input[type=range]
+			</td>
+		</tr>
+		<tr title="Dynamic mv-editor with not found editor" class="interactive" data-click="input[type=checkbox] wait 1s">
+			<td mv-app="select" class="mv-autoedit">
+				<input type="checkbox" property="showName" class="test-content-ignore">
+				<span property="prop" mv-editor="#[if(showName, 'foo', 'range')]-input"></span>
+			</td>
+			<td>
+				span[property] > input:is([type=text], :not([type]))
+			</td>
+		</tr>
+	</table>
+	<input type="number" id="spinner-input">
+	<input type="range" id="range-input">
 </section>
 
 <section mv-app="mvmode" mv-storage="local">
