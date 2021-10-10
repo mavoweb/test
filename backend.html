@@ -494,16 +494,16 @@ localStorage.localstoretest = `{
 			</td>
 			<td>
 				<pre>{
-	"text": "1"
+	"foo": true
 }</pre>
 			</td>
 		</tr>
-		<tr class="interactive" data-click=".mv-login wait 1s after mv-load">
+		<tr class="interactive" data-click=".mv-login wait .5s after mv-load, input[type=checkbox] wait 1s after mv-load">
 			<td mv-app="appName" mv-storage="2#saveafterlogin-data" mv-autosave="0">
-				<input property="text">
+				<input property="foo" type="checkbox">[foo]
 			</td>
 			<td>
-				1
+				true
 			</td>
 		</tr>
 	</table>
