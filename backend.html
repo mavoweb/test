@@ -85,6 +85,22 @@
 				</ul>
 			</td>
 		</tr>
+		<tr class="ignore" data-click="#updateData">
+			<td colspan="2">
+				<pre id="elementLiveData" contenteditable="">
+
+				</pre>
+				<button id="updateData" onclick="elementLiveData.textContent = JSON.stringify({foo: 1})">Update data</button>
+			</td>
+		</tr>
+		<tr title="Updates to element content should update rendered data">
+			<td mv-app mv-storage="#elementLiveData">
+				<span property="foo"></span>
+			</td>
+			<td>
+				1
+			</td>
+		</tr>
 	</table>
 </section>
 
@@ -493,36 +509,37 @@ localStorage.localstoretest = `{
 	</table>
 
 	<script>
-		Mavo.Backend.register($.Class({
-			extends: Mavo.Backend,
-			id: 'Element2',
-			constructor: function () {
+		Mavo.Backend.register(class Element2 extends Mavo.Backend {
+			id = 'Element2'
+
+			constructor (url, o) {
+				super(url, o);
 				this.permissions.on(["read", "login"]);
 				this.element = $(this.source.slice(1));
-			},
+			}
 
-			get: function() {
+			get () {
 				return Promise.resolve(this.element.textContent);
-			},
+			}
 
-			put: function(serialized) {
+			put (serialized) {
 				return Promise.resolve(this.element.textContent = serialized);
-			},
+			}
 
-			login: function() {
+			login () {
 				this.permissions.off("login").on(["edit", "save", "logout"]);
 				return Promise.resolve();
-			},
+			}
 
-			logout: function() {
+			logout () {
 				this.permissions.off(["edit", "save", "logout"]).on("login");
 				return Promise.resolve();
-			},
-
-			static: {
-				test: url => url.indexOf("2#") === 0
 			}
-		}));
+
+			static test (url) {
+				return url.indexOf("2#") === 0;
+			}
+		});
 	</script>
 </section>
 
