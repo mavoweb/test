@@ -129,6 +129,10 @@ table[data-test="expressionRewrite"][data-columns="3"] td:nth-child(n + 2) {
 			<td>$fn.get(foo, "bar")</td>
 		</tr>
 		<tr>
+			<td>foo.bar.baz[0]</td>
+			<td>$fn.get(foo, "bar", "baz", 0)</td>
+		</tr>
+		<tr>
 			<td>foo.bar()</td>
 			<td>foo.bar()</td>
 		</tr>

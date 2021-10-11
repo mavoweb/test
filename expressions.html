@@ -898,6 +898,30 @@
 
 			</td>
 		</tr>
+		<tr title="$all.$previous and $all.$next">
+			<td>
+				<div mv-app="appName" mv-storage='data:application/json,{"foo": [1, 2, 3]}' mv-expressions="{{ }}">
+					<div mv-list="foo">
+						<div mv-list-item mv-attribute="data-value">
+							{{ $index + 1 }}
+							<div>prev: {{ foo.$all.$previous }}</div>
+							<div>next: {{ foo.$all.$next }}</div>
+						</div>
+					</div>
+				</div>
+			</td>
+			<td style="white-space: pre-line;">
+				1
+				prev:
+				next: 1, 2, 3
+				2
+				prev: 1
+				next: 2, 3
+				3
+				prev: 1, 2
+				next: 3
+			</td>
+		</tr>
 	</table>
 </section>
 <section>
