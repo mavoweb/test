@@ -372,7 +372,7 @@ localStorage.localstoretest = `{
 				<script>document.write($$("td pre").pop().outerHTML)</script>
 			</td>
 		</tr>
-		<!-- <tr>
+		<tr>
 			<td mv-app="mvstoragexpression" mv-storage="[if(true, '#element-data-2', local)]">
 				<div property="prop1">yolo</div>
 			</td>
@@ -405,8 +405,8 @@ localStorage.localstoretest = `{
 				<input type="checkbox" checked /> Element storage
 				using element storage
 			</td>
-		</tr>-->
-		<tr title="Interactive, different permissions" class="interactive">
+		</tr>
+		<tr title="Interactive, different permissions">
 			<td mv-app="mvstoragexpression" mv-storage="[if(storage, '#countries', 'data/countries.json')]">
 				<label>
 					<input type="checkbox" property="storage" />
@@ -432,7 +432,7 @@ localStorage.localstoretest = `{
 			<td></td>
 			<td>.mv-bar .mv-edit + .mv-save</td>
 		</tr>
-		<tr class="interactive" title="Interactive, setting to none">
+		<tr title="Interactive, setting to none">
 			<td mv-app="mvstoragexpression" mv-storage="[if(storage, none, '#element-data-2')]">
 				<label>
 					<input type="checkbox" property="storage" />
@@ -497,11 +497,11 @@ localStorage.localstoretest = `{
 			</td>
 		</tr>
 		<tr class="interactive" data-click=".mv-login wait .5s after mv-load, input[type=checkbox] wait 1s after mv-load">
-			<td mv-app="appName" mv-storage="2#saveafterlogin-data" mv-autosave="0">
-				<input property="foo" type="checkbox">[foo]
+			<td mv-app="appName" mv-storage="2#saveafterlogin-data" mv-autosave>
+				<input property="foo" type="checkbox"> [foo]
 			</td>
 			<td>
-				true
+				on true
 			</td>
 		</tr>
 	</table>
