@@ -50,13 +50,13 @@
 			<td>with export</td>
 			<td>status,edit,save,export,login,logout</td>
 		</tr>
-		<tr title="Legacy yes-">
-			<td>yes-export</td>
-			<td>status,edit,save,export,login,logout</td>
-		</tr>
 		<tr title="Relative: Both positive and negative">
 			<td>with export no-edit</td>
 			<td>status,save,export,login,logout</td>
+		</tr>
+		<tr title="Relative specifying different order">
+			<td>with export edit status save</td>
+			<td>export,edit,status,save,login,logout</td>
 		</tr>
 		<tr title="Absolute">
 			<td>edit save</td>
@@ -70,11 +70,15 @@
 			<td>with no-status no-login edit save export</td>
 			<td>edit,save,export,logout</td>
 		</tr>
-		<tr title="Conflicts, last one wins">
+		<tr title="Conflicts, positive one wins">
 			<td>with no-export edit save no-save export no-edit edit edit no-edit</td>
-			<td>status,export,login,logout</td>
+			<td>status,edit,save,export,login,logout</td>
 		</tr>
 		<tr title="Ignore nonexistent ids">
+			<td>foo no-bar</td>
+			<td>status,edit,save,login,logout</td>
+		</tr>
+		<tr title="Ignore nonexistent ids (relative syntax)">
 			<td>with foo no-bar</td>
 			<td>status,edit,save,login,logout</td>
 		</tr>
@@ -353,11 +357,9 @@
 		</tr>
 	</table>
 	<script>
-		Mavo.Backend.register($.Class({
-			extends: Mavo.Backend.Local,
-			id: 'Local2',
-
-			constructor: function() {
+		Mavo.Backend.register(class Local2 extends Mavo.Backend.Local {
+			constructor (...args) {
+				super(...args);
 				this.permissions.on(["read", "edit", "save", "login"]);
 				this.key = this.mavo.id;
 				Mavo.defer().then(() => {
@@ -368,23 +370,23 @@
 						url: "https://github.com/username"
 					};
 				});
-			},
+			}
 
-			login: function() {
+			login () {
 				this.permissions.off("login").on(["edit", "save", "logout"]);
 				$.fire(this.mavo.element, "mv-login", { backend: this });
 				return Promise.resolve();
-			},
+			}
 
-			logout: function() {
+			logout () {
 				this.permissions.off(["edit", "save", "logout"]).on("login");
 				return Promise.resolve();
-			},
-
-			static: {
-				test: url => url === "local2"
 			}
-		}));
+
+			static test (url) {
+				return url === "local2";
+			}
+		});
 	</script>
 </section>
 
