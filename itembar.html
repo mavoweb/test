@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Item bar tests</title>
+	<link rel="stylesheet" href="https://get.mavo.io/mavo.css" />
+	<link rel="stylesheet" href="style.css" />
+	<style>
+		.mv-item-bar.mv-item-bar.mv-item-bar {
+			position: static;
+			opacity: 1;
+			border: 0;
+			pointer-events: auto;
+		}
+	</style>
+	<script src="https://get.mavo.io/mavo.js"></script>
+	<script src="mavotest.js"></script>
+</head>
+<body>
+
+<h1>Item bar tests</h1>
+
+<script type="application/json" id="countries">{
+	"country": [
+		{
+			"code": "",
+			"name": "Online"
+		},
+		{
+			"code": "us",
+			"name": "United States"
+		},
+		{
+			"code": "gb",
+			"name": "United Kingdom"
+		}
+	]
+}</script>
+
+<section mv-app="customitemcontrols" mv-storage="#countries" class="mv-autoedit">
+	<h1>Custom item bar placement</h1>
+	<table class="reftest">
+		<tr>
+			<td mv-list>
+				<div property="country" mv-list-item>
+					<div class="mv-item-bar mv-ui">A</div>
+					<span property="code"></span>
+					<span property="name"></span>
+				</div>
+			</td>
+			<td>
+				<div class="bordered"><div class="mv-item-bar mv-ui">A</div>  Online</div>
+				<div class="bordered"><div class="mv-item-bar mv-ui">A</div> us United States</div>
+				<div class="bordered"><div class="mv-item-bar mv-ui">A</div> gb United Kingdom </div>
+			</td>
+		</tr>
+	</table>
+</section>
+
+</body>
+</html>
