@@ -12,6 +12,13 @@
 			border: 0;
 			pointer-events: auto;
 		}
+
+		[mv-list-item] {
+			border: 1px solid rgba(0,0,0,.2);
+			background: rgba(0,0,0,.1);
+			padding: .5em;
+			margin: .5em;
+		}
 	</style>
 	<script src="https://get.mavo.io/mavo.js"></script>
 	<script src="mavotest.js"></script>
@@ -52,6 +59,53 @@
 				<div class="bordered"><div class="mv-item-bar mv-ui">A</div>  Online</div>
 				<div class="bordered"><div class="mv-item-bar mv-ui">A</div> us United States</div>
 				<div class="bordered"><div class="mv-item-bar mv-ui">A</div> gb United Kingdom </div>
+			</td>
+		</tr>
+	</table>
+</section>
+
+<section mv-app="customitemcontrols" mv-storage="#countries" class="mv-autoedit">
+	<h1>Custom item bar buttons</h1>
+	<table class="reftest" data-test="selector">
+		<tr title="No add button">
+			<td mv-list>
+				<div property="country" mv-list-item mv-item-bar="no-add">
+					<span property="code"></span>
+					<span property="name"></span>
+					<div class="mv-item-bar mv-ui"></div>
+				</div>
+			</td>
+			<td>
+				<ul>
+					<li>.mv-item-bar > .mv-delete + .mv-move</li>
+					<li class="not">.mv-item-bar > .mv-add</li>
+				</ul>
+			</td>
+		</tr>
+		<tr title="Different order">
+			<td mv-list>
+				<div property="country" mv-list-item mv-item-bar="with move delete">
+					<span property="code"></span>
+					<span property="name"></span>
+				</div>
+			</td>
+			<td>
+				<ul>
+					<li>.mv-item-bar > .mv-add + .mv-move + .mv-delete</li>
+				</ul>
+			</td>
+		</tr>
+		<tr title="No item bar">
+			<td mv-list>
+				<div property="country" mv-list-item mv-item-bar="none">
+					<span property="code"></span>
+					<span property="name"></span>
+				</div>
+			</td>
+			<td>
+				<ul>
+					<li>.mv-item-bar:empty</li>
+				</ul>
 			</td>
 		</tr>
 	</table>
