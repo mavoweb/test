@@ -170,7 +170,7 @@ table.reftest td:first-child {
 </section>
 
 <section>
-	<h1>date() and time()</h1>
+	<h1>date(), time(), datetime()</h1>
 
 	<table class="reftest" data-test="expressionEvaluation" data-columns="3">
 		<tr>
@@ -178,12 +178,20 @@ table.reftest td:first-child {
 			<td>"1986-06-03"</td>
 		</tr>
 		<tr>
-			<td>time("1986-06-03 23:15:20")</td>
-			<td>"23:15:20"</td>
+			<td>date("1986-06-03 23:15:20", 'month')</td>
+			<td>"1986-06"</td>
 		</tr>
 		<tr>
-			<td>time("1986-06-03 00:00:00")</td>
-			<td>"00:00:00"</td>
+			<td>time("1986-06-03 23:15:20")</td>
+			<td>"23:15"</td>
+		</tr>
+		<tr>
+			<td>time("1986-06-03")</td>
+			<td>"00:00"</td>
+		</tr>
+		<tr>
+			<td>time("1986-06-03 23:15:20", "month")</td>
+			<td>""</td>
 		</tr>
 		<tr title="No argument">
 			<td>date()</td>
@@ -208,6 +216,88 @@ table.reftest td:first-child {
 		<tr title="Invalid argument">
 			<td>time("foobar")</td>
 			<td>""</td>
+		</tr>
+	</table>
+</section>
+
+<section>
+	<h1>datetime()</h1>
+
+	<table class="reftest" data-test="expressionEvaluation" data-columns="3">
+		<tr>
+			<td>datetime("1986-06-03 23:15:20")</td>
+			<td>"1986-06-03T23:15"</td>
+		</tr>
+		<tr>
+			<td>datetime("1986-06-03 23:15:20", "year")</td>
+			<td>"1986"</td>
+		</tr>
+		<tr>
+			<td>datetime("1986-06-03 23:15:20", "months")</td>
+			<td>"1986-06"</td>
+		</tr>
+		<tr>
+			<td>datetime("1986-06-03 23:15:20", "days")</td>
+			<td>"1986-06-03"</td>
+		</tr>
+		<tr>
+			<td>datetime("1986-06-03 23:15:20", "hours")</td>
+			<td>"1986-06-03T23:00"</td>
+		</tr>
+		<tr>
+			<td>datetime("1986-06-03 23:15:20", "minutes")</td>
+			<td>"1986-06-03T23:15"</td>
+		</tr>
+		<tr>
+			<td>datetime("1986-06-03 23:15:20", "seconds")</td>
+			<td>"1986-06-03T23:15:20"</td>
+		</tr>
+		<tr>
+			<td>datetime("1986-06-03 23:15:20", "ms")</td>
+			<td>"1986-06-03T23:15:20.000"</td>
+		</tr>
+	</table>
+</section>
+
+<section>
+	<h1>readable_datetime()</h1>
+
+	<table class="reftest" data-test="expressionEvaluation" data-columns="3">
+		<tr>
+			<td>readable_datetime("1986-06-03 23:15:20")</td>
+			<td>"3 Jun 1986 23:15"</td>
+		</tr>
+		<tr>
+			<td>readable_datetime("1986-06-03 23:15:20", "year")</td>
+			<td>"1986"</td>
+		</tr>
+		<tr>
+			<td>readable_datetime("1986-06-03 23:15:20", "months")</td>
+			<td>"June 1986"</td>
+		</tr>
+		<tr>
+			<td>readable_datetime("1986-06-03 23:15:20", precision: "months", month: "short")</td>
+			<td>"Jun 1986"</td>
+		</tr>
+		<tr>
+			<td>readable_datetime("1986-06-03 23:15:20", "days")</td>
+			<td>"3 Jun 1986"</td>
+		</tr>
+		<tr>
+			<td>readable_datetime("1986-06-03 23:15:20", "hours")</td>
+			<td>"3 Jun 1986 23:00"</td>
+		</tr>
+		<tr>
+			<td>readable_datetime("1986-06-03 23:15:20", "minutes")</td>
+			<td>"3 Jun 1986 23:15"</td>
+		</tr>
+		<tr>
+			<td>readable_datetime("1986-06-03 23:15:20", "seconds")</td>
+			<td>"3 Jun 1986 23:15:20"</td>
+		</tr>
+		<tr>
+			<td>readable_datetime("1986-06-03 23:15:20", "ms")</td>
+			<td>"3 Jun 1986 23:15:20.000"</td>
 		</tr>
 	</table>
 </section>
@@ -261,11 +351,11 @@ table.reftest td:first-child {
 		</tr>
 		<tr>
 			<td>time('01:00' + hour())</td>
-			<td>"02:00:00"</td>
+			<td>"02:00"</td>
 		</tr>
 		<tr>
 			<td>time('01:00' - hour())</td>
-			<td>"00:00:00"</td>
+			<td>"00:00"</td>
 		</tr>
 	</table>
 </section>
