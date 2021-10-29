@@ -1312,6 +1312,60 @@ b", "
 	</table>
 </section>
 
+<section>
+	<h1>pluralize()</h1>
+
+	<table class="reftest" data-test="expressionEvaluation" data-columns="3">
+		<tr>
+			<td>pluralize(1, "country", "countries")</td>
+			<td>"1 country"</td>
+		</tr>
+		<tr>
+			<td>pluralize(2, "country", "countries")</td>
+			<td>"2 countries"</td>
+		</tr>
+		<tr title="With (incorrect) labels">
+			<td>pluralize(2, many: "countries", one: "country")</td>
+			<td>"2 countries"</td>
+		</tr>
+		<tr title="Fractional">
+			<td>pluralize(0.5, "country", "countries")</td>
+			<td>"0.5 countries"</td>
+		</tr>
+		<tr title="Negative numbers">
+			<td>pluralize(-1, "country", "countries")</td>
+			<td>"-1 country"</td>
+		</tr>
+		<tr title="Greek">
+			<td>pluralize(1, "χώρα", "χώρες", lang: 'el')</td>
+			<td>"1 χώρα"</td>
+		</tr>
+		<tr title="Greek">
+			<td>pluralize(2, "χώρα", "χώρες", lang: 'el')</td>
+			<td>"2 χώρες"</td>
+		</tr>
+		<tr title="Russian">
+			<td>pluralize(1, one: 'страна', few: 'страны', many: 'стран', lang: 'ru')</td>
+			<td>"1 страна"</td>
+		</tr>
+	</table>
+
+	<table class="reftest">
+		<tr title="Inferred language">
+			<td mv-app="" lang="ru">
+				[pluralize(1, one: 'страна', few: 'страны', many: 'стран')]
+				[pluralize(2, one: 'страна', few: 'страны', many: 'стран')]
+				[pluralize(5, one: 'страна', few: 'страны', many: 'стран')]
+			</td>
+			<td>
+				1 страна
+				2 страны
+				5 стран
+			</td>
+		</tr>
+	</table>
+</section>
+
 <script>
 function expressionEvaluation(test, result, expected) {
 	var r = (new Mavo.Expression(test.textContent)).eval();
