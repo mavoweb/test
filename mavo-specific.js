@@ -1,3 +1,5 @@
+
+
 document.addEventListener("DOMContentLoaded", function(){
 	var page = location.pathname.match(/\/([a-z]+)(?:\.html|\/?$)/)[1];
 

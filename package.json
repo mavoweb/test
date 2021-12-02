@@ -4,7 +4,13 @@
   "description": "Mavo unit tests",
   "main": "mavo.js",
   "scripts": {
-    "test": "open ."
+    "build:css": "npx postcss **/*.postcss ./*.postcss --base . --dir . --ext .css",
+    "build:js": "cat test.js mavo-specific.js > mavotest.js",
+    "build": "npm run build:css && npm run build:js",
+    "watch:css": "npx postcss **/*.postcss ./*.postcss --base . --dir . --ext .css --watch",
+    "watch:js": "onchange 'test.js' 'mavo-specific.js' -- npm run build:js",
+    "watch": "npm run watch:css & npm run watch:js",
+    "test": "open index.html"
   },
   "repository": {
     "type": "git",
@@ -17,16 +23,10 @@
   },
   "homepage": "https://mavo.io",
   "devDependencies": {
-    "babel-eslint": "^10.1.0",
-    "babel-preset-es2015": "^6.24.1",
-    "gulp": "^4.0.2",
-    "gulp-autoprefixer": "^6.1.0",
-    "gulp-concat": "^2.6.1",
-    "gulp-notify": "^3.2.0",
-    "gulp-rename": "^1.4.0",
-    "gulp-replace": "^1.0.0",
-    "gulp-sass": "^4.1.0",
-    "gulp-sourcemaps": "^2.6.5",
-    "gulp-util": "^3.0.7"
+    "onchange": "^7.1.0",
+    "postcss": "^8.3.9",
+    "postcss-cli": "^9.0.1",
+    "postcss-custom-selectors": "^6.0.0",
+    "postcss-nesting": "^8.0.1"
   }
 }
