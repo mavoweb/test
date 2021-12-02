@@ -875,4 +875,4 @@ self.println = Test.println;
 self.$ = $;
 self.$$ = $$;
 
-})(self.Bliss, Bliss.$)
+})(self.Bliss, Bliss.$);
