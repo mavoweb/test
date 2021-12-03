@@ -220,8 +220,10 @@ var _ = self.RefTest = $.Class({
 	setup: function() {
 		// Remove any <script> elements to prevent them messing up the contents. They've already been processed anyway.
 		// Keep them in an attribute though, as they may be useful to display
-		for (var script of $$("script", this.table)) {
-			$.remove(script);
+		for (let script of $$("script", this.table)) {
+			if (!script.type || script.type === "text/javascript") {
+				script.remove();
+			}
 		}
 
 		if (this.table.rows.length === 0) {
@@ -327,7 +329,7 @@ var _ = self.RefTest = $.Class({
 			env.tr.compare = _.getTest(env.tr.getAttribute("data-test"), this.compare);
 		}
 
-		var resultCell;
+		let resultCell = env.tr.cells[env.tr.cells.length - 1];
 
 		if (env.cells.length) {
 			if (this.columns == 3) {
@@ -349,6 +351,7 @@ var _ = self.RefTest = $.Class({
 				}
 			}
 			else if (this.columns == 2 && !env.cells[0].innerHTML) {
+				// Empty cell, takes the test from above
 				let previous = env.tr;
 				while (previous = previous.previousElementSibling) {
 					if (previous.cells[0].innerHTML) {
