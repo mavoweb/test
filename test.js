@@ -480,6 +480,10 @@ var _ = self.RefTest = $.Class({
 					let test = test_numbers[i];
 					let ref = ref_numbers[i];
 
+					if (Number.isNaN(ref) && !Number.isNaN(test)) {
+						return false;
+					}
+
 					if (Math.abs(test - ref) > ε) {
 						return false;
 					}
