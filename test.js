@@ -457,6 +457,37 @@ var _ = self.RefTest = $.Class({
 				return pass;
 			},
 
+			// Compare numbers ignoring other stuff around them
+			// optionally with epsilon
+			compareNumbers: function(...cells) {
+				let tr = cells[0].parentNode;
+				let ε = +tr.closest("[data-epsilon]").dataset.epsilon || 0;
+
+				let test = cells[cells.length - 2] || cells[cells.length - 1];
+				let ref = cells[cells.length - 1];
+
+				let rNumber = /-?\d*\.?\d+(e-?\d+)?|NaN/g;
+
+				let test_numbers = test.textContent.match(rNumber);
+				let ref_numbers = ref.textContent.match(rNumber);
+
+				if (test_numbers.length !== ref_numbers.length) {
+					// Different number of numbers
+					return false;
+				}
+
+				for (let i = 0; i < test_numbers.length; i++) {
+					let test = test_numbers[i];
+					let ref = ref_numbers[i];
+
+					if (Math.abs(test - ref) > ε) {
+						return false;
+					}
+				}
+
+				return true;
+			},
+
 			// Compares numbers to 3 significant digits if no argument is passed,
 			// If argument is passed, returns a comparison function for that number of significant digits
 			fuzzyNumbers: function(precision, ...cells) {
