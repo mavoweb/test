@@ -461,7 +461,7 @@ var _ = self.RefTest = $.Class({
 			// optionally with epsilon
 			compareNumbers: function(...cells) {
 				let tr = cells[0].parentNode;
-				let ε = +tr.closest("[data-epsilon]").dataset.epsilon || 0;
+				let ε = +(tr.closest("[data-epsilon]")?.dataset.epsilon) || 0;
 
 				let test = cells[cells.length - 2] || cells[cells.length - 1];
 				let ref = cells[cells.length - 1];
