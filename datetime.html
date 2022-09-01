@@ -224,6 +224,10 @@ table.reftest td:first-child {
 	<h1>datetime()</h1>
 
 	<table class="reftest" data-test="expressionEvaluation" data-columns="3">
+		<tr title="Single argument">
+			<td>datetime("1986-06-03")</td>
+			<td>"1986-06-03T00:00"</td>
+		</tr>
 		<tr>
 			<td>datetime("1986-06-03 23:15:20")</td>
 			<td>"1986-06-03T23:15"</td>
@@ -255,6 +259,22 @@ table.reftest td:first-child {
 		<tr>
 			<td>datetime("1986-06-03 23:15:20", "ms")</td>
 			<td>"1986-06-03T23:15:20.000"</td>
+		</tr>
+		<tr title="Separate date and time, no precision">
+			<td>datetime("1986-06-03", "23:15:20")</td>
+			<td>"1986-06-03T23:15"</td>
+		</tr>
+		<tr title="Separate date and time, precision">
+			<td>datetime("1986-06-03", "23:15:20", "hours")</td>
+			<td>"1986-06-03T23:00"</td>
+		</tr>
+		<tr title="Separate date and time, empty time">
+			<td>datetime("1986-06-03", "")</td>
+			<td>"1986-06-03"</td>
+		</tr>
+		<tr title="Separate date and time, no time, precision">
+			<td>datetime("1986-06-03", "month")</td>
+			<td>"1986-06"</td>
 		</tr>
 	</table>
 </section>
