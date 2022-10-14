@@ -1373,6 +1373,34 @@ b", "
 			<td>duration(6*52*7*24*60*60*1000 + 2*31*24*60*60*1000,4)</td>
 			<td>["6 years", "2 months"]</td>
 		</tr>
+		<tr title="Negative duration without terms">
+			<td>duration(-2*3600*1000)</td>
+			<td>"-2 hours"</td>
+		</tr>
+		<tr>
+			<td>duration(-72*3600*1000)</td>
+			<td>"-3 days"</td>
+		</tr>
+		<tr>
+			<td>duration(-72*3600*1000 + -2*3600*1000 + -51*60*1000 + -29*1000 + -81)</td>
+			<td>"-3 days"</td>
+		</tr>
+		<tr title="Negative duration with number of terms">
+			<td>duration(-72*3600*1000 + -2*3600*1000 + -51*60*1000 + -29*1000 + -81, 5)</td>
+			<td>["-3 days", "-2 hours", "-51 minutes", "-29 seconds", "-81 ms"]</td>
+		</tr>
+		<tr>
+			<td>duration(-72*3600*1000 + -2*3600*1000 + -51*60*1000 + -29*1000 + -81, 2)</td>
+			<td>["-3 days", "-2 hours"]</td>
+		</tr>
+		<tr title="Negative duration with terms as unit">
+			<td>duration(-72*3600*1000 + -2*3600*1000 + -51*60*1000 + -29*1000 + -81, "days")</td>
+			<td>"-3 days"</td>
+		</tr>
+		<tr>
+			<td>duration(-72*3600*1000 + -2*3600*1000 + -51*60*1000 + -29*1000 + -81, "hours")</td>
+			<td>"-74 hours"</td>
+		</tr>
 	</table>
 </section>
 
