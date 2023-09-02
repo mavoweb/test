@@ -3,14 +3,22 @@
 <head>
 	<meta charset="UTF-8">
 	<title>Property tests</title>
-	<link rel="stylesheet" href="https://dev.mavo.io/dist/mavo.css" />
+	<script>
+		let version = new URL(location).searchParams.get("version");
+		let baseURL = "https://get.mavo.io/";
+
+		if (version) {
+			baseURL += version + "/";
+		}
+		document.write(`<link rel="stylesheet" href="${ baseURL }mavo.css" />
+	<script src="${ baseURL }mavo.js"></sc` + `ript>`);
+	</script>
 	<link rel="stylesheet" href="style.css" />
 	<style>
 		[mv-mode="edit"] ::before {
 			content: var(--prepend-on-edit);
 		}
 	</style>
-	<script src="https://dev.mavo.io/dist/mavo.js"></script>
 	<script src="mavotest.js"></script>
 </head>
 <body>
