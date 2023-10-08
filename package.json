@@ -24,7 +24,7 @@
   "homepage": "https://mavo.io",
   "devDependencies": {
     "onchange": "^7.1.0",
-    "postcss": "^8.3.9",
+    "postcss": "^8.4.31",
     "postcss-cli": "^9.0.1",
     "postcss-custom-selectors": "^6.0.0",
     "postcss-nesting": "^8.0.1"
