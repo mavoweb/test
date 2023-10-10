@@ -349,11 +349,822 @@ table[data-test="expressionRewrite"][data-columns="3"] td:nth-child(n + 2) {
 	</table>
 </section>
 
+<section>
+	<h1>Get Variables</h1>
+
+	<p>These tests check if variables are extracted from ASTs correctly.</p>
+
+	<table class="reftest" data-test="getVariables" data-columns="3">
+		<tr>
+			<td>url('tag')</td>
+			<td>""</td>
+		</tr>
+		<tr>
+			<td>!tagFilter or count(tag = tagFilter) > 0</td>
+			<td>tagFilter,tag,tagFilter</td>
+		</tr>
+		<tr>
+			<td>if(featured, 'featured')</td>
+			<td>featured</td>
+		</tr>
+		<tr>
+			<td>if(starts(url, 'http'), 'external')</td>
+			<td>url</td>
+		</tr>
+		<tr>
+			<td>count(done)</td>
+			<td>done</td>
+		</tr>
+		<tr>
+			<td>replace(join(pathsummary, ' '), '  ', ' ', 10)</td>
+			<td>pathsummary</td>
+		</tr>
+		<tr>
+			<td>type != v and type != z</td>
+			<td>type,v,type,z</td>
+		</tr>
+		<tr>
+			<td>type = a</td>
+			<td>type,a</td>
+		</tr>
+		<tr>
+			<td>largeArc + 0</td>
+			<td>largeArc</td>
+		</tr>
+		<tr>
+			<td>type = c or type = s or type = q</td>
+			<td>type,c,type,s,type,q</td>
+		</tr>
+		<tr>
+			<td>if(absolute, uppercase(type), type)</td>
+			<td>absolute,type,type</td>
+		</tr>
+		<tr>
+			<td>payment * years * 12</td>
+			<td>payment,years</td>
+		</tr>
+		<tr>
+			<td>amount * interest1200 * (1 + 1 / (pow(1 + interest1200 , years * 12) - 1 ))</td>
+			<td>amount,interest1200,interest1200,years</td>
+		</tr>
+		<tr>
+			<td>iff(payment < 1500, block, none)</td>
+			<td>payment,block,none</td>
+		</tr>
+		<tr>
+			<td>2 * height * tan(angle * PI/180) + thickness</td>
+			<td>height,angle,PI,thickness</td>
+		</tr>
+		<tr>
+			<td>thickness * cos(angle * PI/180)</td>
+			<td>thickness,angle,PI</td>
+		</tr>
+		<tr>
+			<td>1.5 * charwidth - thickness</td>
+			<td>charwidth,thickness</td>
+		</tr>
+		<tr>
+			<td>2*charwidth - 2*thickness</td>
+			<td>charwidth,thickness</td>
+		</tr>
+		<tr>
+			<td>-height</td>
+			<td>height</td>
+		</tr>
+		<tr>
+			<td>height * .52 - thickness/2</td>
+			<td>height,thickness</td>
+		</tr>
+		<tr>
+			<td>3*charwidth - 2*thickness + height/2</td>
+			<td>charwidth,thickness,height</td>
+		</tr>
+		<tr>
+			<td>count(product) = 0</td>
+			<td>product</td>
+		</tr>
+		<tr>
+			<td>count(rating > 3)</td>
+			<td>rating</td>
+		</tr>
+		<tr>
+			<td>lowercase(get(game.gameTheme, 'name'))</td>
+			<td>$fn.get(game, "gameTheme")</td>
+		</tr>
+		<tr>
+			<td>game.rating</td>
+			<td>$fn.get(game, "rating")</td>
+		</tr>
+		<tr>
+			<td>pluralize(game.move, 'move', 'moves')</td>
+			<td>$fn.get(game, "move")</td>
+		</tr>
+		<tr>
+			<td>if(game.gameStarted = true, game.timer, '00:00')</td>
+			<td>$fn.get(game, "gameStarted"),$fn.get(game, "timer")</td>
+		</tr>
+		<tr>
+			<td>random(0, count(themes.theme) - 1)</td>
+			<td>$fn.get(themes, "theme")</td>
+		</tr>
+		<tr>
+			<td>get(themes.theme, themeNumber)</td>
+			<td>$fn.get(themes, "theme"),themeNumber</td>
+		</tr>
+		<tr>
+			<td>if(move < 19, 3, if(move < 26, 2, if(move < 32, 1, 0)))</td>
+			<td>move,move,move</td>
+		</tr>
+		<tr>
+			<td>count(card where starts(state, 'matched-')) = count(card)</td>
+			<td>card,state,card</td>
+		</tr>
+		<tr>
+			<td>minutes($now - startTime) mod 60</td>
+			<td>$now,startTime</td>
+		</tr>
+		<tr>
+			<td>if(minutes < 10, 0 & minutes, minutes)</td>
+			<td>minutes,minutes,minutes</td>
+		</tr>
+		<tr>
+			<td>shuffle(list(symbols, symbols))</td>
+			<td>symbols,symbols</td>
+		</tr>
+		<tr>
+			<td>if(game.gameOver, 'game-over')</td>
+			<td>$fn.get(game, "gameOver")</td>
+		</tr>
+		<tr>
+			<td>last(stats.attempts)</td>
+			<td>$fn.get(stats, "attempts")</td>
+		</tr>
+		<tr>
+			<td>pluralize(moves, "move", "moves")</td>
+			<td>moves</td>
+		</tr>
+		<tr>
+			<td>if(stars = 0, "no stars", pluralize(stars, "star", "stars"))</td>
+			<td>stars,stars</td>
+		</tr>
+		<tr>
+			<td>if(popup.isShowing or statistics.isShowing, backdrop)</td>
+			<td>$fn.get(popup, "isShowing"),$fn.get(statistics, "isShowing"),backdrop</td>
+		</tr>
+		<tr>
+			<td>if(!mode.practiceMode, result)</td>
+			<td>$fn.get(mode, "practiceMode"),result</td>
+		</tr>
+		<tr>
+			<td>if(isOver, statistics.hiddenWord, commonWords.todaysWord)</td>
+			<td>isOver,$fn.get(statistics, "hiddenWord"),$fn.get(commonWords, "todaysWord")</td>
+		</tr>
+		<tr>
+			<td>$today = statistics.date and !mode.practiceMode</td>
+			<td>$today,$fn.get(statistics, "date"),$fn.get(mode, "practiceMode")</td>
+		</tr>
+		<tr>
+			<td>guess in possibleWords.words or guess in commonWords.words</td>
+			<td>guess,$fn.get(possibleWords, "words"),guess,$fn.get(commonWords, "words")</td>
+		</tr>
+		<tr>
+			<td>unique(condense(usedLetters where (state = correct and !stateHidden)).letter)</td>
+			<td>usedLetters,state,correct,stateHidden</td>
+		</tr>
+		<tr>
+			<td>if(seconds($now) - errorTime < 2, visible)</td>
+			<td>$now,errorTime,visible</td>
+		</tr>
+		<tr>
+			<td>if(isOver, statistics.usedLetters, list())</td>
+			<td>isOver,$fn.get(statistics, "usedLetters")</td>
+		</tr>
+		<tr>
+			<td>if(attempt > 1, if(contains(join(guesses), key), if(key in correctLetters, correct, if(contains(hiddenWord, key), elsewhere, absent))))</td>
+			<td>attempt,guesses,key,key,correctLetters,correct,hiddenWord,key,elsewhere,absent</td>
+		</tr>
+		<tr>
+			<td>if(isShowing, visible)</td>
+			<td>isShowing,visible</td>
+		</tr>
+		<tr>
+			<td>$today = date and !mode.practiceMode and game.result != lost</td>
+			<td>$today,date,$fn.get(mode, "practiceMode"),$fn.get(game, "result"),lost</td>
+		</tr>
+		<tr>
+			<td>!mode.practiceMode</td>
+			<td>$fn.get(mode, "practiceMode")</td>
+		</tr>
+		<tr>
+			<td>count(games where guess > 0)</td>
+			<td>games,guess</td>
+		</tr>
+		<tr>
+			<td>round(wins / played * 100) or 0</td>
+			<td>wins,played</td>
+		</tr>
+		<tr>
+			<td>$today = date and !mode.practiceMode</td>
+			<td>$today,date,$fn.get(mode, "practiceMode")</td>
+		</tr>
+		<tr>
+			<td>$today + 1 * day()</td>
+			<td>$today</td>
+		</tr>
+		<tr>
+			<td>digits(2, hours(difference))</td>
+			<td>difference</td>
+		</tr>
+		<tr>
+			<td>digits(2, minutes(difference) mod 60)</td>
+			<td>difference</td>
+		</tr>
+		<tr>
+			<td>if(result = won, count(guesses), X)</td>
+			<td>result,won,guesses,X</td>
+		</tr>
+		<tr>
+			<td>commonWords.index + 1</td>
+			<td>$fn.get(commonWords, "index")</td>
+		</tr>
+		<tr>
+			<td>1 .. 6</td>
+			<td>""</td>
+		</tr>
+		<tr>
+			<td>if(wins > 0, wins, 'initial')</td>
+			<td>wins,wins</td>
+		</tr>
+		<tr>
+			<td>if(value = 0, '--color: initial; --inset: initial;')</td>
+			<td>value</td>
+		</tr>
+		<tr>
+			<td>count(filter(games, guess = guessCount)) or 0</td>
+			<td>games,guess,guessCount</td>
+		</tr>
+		<tr>
+			<td>if($index mod 5 = 0, "\n") & if(state = correct, "🟩", if(state = elsewhere, "🟨", "⬜️"))</td>
+			<td>$index,state,correct,state,elsewhere</td>
+		</tr>
+		<tr>
+			<td>split(join(guesses), '')</td>
+			<td>guesses</td>
+		</tr>
+		<tr>
+			<td>if(mode.practiceMode, random(0, count(words) - 1), days($today - startDate) mod count(words))</td>
+			<td>$fn.get(mode, "practiceMode"),words,$today,startDate,words</td>
+		</tr>
+		<tr>
+			<td>$user.info.uid</td>
+			<td>$fn.get($user, "info", "uid")</td>
+		</tr>
+		<tr>
+			<td>$user.name or $user.info.email</td>
+			<td>$fn.get($user, "name"),$fn.get($user, "info", "email")</td>
+		</tr>
+		<tr>
+			<td>first(room).name or 'General'</td>
+			<td>room</td>
+		</tr>
+		<tr>
+			<td>user_id and count(messages) = 0</td>
+			<td>user_id,messages</td>
+		</tr>
+		<tr>
+			<td>group(name: name, creator: user_id, created: $now)</td>
+			<td>name,user_id,$now</td>
+		</tr>
+		<tr>
+			<td>(name or '').trim() = ''</td>
+			<td>name</td>
+		</tr>
+		<tr>
+			<td>count(todo where done)</td>
+			<td>todo,done</td>
+		</tr>
+		<tr>
+			<td>count(todo where !done)</td>
+			<td>todo,done</td>
+		</tr>
+		<tr>
+			<td>if(todoLeft = 1, 'item', 'items')</td>
+			<td>todoLeft</td>
+		</tr>
+		<tr>
+			<td>(done and activeFilter = 'active') or (!done and activeFilter = 'completed')</td>
+			<td>done,activeFilter,done,activeFilter</td>
+		</tr>
+		<tr>
+			<td>(numOfChildren mod 5) + 1</td>
+			<td>numOfChildren</td>
+		</tr>
+		<tr>
+			<td>if(flexDirection = "row" or flexDirection = "row-reverse", "horizontal", "vertical")</td>
+			<td>flexDirection,flexDirection</td>
+		</tr>
+		<tr>
+			<td>numOfChildren > 6 and (flexDirection = 'row' or flexDirection = 'row-reverse')</td>
+			<td>numOfChildren,flexDirection,flexDirection</td>
+		</tr>
+		<tr>
+			<td>(flexWrap = 'wrap' or flexWrap = 'wrap-reverse') and (isMoreThanOneRow or isMoreThanOneColumn)</td>
+			<td>flexWrap,flexWrap,isMoreThanOneRow,isMoreThanOneColumn</td>
+		</tr>
+		<tr>
+			<td>if(flexDirection = column, 50, 100)</td>
+			<td>flexDirection,column</td>
+		</tr>
+		<tr>
+			<td>group('0': 'auto', '1': 'flex-start', '2': 'flex-end', '3': 'center', '4': 'baseline', '5': 'stretch')</td>
+			<td>""</td>
+		</tr>
+		<tr>
+			<td>if(feedback, block, none)</td>
+			<td>feedback,block,none</td>
+		</tr>
+		<tr>
+			<td>replace(uppercase(url('doc')), '-', ' ')</td>
+			<td>""</td>
+		</tr>
+		<tr>
+			<td>filter(tagFilter, tagFilter.show).tagFilter</td>
+			<td>tagFilter,$fn.get(tagFilter, "show")</td>
+		</tr>
+		<tr>
+			<td>count(issue.openness = "open")</td>
+			<td>$fn.get(issue, "openness")</td>
+		</tr>
+		<tr>
+			<td>[New, Accepted, Deferred, Retracted, 'Out Of Scope', Invalid, Rejected, Objection]</td>
+			<td>New,Accepted,Deferred,Retracted,Invalid,Rejected,Objection</td>
+		</tr>
+		<tr>
+			<td>count(issue.status = id)</td>
+			<td>$fn.get(issue, "status"),id</td>
+		</tr>
+		<tr>
+			<td>if(and(shown), '', 'filtered')</td>
+			<td>shown</td>
+		</tr>
+		<tr>
+			<td>!!authorResponse</td>
+			<td>authorResponse</td>
+		</tr>
+		<tr>
+			<td>if(from, from, 'Author')</td>
+			<td>from,from</td>
+		</tr>
+		<tr>
+			<td>openFilter['id=' & openness].show</td>
+			<td>""</td>
+		</tr>
+		<tr>
+			<td>!status or statusFilter['id=' & status].show</td>
+			<td></td>
+		</tr>
+		<tr>
+			<td>!count(selectedTags) or intersects(tag, selectedTags)</td>
+			<td>selectedTags,tag,selectedTags</td>
+		</tr>
+		<tr>
+			<td>!url('spec')</td>
+			<td>""</td>
+		</tr>
+		<tr>
+			<td>'link_url' in link and link.link_url != 'null' and link.link_url != ''</td>
+			<td>link,$fn.get(link, "link_url"),$fn.get(link, "link_url")</td>
+		</tr>
+		<tr>
+			<td>get(people.member, 'id=' & author_name)</td>
+			<td>$fn.get(people, "member"),author_name</td>
+		</tr>
+		<tr>
+			<td>month(data_lettura, 'name')&'-'&year(data_lettura)</td>
+			<td>data_lettura,data_lettura</td>
+		</tr>
+		<tr>
+			<td>replace(first(afiliado).numero, '.')</td>
+			<td>afiliado</td>
+		</tr>
+		<tr>
+			<td>replace(uppercase(idify(first(afiliado).nombre)),'-','%20')</td>
+			<td>afiliado</td>
+		</tr>
+		<tr>
+			<td>first(afiliado).nombre</td>
+			<td>afiliado</td>
+		</tr>
+		<tr>
+			<td>condense(medicamento where id = medicamento_1).droga</td>
+			<td>medicamento,medicamento_1</td>
+		</tr>
+		<tr>
+			<td>idify(join(list(droga, concentracion, contenido), '-'))</td>
+			<td>droga,concentracion,contenido</td>
+		</tr>
+		<tr>
+			<td>$index <= (curPage - 1) * perPage - 1 or $index >= curPage * perPage</td>
+			<td>$index,curPage,perPage,$index,curPage,perPage</td>
+		</tr>
+		<tr>
+			<td>if(curPage = 1, selected)</td>
+			<td>curPage,selected</td>
+		</tr>
+		<tr>
+			<td>dots and curPage < 4</td>
+			<td>dots,curPage</td>
+		</tr>
+		<tr>
+			<td>dots and curPage > pageCount - 3</td>
+			<td>dots,curPage,pageCount</td>
+		</tr>
+		<tr>
+			<td>if(curPage = pageCount, selected)</td>
+			<td>curPage,pageCount,selected</td>
+		</tr>
+		<tr>
+			<td>2 .. pageCount - 1</td>
+			<td>pageCount</td>
+		</tr>
+		<tr>
+			<td>dots and abs(page - curPage) > 1</td>
+			<td>dots,page,curPage</td>
+		</tr>
+		<tr>
+			<td>unique(blog.post.category)</td>
+			<td>$fn.get(blog, "post", "category")</td>
+		</tr>
+		<tr>
+			<td>count(blog.post where cat in category)</td>
+			<td>$fn.get(blog, "post"),category</td>
+		</tr>
+		<tr>
+			<td>first(10, blog.post)</td>
+			<td>$fn.get(blog, "post")</td>
+		</tr>
+		<tr>
+			<td>Pi * R * R</td>
+			<td>Pi,R,R</td>
+		</tr>
+		<tr>
+			<td>b * b - 4 * a * c</td>
+			<td>b,b,a,c</td>
+		</tr>
+		<tr>
+			<td>D < 0 and a</td>
+			<td>D,a</td>
+		</tr>
+		<tr>
+			<td>(-b + sqrt(D)) / (2 * a)</td>
+			<td>b,D,a</td>
+		</tr>
+		<tr>
+			<td>-b / (2 * a)</td>
+			<td>b,a</td>
+		</tr>
+		<tr>
+			<td>sin(angle * Pi / 180)</td>
+			<td>angle,Pi</td>
+		</tr>
+		<tr>
+			<td>if(!mode, 'visibility: hidden')</td>
+			<td>mode</td>
+		</tr>
+		<tr>
+			<td>if(mode = 'false', group('use_koib': false),if(mode = 'true', group('use_koib': true),if(mode = 'custom', group('use_koib': koib))))</td>
+			<td>mode,mode,mode,koib</td>
+		</tr>
+		<tr>
+			<td>if(name and size and ext, './data/assets/' & name & '_' & size & '.' & ext)</td>
+			<td>name,size,ext,name,size,ext</td>
+		</tr>
+		<tr>
+			<td>if(len(name) > 1, 'list-instruction', '')</td>
+			<td>name</td>
+		</tr>
+		<tr>
+			<td>if(name != ' ' and size!= ' ' and ext != ' ', './images/' & name & '_' & size & '.' & ext)</td>
+			<td>name,size,ext,name,size,ext</td>
+		</tr>
+		<tr>
+			<td>count(columnLeft.task) > 0</td>
+			<td>$fn.get(columnLeft, "task")</td>
+		</tr>
+		<tr>
+			<td>list('"' & columnLeft.task.id & '"', '"' & columnRight.task.id & '"')</td>
+			<td>$fn.get(columnLeft, "task", "id"),$fn.get(columnRight, "task", "id")</td>
+		</tr>
+		<tr>
+			<td>if(event.title,event.title,'Event Signup')</td>
+			<td>$fn.get(event, "title"),$fn.get(event, "title")</td>
+		</tr>
+		<tr>
+			<td>url('debug')==''</td>
+			<td>""</td>
+		</tr>
+		<tr>
+			<td>if(uid,storePrefix & 'events/' & eventId,'none')</td>
+			<td>uid,storePrefix,eventId</td>
+		</tr>
+		<tr>
+			<td>''+$startup</td>
+			<td>$startup</td>
+		</tr>
+		<tr>
+			<td>!signup.signed  && event.title</td>
+			<td>$fn.get(signup, "signed"),$fn.get(event, "title")</td>
+		</tr>
+		<tr>
+			<td>if(signup.space,'Sign Up','Event is Full')</td>
+			<td>$fn.get(signup, "space")</td>
+		</tr>
+		<tr>
+			<td>util.uid && util.eventId</td>
+			<td>$fn.get(util, "uid"),$fn.get(util, "eventId")</td>
+		</tr>
+		<tr>
+			<td>util.uid && util.uid==ownerId</td>
+			<td>$fn.get(util, "uid"),$fn.get(util, "uid"),ownerId</td>
+		</tr>
+		<tr>
+			<td>util.uid && util.eventId && event.title</td>
+			<td>$fn.get(util, "uid"),$fn.get(util, "eventId"),$fn.get(event, "title")</td>
+		</tr>
+		<tr>
+			<td>max(0,event.limit - count(ticket))</td>
+			<td>$fn.get(event, "limit"),ticket</td>
+		</tr>
+		<tr>
+			<td>count(ticket where uid=util.uid)</td>
+			<td>ticket,$fn.get(util, "uid")</td>
+		</tr>
+		<tr>
+			<td>if(signed,get(first(ticket where uid=util.uid),'time'))</td>
+			<td>signed,ticket,$fn.get(util, "uid")</td>
+		</tr>
+		<tr>
+			<td>event.limit-count(ticket)</td>
+			<td>$fn.get(event, "limit"),ticket</td>
+		</tr>
+		<tr>
+			<td>count(events)>0 || url('owner')</td>
+			<td>events</td>
+		</tr>
+		<tr>
+			<td>if(showAll,0,url('owner') || util.uid)</td>
+			<td>showAll,$fn.get(util, "uid")</td>
+		</tr>
+		<tr>
+			<td>if(ownerId==util.uid,'My',if(showAll,'All',first(events.organizerName)))</td>
+			<td>ownerId,$fn.get(util, "uid"),showAll,$fn.get(events, "organizerName")</td>
+		</tr>
+		<tr>
+			<td>ownerId=util.uid</td>
+			<td>ownerId,$fn.get(util, "uid")</td>
+		</tr>
+		<tr>
+			<td>trackEvents("mavo-apps/signup/events",ownerId)</td>
+			<td>ownerId</td>
+		</tr>
+		<tr>
+			<td>if(radius, diameter / 2)</td>
+			<td>radius,diameter</td>
+		</tr>
+		<tr>
+			<td>if(radius = 0 or isNaN(radius), ' ', radius * 2 * PI)</td>
+			<td>radius,radius,radius,PI</td>
+		</tr>
+		<tr>
+			<td>if(circumference = 0 or isNaN(circumference), 'circumference', circumference)</td>
+			<td>circumference,circumference,circumference</td>
+		</tr>
+		<tr>
+			<td>if(a / 100 * b, a / 100 * b, " ")</td>
+			<td>a,b,a,b</td>
+		</tr>
+		<tr>
+			<td>if(!Number.isNaN(c / d * 100), c / d * 100 & "%"," ")</td>
+			<td>c,d,c,d</td>
+		</tr>
+		<tr>
+			<td>if(!Number.isNaN(((f - e) / e) * 100), ((f - e) / e) * 100 & "%"," ")</td>
+			<td>f,e,e,f,e,e</td>
+		</tr>
+		<tr>
+			<td>if((ow / oh) * nh > 0, (ow / oh) * nh, '')</td>
+			<td>ow,oh,nh,ow,oh,nh</td>
+		</tr>
+		<tr>
+			<td>if((oh / ow) * 200 > 0, (oh / ow) * 200, 0)</td>
+			<td>oh,ow,oh,ow</td>
+		</tr>
+		<tr>
+			<td>if((oh / ow) * 200 > 0, 'box', 'hidden')</td>
+			<td>oh,ow</td>
+		</tr>
+		<tr>
+			<td>search(url(),'favorites')>0</td>
+			<td>""</td>
+		</tr>
+		<tr>
+			<td>url('meid') || if(useNameLogin,nameLoginData.name,getUid(signal))</td>
+			<td>useNameLogin,$fn.get(nameLoginData, "name"),signal</td>
+		</tr>
+		<tr>
+			<td>if(meid,'https://mavo-cd7c3.firebaseio.com/' & path & '/' & meid,'none')</td>
+			<td>meid,path,meid</td>
+		</tr>
+		<tr>
+			<td>setSignal('sig'&'nal')</td>
+			<td>""</td>
+		</tr>
+		<tr>
+			<td>watchSessions()</td>
+			<td>""</td>
+		</tr>
+		<tr>
+			<td>watchUsers(mysid,if(mysid='test' || !session.lookbackTime,365*24*60*60*100,session.lookbackTime),util.useFavorites)</td>
+			<td>mysid,mysid,$fn.get(session, "lookbackTime"),$fn.get(session, "lookbackTime"),$fn.get(util, "useFavorites")</td>
+		</tr>
+		<tr>
+			<td>if(url('session'),session.name,'Session')</td>
+			<td>$fn.get(session, "name")</td>
+		</tr>
+		<tr>
+			<td>url('session') or sessionSelect</td>
+			<td>sessionSelect</td>
+		</tr>
+		<tr>
+			<td>if(mysid,'https://mavo-cd7c3.firebaseio.com/ifdr-session/' & mysid,'none')</td>
+			<td>mysid,mysid</td>
+		</tr>
+		<tr>
+			<td>if(me,me.name,'unnamed user')</td>
+			<td>me,$fn.get(me, "name")</td>
+		</tr>
+		<tr>
+			<td>if(me,me.email)</td>
+			<td>me,$fn.get(me, "email")</td>
+		</tr>
+		<tr>
+			<td>first(session.pushOutTimes where uid=util.meid).time</td>
+			<td>$fn.get(session, "pushOutTimes"),$fn.get(util, "meid")</td>
+		</tr>
+		<tr>
+			<td>mysid and util.meid and checkInTime > (myPushOut || 0)</td>
+			<td>mysid,$fn.get(util, "meid"),checkInTime,myPushOut</td>
+		</tr>
+		<tr>
+			<td>!session.noCheckout and checkedIn</td>
+			<td>$fn.get(session, "noCheckout"),checkedIn</td>
+		</tr>
+		<tr>
+			<td>lookup(session.playedIndex,selection) or lookup(session.declinedIndex,selection)</td>
+			<td>$fn.get(session, "playedIndex"),selection,$fn.get(session, "declinedIndex"),selection</td>
+		</tr>
+		<tr>
+			<td>user.mysid and not util.favorites</td>
+			<td>$fn.get(user, "mysid"),$fn.get(util, "favorites")</td>
+		</tr>
+		<tr>
+			<td>!!user.mysid</td>
+			<td>$fn.get(user, "mysid")</td>
+		</tr>
+		<tr>
+			<td>if(util.useNameLogin,util.nameLoginData,getProfile(signal))</td>
+			<td>$fn.get(util, "useNameLogin"),$fn.get(util, "nameLoginData"),signal</td>
+		</tr>
+		<tr>
+			<td>sort(first(requestLimit,currentList),'-timestamp')</td>
+			<td>requestLimit,currentList</td>
+		</tr>
+		<tr>
+			<td>picks where not(picks.current)</td>
+			<td>picks,$fn.get(picks, "current")</td>
+		</tr>
+		<tr>
+			<td>sort(mergePicks(session.users where active,util.signal,picks),'-count','+label')</td>
+			<td>$fn.get(session, "users"),active,$fn.get(util, "signal"),picks</td>
+		</tr>
+		<tr>
+			<td>round($now/60000)*60000</td>
+			<td>$now</td>
+		</tr>
+		<tr>
+			<td>0</td>
+			<td>""</td>
+		</tr>
+		<tr>
+			<td>if(url('session'),'https://mavo-cd7c3.firebaseio.com/ifdr-session/' & url('session'),'none')</td>
+			<td>""</td>
+		</tr>
+		<tr>
+			<td>if(useNameLogin,nameLoginData,getProfile(signal))</td>
+			<td>useNameLogin,nameLoginData,signal</td>
+		</tr>
+		<tr>
+			<td>if(url('session'),'ifd.csv','none')</td>
+			<td>""</td>
+		</tr>
+		<tr>
+			<td>!util.me.uid</td>
+			<td>$fn.get(util, "me", "uid")</td>
+		</tr>
+		<tr>
+			<td>util.me.uid and mysid</td>
+			<td>$fn.get(util, "me", "uid"),mysid</td>
+		</tr>
+		<tr>
+			<td>!mysid or !session.meIsMarkid</td>
+			<td>mysid,$fn.get(session, "meIsMarkid")</td>
+		</tr>
+		<tr>
+			<td>session.hideOptions and !showTimes</td>
+			<td>$fn.get(session, "hideOptions"),showTimes</td>
+		</tr>
+		<tr>
+			<td>id=url('session')</td>
+			<td>id</td>
+		</tr>
+		<tr>
+			<td>sort(mergePicks(condense(session.users where active,util.signal)),sortRule,'-count','-label')</td>
+			<td>$fn.get(session, "users"),$fn.get(util, "signal"),sortRule</td>
+		</tr>
+		<tr>
+			<td>if(util.me.uid,util.sessionStore,'')</td>
+			<td>$fn.get(util, "me", "uid"),$fn.get(util, "sessionStore")</td>
+		</tr>
+		<tr>
+			<td>watchUsers(requests.mysid,lookbackTime,(search(url(),'favorites')>0))</td>
+			<td>$fn.get(requests, "mysid"),lookbackTime</td>
+		</tr>
+		<tr>
+			<td>has(util.me.uid,markidUids) or url('markid')='' or requests.mysid='test'</td>
+			<td>$fn.get(util, "me", "uid"),markidUids,$fn.get(requests, "mysid")</td>
+		</tr>
+		<tr>
+			<td>6*24*60*60*1000</td>
+			<td>""</td>
+		</tr>
+		<tr>
+			<td>30*60*1000</td>
+			<td>""</td>
+		</tr>
+		<tr>
+			<td>1*60*60*1000</td>
+			<td>""</td>
+		</tr>
+		<tr>
+			<td>10*365*24*60*60*1000</td>
+			<td>""</td>
+		</tr>
+		<tr>
+			<td>thisMinute-2*24*60*60*1000</td>
+			<td>thisMinute</td>
+		</tr>
+		<tr>
+			<td>weekdayChoice+weekMs*floor((thisMinute-weekdayChoice)/weekMs)</td>
+			<td>weekdayChoice,weekMs,thisMinute,weekdayChoice,weekMs</td>
+		</tr>
+		<tr>
+			<td>if(lookbackChoice='date',thisMinute-customStart,if(lookbackChoice='week',thisMinute-weekTimeout,lookbackChoice))</td>
+			<td>lookbackChoice,thisMinute,customStart,lookbackChoice,thisMinute,weekTimeout,lookbackChoice</td>
+		</tr>
+		<tr>
+			<td>if(requestInput='',100,requestInput)</td>
+			<td>requestInput,requestInput</td>
+		</tr>
+		<tr>
+			<td>hideOptions and !showActivity</td>
+			<td>hideOptions,showActivity</td>
+		</tr>
+		<tr>
+			<td>!meIsMarkid || count(declined)==0</td>
+			<td>meIsMarkid,declined</td>
+		</tr>
+		<tr>
+			<td>sort(getUsers(util.signal),'-checkInTime')</td>
+			<td>$fn.get(util, "signal")</td>
+		</tr>		
+		<tr>
+			<td>name.trim()</td>
+			<td>$fn.get(name, "trim")</td>
+		</tr>
+	</table>
+</section>
+
 <script>
 function expressionRewrite(test, result, expected) {
 	var r = result.textContent = Mavo.Script.rewrite(test.textContent);
 
 	return Test.equals(r, expected.textContent);
+}
+function getVariables(test, result, expected) {
+	const expr = test.textContent;
+	const ast = Mavo.Script.parse(expr);
+	const variables = result.textContent = Mavo.Script.getVariables(ast).map(Mavo.Script.serialize).toString() || '""';
+	return Test.equals(variables, expected.textContent);
 }
 </script>
 
