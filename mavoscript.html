@@ -717,11 +717,11 @@ table[data-test="expressionRewrite"][data-columns="3"] td:nth-child(n + 2) {
 		</tr>
 		<tr>
 			<td>openFilter['id=' & openness].show</td>
-			<td>""</td>
+			<td>$fn.get(openFilter, $fn.concatenate('id=', openness), "show"),openness</td>
 		</tr>
 		<tr>
 			<td>!status or statusFilter['id=' & status].show</td>
-			<td></td>
+			<td>status,$fn.get(statusFilter, $fn.concatenate('id=', status), "show"),status</td>
 		</tr>
 		<tr>
 			<td>!count(selectedTags) or intersects(tag, selectedTags)</td>
@@ -757,7 +757,7 @@ table[data-test="expressionRewrite"][data-columns="3"] td:nth-child(n + 2) {
 		</tr>
 		<tr>
 			<td>condense(medicamento where id = medicamento_1).droga</td>
-			<td>medicamento,medicamento_1</td>
+			<td>medicamento,id,medicamento_1</td>
 		</tr>
 		<tr>
 			<td>idify(join(list(droga, concentracion, contenido), '-'))</td>
@@ -797,7 +797,7 @@ table[data-test="expressionRewrite"][data-columns="3"] td:nth-child(n + 2) {
 		</tr>
 		<tr>
 			<td>count(blog.post where cat in category)</td>
-			<td>$fn.get(blog, "post"),category</td>
+			<td>$fn.get(blog, "post"),cat,category</td>
 		</tr>
 		<tr>
 			<td>first(10, blog.post)</td>
@@ -897,11 +897,11 @@ table[data-test="expressionRewrite"][data-columns="3"] td:nth-child(n + 2) {
 		</tr>
 		<tr>
 			<td>count(ticket where uid=util.uid)</td>
-			<td>ticket,$fn.get(util, "uid")</td>
+			<td>ticket,uid,$fn.get(util, "uid")</td>
 		</tr>
 		<tr>
 			<td>if(signed,get(first(ticket where uid=util.uid),'time'))</td>
-			<td>signed,ticket,$fn.get(util, "uid")</td>
+			<td>signed,ticket,uid,$fn.get(util, "uid")</td>
 		</tr>
 		<tr>
 			<td>event.limit-count(ticket)</td>
@@ -1009,7 +1009,7 @@ table[data-test="expressionRewrite"][data-columns="3"] td:nth-child(n + 2) {
 		</tr>
 		<tr>
 			<td>first(session.pushOutTimes where uid=util.meid).time</td>
-			<td>$fn.get(session, "pushOutTimes"),$fn.get(util, "meid")</td>
+			<td>$fn.get(session, "pushOutTimes"),uid,$fn.get(util, "meid")</td>
 		</tr>
 		<tr>
 			<td>mysid and util.meid and checkInTime > (myPushOut || 0)</td>
@@ -1025,7 +1025,7 @@ table[data-test="expressionRewrite"][data-columns="3"] td:nth-child(n + 2) {
 		</tr>
 		<tr>
 			<td>user.mysid and not util.favorites</td>
-			<td>$fn.get(user, "mysid"),$fn.get(util, "favorites")</td>
+			<td>$fn.get(user, "mysid"),not,$fn.get(util, "favorites")</td>
 		</tr>
 		<tr>
 			<td>!!user.mysid</td>
@@ -1089,7 +1089,7 @@ table[data-test="expressionRewrite"][data-columns="3"] td:nth-child(n + 2) {
 		</tr>
 		<tr>
 			<td>sort(mergePicks(condense(session.users where active,util.signal)),sortRule,'-count','-label')</td>
-			<td>$fn.get(session, "users"),$fn.get(util, "signal"),sortRule</td>
+			<td>$fn.get(session, "users"),active,$fn.get(util, "signal"),sortRule</td>
 		</tr>
 		<tr>
 			<td>if(util.me.uid,util.sessionStore,'')</td>
