@@ -1458,6 +1458,117 @@ b", "
 	</table>
 </section>
 
+<section>
+	<h1>url()</h1>
+
+	<table class="reftest" data-test="expressionEvaluation" data-columns="3">
+		<tr>
+			<td>url("foo", url: "https://mavo.io?foo=bar")</td>
+			<td>"bar"</td>
+		</tr>
+		<tr>
+			<td>url("bar", url: "https://mavo.io?bar&foo=bar")</td>
+			<td>""</td>
+		</tr>
+		<tr>
+			<td>url("foo", url: "https://mavo.io/foo")</td>
+			<td>""</td>
+		</tr>
+		<tr>
+			<td>url("foo", url: "https://mavo.io/foo/bar")</td>
+			<td>"bar"</td>
+		</tr>
+		<tr>
+			<td>url("bar", url: "https://mavo.io/foo/bar/baz")</td>
+			<td>"baz"</td>
+		</tr>
+		<tr>
+			<td>url("foo", url: "https://mavo.io/foo/bar/baz")</td>
+			<td>"bar"</td>
+		</tr>
+		<tr title="Query string parameters take precedence">
+			<td>url("foo", url: "https://mavo.io/foo/bar?foo=baz")</td>
+			<td>"baz"</td>
+		</tr>
+		<tr title="With type">
+			<td>url("foo", url: "https://mavo.io/foo/bar?foo=baz", type: "query")</td>
+			<td>"baz"</td>
+		</tr>
+		<tr>
+			<td>url("foo", url: "https://mavo.io/foo/bar?foo=baz", type: "path")</td>
+			<td>"bar"</td>
+		</tr>
+		<tr title="Case sensitive">
+			<td>url("Foo", url: "https://mavo.io/Foo/bar?foo=baz", case_sensitive: true)</td>
+			<td>"bar"</td>
+		</tr>
+		<tr>
+			<td>url("Foo", url: "https://mavo.io/Foo/bar?Foo=baz", case_sensitive: true)</td>
+			<td>"baz"</td>
+		</tr>
+		<tr title="Multiple values">
+			<td>url("foo", url: "https://mavo.io/foo/bar?foo=baz", multiple: true)</td>
+			<td>["baz"]</td>
+		</tr>
+		<tr>
+			<td>url("foo", url: "https://mavo.io/foo/bar?foo=baz", multiple: true, type: "path")</td>
+			<td>["bar"]</td>
+		</tr>
+		<tr>
+			<td>url("foo", url: "https://mavo.io/foo/bar?foo=baz&foo=yolo", multiple: true)</td>
+			<td>["baz", "yolo"]</td>
+		</tr>
+		<tr>
+			<td>url("foo", url: "https://mavo.io/foo", multiple: true)</td>
+			<td>[""]</td>
+		</tr>
+		<tr title="Options can go in random order">
+			<td>url("Foo", case_sensitive: true, multiple: true, url: "https://mavo.io/foo/bar?Foo=baz&foo=yolo")</td>
+			<td>["baz"]</td>
+		</tr>
+		<tr title="Not found">
+			<td>url("foo", url: "https://mavo.io/Foo/bar", case_sensitive: true)</td>
+			<td>null</td>
+		</tr>
+		<tr>
+			<td>url("baz", url: "https://mavo.io/foo/bar?foo=baz", multiple: true)</td>
+			<td>[]</td>
+		</tr>
+		<tr title="Empty parameter name">
+			<td>url("")</td>
+			<td>null</td>
+		</tr>
+		<tr>
+			<td>url("", multiple: true)</td>
+			<td>[]</td>
+		</tr>
+		<tr title="Do not strip non-ASCII chars">
+			<td>url("foo", url: "https://mavo.io?foo=Pâté")</td>
+			<td>"Pâté"</td>
+		</tr>
+		<tr title="Decode escaped chars">
+			<td>url("foo", url: "https://mavo.io?foo=foo%26bar")</td>
+			<td>"foo&bar"</td>
+		</tr>
+		<tr title="Ignore unknown options">
+			<td>url("foo", url: "https://mavo.io?foo=bar", baz: "yolo")</td>
+			<td>"bar"</td>
+		</tr>
+	</table>
+
+	<p><a href="?foo=bar">Click here first for these tests to pass.</a></p>
+	<table class="reftest" data-test="expressionEvaluation" data-columns="3">
+		<tr title="Default URL">
+			<td>url()</td>
+			<td>"https://test.mavo.io/functions.html?foo=bar"</td>
+		</tr>
+		<tr>
+			<td>url("foo")</td>
+			<td>"bar"</td>
+		</tr>
+	</table>
+</section>
+
 <script>
 function expressionEvaluation(test, result, expected) {
 	var r = (new Mavo.Expression(test.textContent)).eval();
