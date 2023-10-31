@@ -181,12 +181,12 @@
 				path: "countries.json"
 			}</td>
 		</tr>
-		<tr mv-app mv-bar="none" mv-source="https://github.com/leaverou/bliss/blob/somebranch/data/countries.json" mv-source-branch="master">
+		<tr mv-app mv-bar="none" mv-source="https://github.com/leaverou/bliss/blob/somebranch/data/countries.json" mv-source-branch="main">
 			<td></td>
 			<td>{
 				username: "leaverou",
 				repo: "bliss",
-				branch: "master",
+				branch: "main",
 				filepath: "data",
 				filename: "countries.json",
 				path: "data/countries.json"
@@ -326,7 +326,7 @@
 	</script>
 </section>
 
-<section mv-app="githubtest" mv-storage="https://github.com/mavoweb/test/blob/master/data/countries.json">
+<section mv-app="githubtest" mv-storage="https://github.com/mavoweb/test/blob/main/data/countries.json">
 	<h1>Basic</h1>
 
 	<table class="reftest">
@@ -354,7 +354,7 @@
 
 	<table class="reftest" data-click='input[property=flip] wait .1s after mv-load'>
 		<tr>
-			<td mv-app="dynamic" mv-storage="https://github.com/mavoweb/test/blob/master/data/[if(flip, 'countries' , 'people')].json">
+			<td mv-app="dynamic" mv-storage="https://github.com/mavoweb/test/blob/main/data/[if(flip, 'countries' , 'people')].json">
 				<div class="test-content-ignore">
 					<input type="checkbox" property="flip"> Check me
 				</div>
@@ -376,14 +376,14 @@
 	</table>
 </section>
 
-<section mv-app="githubupload" mv-storage="https://github.com/LeaVerou/mv-data" mv-storage-branch="master" class="mv-autoedit">
+<section mv-app="githubupload" mv-storage="https://github.com/LeaVerou/mv-data" class="mv-autoedit">
 	<h1>Github upload</h1>
 
 	<p>Try to upload an image below. Try pasting an image, or drag & drop too.</p>
 	<img property="image" src="https://mavo.io/logo.svg" style="max-width: 100%">
 </section>
 
-<section mv-app="githubtest" mv-storage="https://github.com/LeaVerou" mv-storage-branch="master">
+<section mv-app="githubtest" mv-storage="https://github.com/LeaVerou">
 	<h1>Github with profile URL</h1>
 
 	<table class="reftest">
@@ -431,7 +431,7 @@
 	</table>
 </section>
 
-<section mv-app="githubapi" mv-storage="https://api.github.com/repos/mavoweb/test/contents/data" mv-storage-branch="master">
+<section mv-app="githubapi" mv-storage="https://api.github.com/repos/mavoweb/test/contents/data">
 	<h1>Github API</h1>
 
 	<p>Need to login to Github for this test to pass.</p>
@@ -466,7 +466,7 @@
 
 	<table class="reftest">
 		<tr>
-			<td mv-app="implicitmvformat" mv-storage="https://github.com/mavoweb/test/data/markdown.md" mv-storage-branch="master" mv-format="text">
+			<td mv-app="implicitmvformat" mv-storage="https://github.com/mavoweb/test/data/markdown.md" mv-format="text">
 				<div property="content"></div>
 			</td>
 			<td>
@@ -500,7 +500,7 @@
 			</td>
 		</tr>
 		<tr title="CSV from Github, implicit mv-format">
-			<td mv-app="csvgithub" mv-storage="https://github.com/mavoweb/test/data/csv.csv" mv-storage-branch="master">
+			<td mv-app="csvgithub" mv-storage="https://github.com/mavoweb/test/data/csv.csv">
 				<div property="row" mv-multiple>
 					<span property="prop1"></span>
 					<span property="prop2"></span>
@@ -532,7 +532,7 @@
 <section mv-app="urltest" mv-storage="">
 	<h1>mv-storage=Github, mv-source=Element, via URL</h1>
 
-	<p><a href="?urltest-storage=https://github.com/mavoweb/test/blob/master/data/countries.json&urltest-source=%23countries">Click here first for this test to pass.</a></p>
+	<p><a href="?urltest-storage=https://github.com/mavoweb/test/blob/main/data/countries.json&urltest-source=%23countries">Click here first for this test to pass.</a></p>
 	<table class="reftest">
 		<tr class="interactive">
 			<td>
@@ -554,7 +554,7 @@
 	</table>
 </section>
 
-<section mv-app mv-storage="https://github.com/mavoweb/test/blob/master/data/countries.json" mv-source="#countries">
+<section mv-app mv-storage="https://github.com/mavoweb/test/blob/main/data/countries.json" mv-source="#countries">
 	<h1>mv-storage=Github, mv-source=element</h1>
 
 	<table class="reftest">
@@ -578,7 +578,7 @@
 	</table>
 </section>
 
-<section mv-app mv-source="https://github.com/mavoweb/test/blob/master/data/countries.json">
+<section mv-app mv-source="https://github.com/mavoweb/test/blob/main/data/countries.json">
 	<h1>No storage, mv-source=Github</h1>
 	<p>Should display data but no editing controls</p>
 
