@@ -23,6 +23,8 @@
   },
   "homepage": "https://mavo.io",
   "devDependencies": {
+    "htest.dev": "^0.0.4",
+    "jsdom": "^22.1.0",
     "onchange": "^7.1.0",
     "postcss": "^8.3.9",
     "postcss-cli": "^9.0.1",
